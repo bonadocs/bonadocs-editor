@@ -1,0 +1,54 @@
+html {
+  --bonadocsBackground: #151b24;
+  --bonadocsText: #7f97b4;
+  --bonadocsSecondaryText: #e2e7ef;
+  --bonadocsButtonBg: #416bff;
+  --bonadocsStatusBg: #334356;
+  --bonadocsEditorBackground: #0f141b;
+  --bonadocsEditorBorder: #20262e;
+}
+
+.bona__bg {
+  background-color: var(--bonadocsEditorBackground);
+  color: white;
+  font-weight: 700;
+}
+
+.bona__pt {
+  
+}
+
+.bona__bt {
+  border-top: 1px solid var(--bonadocsEditorBorder);
+}
+
+.bona__transition {
+  transform: rotate(90deg);
+}
+
+body {
+  scrollbar-width: thin; /* "auto" or "thin" */
+  scrollbar-color: var(--bonadocsProtocolBackground)
+    var(--bonadocsEditorBackground); /* scroll thumb and track */
+}
+
+/* Works on Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bonadocsBackground) var(--bonadocsEditorBackground);
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 12px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--bonadocsEditorBorder);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--bonadocsText);
+  border-radius: 20px;
+  border: 4px solid var(--bonadocsBackground);
+}

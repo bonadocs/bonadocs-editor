@@ -1,0 +1,13 @@
+.bonadocs {
+  &__editor {
+    display: flex;
+    width: 100%;
+    background-color: var(--bonadocsBackground);
+    min-height: 100vh;
+    overflow-y: auto;
+    @media screen and (min-width: 1200px) {
+      height: auto;
+    }
+    
+  }
+}

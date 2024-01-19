@@ -1,0 +1,33 @@
+// Themes
+@import "themes/dark-theme";
+@import "themes/light-theme";
+
+// Base
+@import "base/base";
+@import "base/typography";
+@import "base/normalize";
+@import "base/reset";
+
+// Pages
+@import "pages/editor";
+@import "pages/setup";
+// Layout
+@import "layout/footer";
+@import "layout/header";
+@import "layout/navbar";
+@import "layout/header";
+@import "layout/sidebar";
+@import "layout/dashboard";
+// Components
+@import "components/progess-bar";
+@import "components/tab";
+@import "components/accordion";
+@import "components/button";
+@import "components/input";
+@import "components/modal";
+@import "components/playground";
+
+// Abstracts
+@import "abstracts/colors.scss";
+@import "abstracts/mixins.scss";
+@import "abstracts/variables.scss";

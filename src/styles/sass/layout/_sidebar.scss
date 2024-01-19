@@ -1,0 +1,41 @@
+.bonadocs {
+  &__editor {
+    &__sidebar {
+      width: 15%;
+      padding: 1.6rem 2.4rem;
+      max-width: 30rem;
+      display: flex;
+      flex-direction: column;
+      @media screen and (max-width: 1500px) {
+        width: 16%;
+      }
+      @media screen and (max-width: 900px) {
+        display: none;
+      }
+      &__logo {
+        margin-bottom: 4rem;
+      }
+      &__item {
+        display: flex;
+        color: var(--bonadocsText);
+        gap: 1rem;
+        font-size: 1.6rem;
+        margin: 1.2rem 0;
+      }
+      &__options {
+        margin-top: auto;
+        margin-bottom: 10rem;
+      }
+      &__simulation {
+        display: flex;
+        align-items: center;
+        height: min-content;
+        gap: 0.8rem;
+        font-size: 1.4rem;
+        &__title {
+          color: white;
+        }
+      }
+    }
+  }
+}

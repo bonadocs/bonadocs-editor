@@ -6,7 +6,7 @@ export const BonadocsEditorContainer: React.FC = () => {
   return (
     <div className="bonadocs__editor">
       <BonadocsEditorSidebar className="bonadocs__editor__sidebar" />
-      <BonadocsEditorView />
+      <BonadocsEditorView className="bonadocs__editor__dashboard" />
     </div>
   );
 };
