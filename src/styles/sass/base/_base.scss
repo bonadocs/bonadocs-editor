@@ -6,6 +6,8 @@ html {
   --bonadocsStatusBg: #334356;
   --bonadocsEditorBackground: #0f141b;
   --bonadocsEditorBorder: #20262e;
+  --bonadocsTextWhite: #ffffff;
+  --bonadocsTextCritical: #B50037;
 }
 
 .bona__bg {
@@ -15,7 +17,6 @@ html {
 }
 
 .bona__pt {
-  
 }
 
 .bona__bt {
@@ -51,4 +52,18 @@ body {
   background-color: var(--bonadocsText);
   border-radius: 20px;
   border: 4px solid var(--bonadocsBackground);
+}
+
+.bona__active {
+  background-color: var(--bonadocsEditorBackground);
+
+  border-radius: 10rem;
+}
+
+.bona__btl {
+  margin-top: .8rem;
+}
+
+.ma-l {
+  margin-left: 1.3rem;
 }

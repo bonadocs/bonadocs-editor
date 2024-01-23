@@ -20,7 +20,7 @@
         color: var(--bonadocsText);
         gap: 1rem;
         font-size: 1.6rem;
-        margin: 1.2rem 0;
+        padding: .8rem;
       }
       &__options {
         margin-top: auto;
@@ -32,6 +32,7 @@
         height: min-content;
         gap: 0.8rem;
         font-size: 1.4rem;
+        padding: 0.8rem;
         &__title {
           color: white;
         }

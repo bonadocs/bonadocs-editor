@@ -1,0 +1,61 @@
+.modal {
+  &__container {
+    background-color: var(--bonadocsEditorBackground);
+    border-radius: 8px;
+    padding: 2.4rem;
+    overflow: auto;
+    display: grid;
+    // max-width: 40rem;
+    color: var(--bonadocsTextWhite);
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    &__wrapper {
+      justify-self: flex-end;
+      color: var(--bonadocsTextWhite);
+    }
+    &__title {
+      //justify-self: center;
+      font-size: 1.6rem;
+      color: var(--bonadocsTextWhite);
+      font-weight: 600;
+    }
+    &__text {
+      margin-top: 2rem;
+      //justify-self: center;
+      color: var(--bonadocsTextWhite);
+      line-height: 2.4rem;
+      font-size: 1.3rem;
+    }
+    &__button {
+      cursor: pointer;
+      font-size: 1.3rem;
+      margin-bottom: 1.4rem;
+      margin-top: 2.4rem;
+      padding: .8rem;
+    }
+  }
+  &__description {
+    margin-top: 1.3rem;
+  }
+  &__title {
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+  &__close {
+    margin-left: auto;
+    width: 3rem;
+    color: var(--bonadocsTextWhite);
+    height: 3rem;
+    padding: .4rem;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--bonadocsEditorBackground);
+    cursor: pointer;
+    margin-bottom: 1.6rem;
+  }
+}

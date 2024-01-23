@@ -1,13 +1,16 @@
 .bonadocs {
   &__editor {
     &__dashboard {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
       &__playground {
         display: flex;
         background-color: var(--bonadocsEditorBackground);
         border-radius: 0.8rem;
         position: relative;
         height: 82vh;
-
+        flex: 1;
         // overflow-y: auto;
         @media screen and (max-height: 700px) {
           height: 100rem;
@@ -24,6 +27,7 @@
           flex-direction: column;
           width: 18%;
           height: 100%;
+          overflow-y: hidden;
           border-right: 1px solid var(--bonadocsEditorBorder);
           &__header {
             display: flex;
@@ -32,9 +36,6 @@
             padding: 0.8rem;
             height: 4rem;
             border-bottom: 1px solid var(--bonadocsEditorBorder);
-            // @media screen and (max-width: 1400px) {
-            //   height: 8%;
-            // }
             &__title {
               font-size: 1.4rem;
               font-weight: 600;
@@ -66,23 +67,9 @@
             }
           }
           &__list {
-            // overflow-y: auto;
-            // max-height: 58rem;
             flex-grow: 1;
             height: auto;
             overflow-y: auto;
-            // @media screen and (min-height: 950px) {
-            //   max-height: 82rem;
-            // }
-            // @media screen and (max-height: 700px) {
-            //   max-height: 89rem;
-            // }
-            // @media screen and (min-height: 1100px) {
-            //   max-height: 97rem;
-            // }
-            // @media screen and (min-height: 1200px) {
-            //   max-height: 107rem;
-            // }
           }
         }
         &__method {

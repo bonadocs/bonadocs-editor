@@ -62,3 +62,24 @@
 .bonadocs__editor__status__slider.bonadocs__editor__status__round:before {
   border-radius: 50%;
 }
+
+.bonadocs {
+  &__editor {
+    &__input {
+      border: 1px solid var(--bonadocsEditorBorder);
+      padding: 1.2rem;
+      color: var(--bonadocsTextWhite);
+      margin-top: .4rem;
+      border-radius: .4rem;
+    }
+    &__input::placeholder {
+      color: var(--bonadocsText);
+      opacity: 1; /* Firefox */
+    }
+
+    ::-ms-input-placeholder {
+      /* Edge 12 -18 */
+      color: var(--bonadocsText);
+    }
+  }
+}

@@ -14,17 +14,17 @@ interface SidebarItemsProp {
 export const SidebarItems: SidebarItemsProp[] = [
   {
     name: "Contracts",
-    route: "/",
+    route: "/contracts",
     icon: React.createElement(ContractIcon),
   },
   {
     name: "Actions",
-    route: "/dashboard",
+    route: "/actions",
     icon: React.createElement(ActionIcon),
   },
   {
     name: "Variables",
-    route: "/page-1",
+    route: "/variables",
     icon: React.createElement(VariableIcon),
   },
 ];

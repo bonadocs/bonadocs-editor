@@ -7,8 +7,13 @@ export const BonadocsEditorSidebarItems: React.FC = () => {
 
   return (
     <ul>
-      {SidebarItems.map(({ name, icon }, index) => (
-        <BonadocsEditorSidebarItem key={index} name={name} icon={icon} />
+      {SidebarItems.map(({ name, icon, route }, index) => (
+        <BonadocsEditorSidebarItem
+          route={route}
+          key={index}
+          name={name}
+          icon={icon}
+        />
       ))}
     </ul>
   );

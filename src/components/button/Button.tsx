@@ -4,13 +4,14 @@ import clsx from "clsx";
 interface ButtonProps {
   onClick: () => void;
   children: ReactElement | string;
-  type?: "action" | "inertia";
+  type?: "action" | "inertia" | "critical";
   className?: string;
 }
 
 const buttonType = {
   action: "bonadocs__button__action",
   inertia: "bonadocs__button__inertia",
+  critical: "bonadocs__button__critical",
 };
 
 export const Button: React.FC<ButtonProps> = ({

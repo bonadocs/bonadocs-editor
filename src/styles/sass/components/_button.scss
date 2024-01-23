@@ -11,5 +11,9 @@
       color: var(--bonadocsText);
       background-color: transparent;
     }
+    &__critical {
+      color: var(--bonadocsTextWhite);
+      background-color: var(--bonadocsTextCritical);
+    }
   }
 }
