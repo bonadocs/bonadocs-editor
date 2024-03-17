@@ -1,6 +1,6 @@
 import React from "react";
 import { BonadocsEditorViewVariablesTableHeader } from "./BonadocsEditorViewVariablesTableHeader";
-import { BonadocsEditorViewVariablesTableItem } from "./BonadocsEditorViewVariablesTableItem";
+import { BonadocsEditorViewVariablesTableItems } from "./BonadocsEditorViewVariablesTableItems";
 
 interface BonadocsEditorViewVariablesTableProps {
   className?: string;
@@ -8,11 +8,12 @@ interface BonadocsEditorViewVariablesTableProps {
 export const BonadocsEditorViewVariablesTable: React.FC<
   BonadocsEditorViewVariablesTableProps
 > = ({ className }) => {
+  
   return (
     // Your component JSX code here
     <div className={className}>
       <BonadocsEditorViewVariablesTableHeader />
-      <BonadocsEditorViewVariablesTableItem />
+      <BonadocsEditorViewVariablesTableItems />
     </div>
   );
 };

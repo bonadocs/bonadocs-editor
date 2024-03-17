@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { Button } from "@/components/button/Button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { deleteVariable } from "@/store/variable/variableSlice";
+import { useCollectionContext } from "@/context/CollectionContext";
+import { VariableItem } from "@/data/dataTypes";
 
 const customStyles = {
   overlay: {
@@ -29,11 +34,14 @@ interface BonadocsVariableDeleteModalProps {
   className?: string;
   show?: boolean;
   closeDeleteModal: () => void;
+  variableItem: VariableItem;
 }
 export const BonadocsVariableDeleteModal: React.FC<
   BonadocsVariableDeleteModalProps
-> = ({ show, closeDeleteModal }) => {
+> = ({ show, closeDeleteModal, variableItem }) => {
   const [open, isOpen] = useState<boolean>(false);
+  const { getCollection } = useCollectionContext();
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
     // console.log(show);
@@ -44,6 +52,8 @@ export const BonadocsVariableDeleteModal: React.FC<
     isOpen(!open);
     closeDeleteModal();
   };
+
+  
 
   return (
     <Modal
@@ -81,11 +91,25 @@ export const BonadocsVariableDeleteModal: React.FC<
       <div className="modal__container">
         <h3 className="modal__container__title">Delete Variable</h3>
         <div className="modal__container__text">
-          Are you certain about your decision to delete this variable? Please be
-          aware that this action cannot be undone.
+          Are you certain about your decision to delete this variable:{" "}
+          {variableItem.name} ? Please be aware that this action cannot be
+          undone.
         </div>
         <div className="modal__container__wrapper">
-          <Button type="critical" onClick={() => {}} className="modal__container__button">Delete Variable</Button>
+          <Button
+            type="critical"
+            onClick={async () => {
+              await dispatch(
+                deleteVariable({
+                  collection: getCollection()!,
+                  variable: variableItem,
+                })
+              );
+            }}
+            className="modal__container__button"
+          >
+            Delete Variable
+          </Button>
         </div>
       </div>
     </Modal>

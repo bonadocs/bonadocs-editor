@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 
-export const Accordion: React.FC = () => {
+interface AccordionProps {
+  title?: string;
+}
+export const Accordion: React.FC<AccordionProps> = ({ title }) => {
   const [open, isOpen] = useState(false);
   return (
     <div>
@@ -25,7 +28,7 @@ export const Accordion: React.FC = () => {
             fill="currentColor"
           />
         </svg>
-        <h3>fiatTokenV2</h3>
+        <h3>{title}</h3>
       </div>
       {open && (
         <div className="bonadocs__accordion__children">

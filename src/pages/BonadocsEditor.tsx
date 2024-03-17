@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom";
 interface BonadocsEditorProps {
   className?: string;
 }
-export const BonadocsEditorView: React.FC<BonadocsEditorProps> = ({
+export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
   className,
 }) => {
   return (

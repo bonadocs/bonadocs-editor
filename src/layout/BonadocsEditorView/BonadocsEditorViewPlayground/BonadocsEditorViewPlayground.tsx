@@ -7,7 +7,8 @@ interface BonadocsEditorViewPlaygroundProps {
 }
 export const BonadocsEditorViewPlayground: React.FC<
   BonadocsEditorViewPlaygroundProps
-> = ({ className }) => {
+  > = ({ className }) => {
+  
   return (
     <>
       <BonadocsEditorViewPlaygroundContract className="bonadocs__editor__dashboard__playground__contract" />

@@ -9,6 +9,7 @@
       cursor: pointer;
       &__icon {
         transition: transform 0.25s cubic-bezier(0, 0, 0, 1);
+        min-width: 2rem;
       }
     }
     &__children {

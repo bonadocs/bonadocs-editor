@@ -1,48 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
 import { TextInput } from "@/components/input/TextInput";
 import { Button } from "@/components/button/Button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { customStyles } from "@/data/toast/toastConfig";
+import {
+  renameVariable,
+  updateCollectionVariables,
+} from "@/store/variable/variableSlice";
+import { useCollectionContext } from "@/context/CollectionContext";
+import { VariableItem } from "@/data/dataTypes";
 
-const customStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.80)",
-  },
-  content: {
-    display: "grid",
-    top: "40%",
-    left: "50%",
-    border: "none",
-    // overflowY: "hidden",
-    borderRadius: "8px",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    height: "min-content",
-    minHeight: "20rem",
-    maxHeight: "70rem",
-    backgroundColor: "transparent",
-    width: "35%",
-  },
-};
 
 interface BonadocsVariableEditModalProps {
   className?: string;
   show?: boolean;
   closeEditModal: () => void;
+  variableItem: VariableItem;
 }
-export const BonadocsVariableEditModal: React.FC<BonadocsVariableEditModalProps> = ({
-  show,
-  closeEditModal,
-}) => {
-  const [variableName, setVariableName] = useState<string>("");
-  const [variableValue, setVariableValue] = useState<string>("");
+export const BonadocsVariableEditModal: React.FC<
+  BonadocsVariableEditModalProps
+> = ({ show, closeEditModal, variableItem }) => {
+  const [variableName, setVariableName] = useState<string>(variableItem.name);
+  const [variableValue, setVariableValue] = useState<string>(
+    variableItem.value || ""
+  );
+
   const [open, isOpen] = useState<boolean>(false);
+  const dispatch: AppDispatch = useDispatch();
+
+  const { getCollection } = useCollectionContext();
 
   useEffect(() => {
-    // console.log(show);
+    console.log("variable", variableItem);
     isOpen(show ?? false);
   }, [show]);
+
+  useEffect(() => {
+    setVariableName(variableItem.name);
+    setVariableValue(variableItem.value || "");
+  }, [variableItem]);
 
   const closeModal = () => {
     isOpen(!open);
@@ -87,9 +85,11 @@ export const BonadocsVariableEditModal: React.FC<BonadocsVariableEditModalProps>
         <div className="modal__container__text">Variable name</div>
         <TextInput
           placeholder="name"
-          handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setVariableName(event.target.value)
-          }
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            console.log(event.target.value);
+
+            setVariableName(event.target.value);
+          }}
           value={variableName}
         />
         <div className="modal__container__text">Variable value</div>
@@ -103,7 +103,25 @@ export const BonadocsVariableEditModal: React.FC<BonadocsVariableEditModalProps>
         <div className="modal__container__wrapper">
           <Button
             type="action"
-            onClick={() => {}}
+            onClick={async () => {
+              const newVariable = { name: variableName, value: variableValue };
+              if (variableItem.name !== variableName) {
+                await dispatch(
+                  renameVariable({
+                    collection: getCollection()!,
+                    oldName: variableItem.name,
+                    newName: variableName,
+                  })
+                );
+              }
+
+              await dispatch(
+                updateCollectionVariables({
+                  collection: getCollection()!,
+                  variable: newVariable,
+                })
+              );
+            }}
             className="modal__container__button"
           >
             Edit Variable

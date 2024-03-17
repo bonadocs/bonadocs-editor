@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import clsx from "clsx";
+import { useSearchParams } from "react-router-dom";
 
 interface BonadocsEditorSidebarItemProps {
   className?: string;
@@ -13,15 +14,15 @@ export const BonadocsEditorSidebarItem: React.FC<
   BonadocsEditorSidebarItemProps
 > = ({ icon, name, className, route }) => {
   const { pathname } = useLocation();
-  console.log(pathname, route);
-  
+
   const active =
     route === pathname
       ? "bona__active"
       : "" || (route === "/contracts" && pathname === "/" && "bona__active");
-
+  const [queryParameters] = useSearchParams();
+  const uri = queryParameters.get("uri");
   return (
-    <Link to={route}>
+    <Link to={`${route}?uri=${uri}`}>
       <li className={`bonadocs__editor__sidebar__item ${active} ${className}`}>
         {icon && <div>{icon}</div>}
         <div>{name}</div>

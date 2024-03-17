@@ -7,8 +7,8 @@
       &__table {
         margin: 1.6rem;
         &__header {
-          display: flex;
-          justify-content: space-between;
+          display: grid;
+          grid-template-columns: 1.93fr 1fr 1fr;
           padding: 1.6rem;
           background-color: var(--bonadocsBackground);
 
@@ -16,14 +16,19 @@
             color: var(--bonadocsTextWhite);
             font-size: 1.4rem;
           }
+          &__menu {
+            display: flex;
+          }
         }
         &__item {
-          display: flex;
-          justify-content: space-between;
+          display: grid;
+          grid-template-columns: 1.93fr 1fr 1fr;
           padding: 1.6rem;
           border-bottom: 1px solid var(--bonadocsEditorBorder);
-          justify-items: left;
 
+          &__menu {
+            display: flex;
+          }
           h3 {
             font-size: 1.3rem;
           }
@@ -83,3 +88,5 @@
     }
   }
 }
+
+

@@ -1,4 +1,5 @@
 import React from "react";
+import { useCollectionContext } from "@/context/CollectionContext";
 import { BonadocsEditorViewPlaygroundResultHeader } from "./BonadocsEditorViewPlaygroundResultHeader";
 interface BonadocsEditorViewPlaygroundResultProps {
   className?: string;
@@ -6,8 +7,7 @@ interface BonadocsEditorViewPlaygroundResultProps {
 export const BonadocsEditorViewPlaygroundResult: React.FC<
   BonadocsEditorViewPlaygroundResultProps
 > = ({ className }) => {
-  // Component logic goes here
-
+  
   return (
     <div className={className}>
       <BonadocsEditorViewPlaygroundResultHeader />

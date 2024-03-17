@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { TextInput } from "@/components/input/TextInput";
 import { Button } from "@/components/button/Button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { updateCollectionVariables } from "@/store/variable/variableSlice";
+import { useCollectionContext } from "@/context/CollectionContext";
 
 const customStyles = {
   overlay: {
@@ -37,6 +41,8 @@ export const BonadocsVariableAddModal: React.FC<
   const [variableName, setVariableName] = useState<string>("");
   const [variableValue, setVariableValue] = useState<string>("");
   const [open, isOpen] = useState<boolean>(false);
+  const dispatch: AppDispatch = useDispatch();
+  const { collection, getCollection } = useCollectionContext();
 
   useEffect(() => {
     // console.log(show);
@@ -44,6 +50,8 @@ export const BonadocsVariableAddModal: React.FC<
   }, [show]);
 
   const closeModal = () => {
+    setVariableName("");
+    setVariableValue("");
     isOpen(!open);
     closeAddModal();
   };
@@ -102,7 +110,18 @@ export const BonadocsVariableAddModal: React.FC<
         <div className="modal__container__wrapper">
           <Button
             type="action"
-            onClick={() => {}}
+            onClick={async () => {
+              const newVariable = { name: variableName, value: variableValue };
+                await dispatch(
+                  updateCollectionVariables({
+                    collection: getCollection()!,
+                    variable: newVariable,
+                  })
+                );
+              
+              
+              // closeModal();
+            }}
             className="modal__container__button"
           >
             Add Variable

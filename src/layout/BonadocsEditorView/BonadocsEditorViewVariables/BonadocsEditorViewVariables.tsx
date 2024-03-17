@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BonadocsEditorViewVariablesHeader } from "./BonadocsEditorViewVariablesHeader";
 import { BonadocsEditorViewVariablesTable } from "./BonadocsEditorViewVariablesTable/BonadocsEditorViewVariablesTable";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/index";
+import { fetchCollectionVariables } from "@/store/variable/variableSlice";
+
 export const BonadocsEditorViewVariables: React.FC = () => {
-  // Component logic goes here
+  const dispatch = useDispatch<AppDispatch>();
 
   return (
     // Component JSX goes here
