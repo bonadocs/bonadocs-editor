@@ -86,7 +86,6 @@ export const BonadocsVariableEditModal: React.FC<
         <TextInput
           placeholder="name"
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            console.log(event.target.value);
 
             setVariableName(event.target.value);
           }}

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BonadocsEditorViewVariablesTableItem } from "./BonadocsEditorViewVariablesTableItem";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -8,13 +8,19 @@ export const BonadocsEditorViewVariablesTableItems = () => {
     (state: RootState) => state.variable.collectionVariables
   );
 
-  useEffect(() => {
-  }, [variables]);
+  useEffect(() => {}, [variables]);
   return (
     <>
-      {variables.map((variable, index) => (
-        <BonadocsEditorViewVariablesTableItem variable={variable} key={index} />
-      ))}
+      {variables && (
+        <div className="bonadocs__editor__variables__table__items">
+          {variables.map((variable, index) => (
+            <BonadocsEditorViewVariablesTableItem
+              variable={variable}
+              key={index}
+            />
+          ))}
+        </div>
+      )}
     </>
   );
 };
