@@ -17,7 +17,7 @@ export const BonadocsEditorViewPlaygroundMethodControlbar: React.FC<
         }}
       >
         Markdown
-      </BonadocsEditorViewPlaygroundMethodControlbarItem>
+      </BonadocsEditorViewPlaygroundMethodControlbarItem> 
       <BonadocsEditorViewPlaygroundMethodControlbarItem
         active={preview}
         onClick={() => {

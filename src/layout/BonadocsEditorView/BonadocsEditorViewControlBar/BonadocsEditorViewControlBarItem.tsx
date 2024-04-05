@@ -3,13 +3,13 @@ import React from "react";
 interface BonadocsEditorViewControlBarItemProps {
   children?: React.ReactNode | string;
   active?: boolean;
+  onClick?: () => void;
 }
 export const BonadocsEditorViewControlBarItem: React.FC<
   BonadocsEditorViewControlBarItemProps
-> = ({ children, active }) => {
-  // Your component code here
+> = ({ children, active, onClick }) => {
   return (
-    <div>
+    <div onClick={onClick}>
       <div
         className={`bonadocs__editor__dashboard__controlbar__item ${
           active && "bona__bg"

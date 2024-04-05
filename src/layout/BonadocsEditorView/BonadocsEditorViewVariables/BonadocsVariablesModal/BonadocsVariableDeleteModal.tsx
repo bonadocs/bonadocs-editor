@@ -6,29 +6,7 @@ import { AppDispatch } from "@/store";
 import { deleteVariable } from "@/store/variable/variableSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { VariableItem } from "@/data/dataTypes";
-
-const customStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.80)",
-  },
-  content: {
-    display: "grid",
-    top: "40%",
-    left: "50%",
-    border: "none",
-    // overflowY: "hidden",
-    borderRadius: "8px",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    height: "min-content",
-    minHeight: "20rem",
-    maxHeight: "70rem",
-    backgroundColor: "transparent",
-    width: "35%",
-  },
-};
+import { customStyles } from "@/data/toast/toastConfig";
 
 interface BonadocsVariableDeleteModalProps {
   className?: string;
@@ -44,7 +22,6 @@ export const BonadocsVariableDeleteModal: React.FC<
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    // console.log(show);
     isOpen(show ?? false);
   }, [show]);
 
@@ -75,16 +52,16 @@ export const BonadocsVariableDeleteModal: React.FC<
           <path
             d="M18 6L6 18"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M6 6L18 18"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </div>
@@ -105,6 +82,7 @@ export const BonadocsVariableDeleteModal: React.FC<
                   variable: variableItem,
                 })
               );
+              closeModal();
             }}
             className="modal__container__button"
           >

@@ -1,0 +1,8 @@
+.toast, .Toastify__toast-body > div {
+  color: var(--bonadocsTextWhite);
+  font-size: 1.3rem;
+}
+
+.Toastify__progress-bar-theme--dark {
+  background: var(--bonadocsButtonBg) !important;
+}

@@ -1,18 +1,19 @@
 import React from "react";
 
+
 interface BonadocsEditorViewPlaygroundResultHeaderProps {
   className?: string;
+  title: string;
 }
 export const BonadocsEditorViewPlaygroundResultHeader: React.FC<
   BonadocsEditorViewPlaygroundResultHeaderProps
-> = ({ className }) => {
-  // Component logic goes here
+> = ({ className, title }) => {
   return (
     <div
       className={`bonadocs__editor__dashboard__playground__result__header ${className}`}
     >
       <h3 className="bonadocs__editor__dashboard__playground__result__header__title">
-        Project Documentation
+        {title}
       </h3>
       <svg
         className="bonadocs__editor__dashboard__playground__result__header__icon"

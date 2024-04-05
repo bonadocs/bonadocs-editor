@@ -11,7 +11,11 @@ import {
 } from "@/store/variable/variableSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { VariableItem } from "@/data/dataTypes";
-
+import { toast } from "react-toastify";
+import MoonLoader from "react-spinners/ClipLoader";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { validateString } from "@/data/variables/variableValidation";
 
 interface BonadocsVariableEditModalProps {
   className?: string;
@@ -26,14 +30,64 @@ export const BonadocsVariableEditModal: React.FC<
   const [variableValue, setVariableValue] = useState<string>(
     variableItem.value || ""
   );
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [open, isOpen] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
 
   const { getCollection } = useCollectionContext();
 
+  const variables = useSelector(
+    (state: RootState) => state.variable.collectionVariables
+  );
+
+  const editVariable = async () => {
+    setLoading(true);
+    const newVariable = {
+      name: variableName.trim(),
+      value: variableValue.trim(),
+    };
+    if (
+      !validateString(newVariable.name) ||
+      !validateString(newVariable.value)
+    ) {
+      setLoading(false);
+      toast.error("Variable name/value is invalid");
+      return;
+    }
+    const existingVariable = variables.find((variable) =>
+      JSON.stringify(variable) !== JSON.stringify(variableItem)
+        ? variable.name === newVariable.name
+        : false
+    );
+
+    if (existingVariable) {
+      toast.error("Variable already exists");
+      setLoading(false);
+      return;
+    }
+
+    if (variableItem.name !== newVariable.name) {
+      await dispatch(
+        renameVariable({
+          collection: getCollection()!,
+          oldName: variableItem.name,
+          newName: newVariable.name,
+        })
+      );
+    }
+
+    await dispatch(
+      updateCollectionVariables({
+        collection: getCollection()!,
+        variable: newVariable,
+      })
+    );
+    setLoading(false);
+    closeModal();
+    toast("Successfully edited");
+  };
+
   useEffect(() => {
-    console.log("variable", variableItem);
     isOpen(show ?? false);
   }, [show]);
 
@@ -67,16 +121,16 @@ export const BonadocsVariableEditModal: React.FC<
           <path
             d="M18 6L6 18"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M6 6L18 18"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </div>
@@ -86,7 +140,6 @@ export const BonadocsVariableEditModal: React.FC<
         <TextInput
           placeholder="name"
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-
             setVariableName(event.target.value);
           }}
           value={variableName}
@@ -101,29 +154,24 @@ export const BonadocsVariableEditModal: React.FC<
         />
         <div className="modal__container__wrapper">
           <Button
+            disabled={loading}
             type="action"
-            onClick={async () => {
-              const newVariable = { name: variableName, value: variableValue };
-              if (variableItem.name !== variableName) {
-                await dispatch(
-                  renameVariable({
-                    collection: getCollection()!,
-                    oldName: variableItem.name,
-                    newName: variableName,
-                  })
-                );
-              }
-
-              await dispatch(
-                updateCollectionVariables({
-                  collection: getCollection()!,
-                  variable: newVariable,
-                })
-              );
-            }}
+            onClick={() => editVariable()}
             className="modal__container__button"
           >
-            Edit Variable
+            <>
+              {loading ? (
+                <MoonLoader
+                  color="#fff"
+                  loading={true}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              ) : (
+                "Edit Variable"
+              )}
+            </>
           </Button>
         </div>
       </div>

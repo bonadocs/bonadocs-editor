@@ -1,20 +1,16 @@
 "use client";
 import React, { createContext, useContext, useRef, useState } from "react";
 import { Collection, CollectionDataManager } from "@bonadocs/core";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/index";
-import { updateContractList } from "../store/list/listSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store/index";
+import { fetchCollectionContracts } from "@/store/contract/contractSlice";
 import { openDB } from "idb";
-import {
-  updateCollectionVariables,
-  fetchCollectionVariables,
-} from "@/store/variable/variableSlice";
+import { fetchCollectionVariables } from "@/store/variable/variableSlice";
 
 // Create the context props
 interface CollectionContextProps {
   initializeEditor: (uri: string) => Promise<CollectionDataManager>; // Update the type to include Promise
   collection: CollectionDataManager | null;
-  logButton: () => void;
   getCollection: () => CollectionDataManager | null;
 }
 
@@ -46,34 +42,28 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const loadCollection = async (uri: string) => {
     try {
       const collectionState = await checkLocalCollection(uri);
-
       if (collectionState) {
         const collectionIndex = (await openDB("collections", 1))
           .objectStoreNames[0];
-
-        console.log("d", collectionIndex);
 
         const collection = await Collection.createFromLocalStore(
           collectionIndex
         );
 
         collectionRef.current = collection.manager;
-        
       } else {
         const dbs = await window.indexedDB.databases();
         dbs.forEach((db) => {
           if (db.name) {
             window.indexedDB.deleteDatabase(db.name);
-            console.log(db.name);
           }
         });
         const collection = await Collection.createFromIPFS(uri);
+
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
       }
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   };
 
   const checkLocalCollection = async (uri: string) => {
@@ -86,31 +76,20 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       const collectionIndex = (await openDB("collections", 1))
         .objectStoreNames[0];
       const isValuePresent = value && collectionIndex ? true : false;
-      console.log((await openDB("collections", 1)).objectStoreNames[0]);
       return isValuePresent;
     } catch (err) {
-      console.log(err);
       return false;
     }
   };
 
   const getCollection = () => collectionRef.current;
-
-  const logButton = () => {
-    console.log("collection", collectionRef.current);
-  };
-
   const initializeEditor = async (uri: string) => {
-    console.log("started");
-
     await loadCollection(uri);
     if (!collectionRef.current) {
       throw new Error("Collection not loaded");
     }
-    
+    dispatch(fetchCollectionContracts(collectionRef.current));
     dispatch(fetchCollectionVariables(collectionRef.current));
-
-    console.log("collection latest",  collectionRef.current);
 
     return collectionRef.current;
   };
@@ -121,7 +100,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         initializeEditor: initializeEditor,
         collection: collectionRef.current,
         getCollection: getCollection,
-        logButton,
       }}
     >
       {children}

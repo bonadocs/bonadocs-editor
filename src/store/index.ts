@@ -1,15 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "./counter/counterSlice";
-import listReducer from "./list/listSlice";
 import methodReducer from "./method/methodSlice";
 import variableReducer from "./variable/variableSlice";
-
+import contractReducer from "./contract/contractSlice";
+import controlBoardReducer from "./controlBoard/controlBoardSlice";
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
-    list: listReducer,
     method: methodReducer,
     variable: variableReducer,
+    contract: contractReducer,
+    controlBoard: controlBoardReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

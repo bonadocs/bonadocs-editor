@@ -15,5 +15,8 @@
       color: var(--bonadocsTextWhite);
       background-color: var(--bonadocsTextCritical);
     }
+    &:disabled {
+      opacity: .2;
+    }
   }
 }

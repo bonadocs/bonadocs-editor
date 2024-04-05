@@ -1,5 +1,10 @@
 import React from "react";
-import { BonadocsEditorViewPlaygroundContractAccordion } from "./BonadocsEditorViewPlaygroundContractAccordion";
+import { useSelector } from "react-redux";
+import { BonadocsEditorViewPlaygroundContractAccordionList } from "./BonadocsEditorViewPlaygroundContractAccordion/BonadocsEditorViewPlaygroundContractAccordionList";
+import { RootState } from "@/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { setWriteMethod } from "@/store/controlBoard/controlBoardSlice";
 
 interface BonadocsEditorViewPlaygroundContractProps {
   className?: string;
@@ -7,11 +12,19 @@ interface BonadocsEditorViewPlaygroundContractProps {
 export const BonadocsEditorViewPlaygroundContract: React.FC<
   BonadocsEditorViewPlaygroundContractProps
 > = ({ className }) => {
+  const currentContract = useSelector(
+    (state: RootState) => state.contract.currentContract
+  );
+  const writeMethod = useSelector(
+    (state: RootState) => state.controlBoard.writeMethod
+  );
+  const dispatch: AppDispatch = useDispatch();
+
   return (
     <div className={className}>
       <div className="bonadocs__editor__dashboard__playground__contract__header">
         <h3 className="bonadocs__editor__dashboard__playground__contract__header__title">
-          fiatTokenV2
+          {currentContract.name}
         </h3>
         <svg
           className="bonadocs__editor__dashboard__playground__contract__header__addIcon"
@@ -37,16 +50,26 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
       </div>
       <div className="bonadocs__editor__dashboard__playground__contract__type">
         <div className="bonadocs__editor__dashboard__playground__contract__type__container">
-          <div className="bonadocs__editor__dashboard__playground__contract__type__container__item bona__bg">
+          <div
+            className={`bonadocs__editor__dashboard__playground__contract__type__container__item ${
+              writeMethod ? "" : "bona__active"
+            }`}
+            onClick={() => dispatch(setWriteMethod(false))}
+          >
             Read
           </div>
-          <div className="bonadocs__editor__dashboard__playground__contract__type__container__item">
+          <div
+            className={`bonadocs__editor__dashboard__playground__contract__type__container__item ${
+              writeMethod && "bona__active"
+            }`}
+            onClick={() => dispatch(setWriteMethod(true))}
+          >
             Write
           </div>
         </div>
       </div>
       <div className="bonadocs__editor__dashboard__playground__contract__list">
-        <BonadocsEditorViewPlaygroundContractAccordion />
+        <BonadocsEditorViewPlaygroundContractAccordionList />
       </div>
     </div>
   );

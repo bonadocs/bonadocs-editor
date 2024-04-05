@@ -6,29 +6,12 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { updateCollectionVariables } from "@/store/variable/variableSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
-
-const customStyles = {
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.80)",
-  },
-  content: {
-    display: "grid",
-    top: "40%",
-    left: "50%",
-    border: "none",
-    // overflowY: "hidden",
-    borderRadius: "8px",
-    right: "auto",
-    bottom: "auto",
-    marginRight: "-50%",
-    transform: "translate(-50%, -50%)",
-    height: "min-content",
-    minHeight: "20rem",
-    maxHeight: "70rem",
-    backgroundColor: "transparent",
-    width: "35%",
-  },
-};
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { customStyles } from "@/data/toast/toastConfig";
+import { toast } from "react-toastify";
+import { validateString } from "@/data/variables/variableValidation";
+import MoonLoader from "react-spinners/ClipLoader";
 
 interface BonadocsVariableAddModalProps {
   className?: string;
@@ -41,11 +24,11 @@ export const BonadocsVariableAddModal: React.FC<
   const [variableName, setVariableName] = useState<string>("");
   const [variableValue, setVariableValue] = useState<string>("");
   const [open, isOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
-  const { collection, getCollection } = useCollectionContext();
+  const { getCollection } = useCollectionContext();
 
   useEffect(() => {
-    // console.log(show);
     isOpen(show ?? false);
   }, [show]);
 
@@ -55,6 +38,42 @@ export const BonadocsVariableAddModal: React.FC<
     isOpen(!open);
     closeAddModal();
   };
+
+  const addVariable = async () => {
+    setLoading(true);
+    const newVariable = {
+      name: variableName,
+      value: variableValue,
+    };
+    if (!validateString(variableName) || !validateString(variableValue)) {
+      setLoading(false);
+      toast.error("Variable name or value cannot be empty");
+      return;
+    }
+    const existingVariable = variables.find(
+      (variable) => variable.name === variableName
+    );
+
+    if (existingVariable) {
+      setLoading(false);
+      toast.error("Variable already exists");
+      return;
+    }
+
+    await dispatch(
+      updateCollectionVariables({
+        collection: getCollection()!,
+        variable: newVariable,
+      })
+    );
+    setLoading(false);
+    closeModal();
+    toast("Variable successfully added.");
+  };
+
+  const variables = useSelector(
+    (state: RootState) => state.variable.collectionVariables
+  );
 
   return (
     <Modal
@@ -76,16 +95,16 @@ export const BonadocsVariableAddModal: React.FC<
           <path
             d="M18 6L6 18"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M6 6L18 18"
             stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </div>
@@ -95,7 +114,7 @@ export const BonadocsVariableAddModal: React.FC<
         <TextInput
           placeholder="name"
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setVariableName(event.target.value)
+            setVariableName(event.target.value.trim())
           }
           value={variableName}
         />
@@ -103,28 +122,30 @@ export const BonadocsVariableAddModal: React.FC<
         <TextInput
           placeholder="value"
           handleChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setVariableValue(event.target.value)
+            setVariableValue(event.target.value.trim())
           }
           value={variableValue}
         />
         <div className="modal__container__wrapper">
           <Button
+            disabled={loading}
             type="action"
-            onClick={async () => {
-              const newVariable = { name: variableName, value: variableValue };
-                await dispatch(
-                  updateCollectionVariables({
-                    collection: getCollection()!,
-                    variable: newVariable,
-                  })
-                );
-              
-              
-              // closeModal();
-            }}
+            onClick={() => addVariable()}
             className="modal__container__button"
           >
-            Add Variable
+            <>
+              {loading ? (
+                <MoonLoader
+                  color="#fff"
+                  loading={true}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              ) : (
+                "Add Variable"
+              )}
+            </>
           </Button>
         </div>
       </div>

@@ -1,11 +1,18 @@
 import React from 'react';
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export const BonadocsEditorViewPlaygroundMethodHeader: React.FC = () => {
-    // Component code goes here
+     const displayDoc = useSelector(
+       (state: RootState) => state.controlBoard.playgroundState
+     );
+  
     return (
       <div className="bonadocs__editor__dashboard__playground__method__header">
         <h3 className="bonadocs__editor__dashboard__playground__method__header__title">
-          Method Documentation
+          {displayDoc !== "interaction"
+            ? "Method Documentation"
+            : "Method params"}
         </h3>
         <svg
           className="bonadocs__editor__dashboard__playground__method__header__icon"

@@ -1,28 +1,18 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { MethodItem } from "@/data/dataTypes";
 
-
-
-interface MethodOutput {
-  output: string;
-}
-
-const initialState: MethodOutput = {
-  output: "",
+const initialState = {
+  methodItem: {} as MethodItem,
 };
 
 const methodSlice = createSlice({
-  name: "counter",
+  name: "method",
   initialState,
   reducers: {
-    // increment: (state) => {
-    //   state.value += 1;
-    // },
-    // decrement: (state) => {
-    //   state.value -= 1;
-    // },
-    // incrementByAmount: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
+    setMethodItem: (state, action: PayloadAction<MethodItem>) => {
+      state.methodItem = action.payload;
+      console.log(state.methodItem);
+    },
   },
   //   extraReducers: (builder) => {
   //     builder
@@ -46,6 +36,6 @@ const methodSlice = createSlice({
 //   }
 // );
 
-// export const { increment, decrement, incrementByAmount } = listSlice.actions;
+export const { setMethodItem } = methodSlice.actions;
 
 export default methodSlice.reducer;

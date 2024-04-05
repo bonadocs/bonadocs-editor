@@ -1,10 +1,43 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect, useRef } from "react";
+import { MethodItem } from "@/data/dataTypes";
+import { Tooltip } from "react-tooltip";
+import AccordionChildItem from "./AccordionChildItem";
 interface AccordionProps {
-  title?: string;
+  title: string;
+  options: MethodItem[];
+  id: string;
+  setActiveItem: (
+    name: string,
+    fragmentKey: string,
+    id: string,
+    readMethod: boolean
+  ) => void;
 }
-export const Accordion: React.FC<AccordionProps> = ({ title }) => {
+
+export const Accordion: React.FC<AccordionProps> = ({
+  title,
+  options,
+  id,
+  setActiveItem,
+}) => {
   const [open, isOpen] = useState(false);
+  const [isOverflown, setIsOverflown] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = ref.current!;
+
+    setIsOverflown(element.scrollWidth > element.clientWidth);
+    const handleResize = () => {
+      setIsOverflown(element.scrollWidth > element.clientWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <div>
       <div
@@ -28,16 +61,26 @@ export const Accordion: React.FC<AccordionProps> = ({ title }) => {
             fill="currentColor"
           />
         </svg>
-        <h3>{title}</h3>
+
+        <h3 className={`bonadocs__accordion__parent__text ${title}`} ref={ref}>
+          {title}
+        </h3>
+        {isOverflown && (
+          <Tooltip opacity={1} clickable anchorSelect={`.${title}`}>
+            {title}
+          </Tooltip>
+        )}
       </div>
       {open && (
         <div className="bonadocs__accordion__children">
-          <div className="bonadocs__accordion__children__item">getPool</div>
-          <div className="bonadocs__accordion__children__item">owner</div>
-          <div className="bonadocs__accordion__children__item">submit</div>
-          <div className="bonadocs__accordion__children__item">
-            setDisputeHandlerFee
-          </div>
+          {options.map((item, i) => (
+            <AccordionChildItem
+              item={item}
+              id={id}
+              key={item.fragmentKey}
+              setActiveItem={setActiveItem}
+            />
+          ))}
         </div>
       )}
     </div>

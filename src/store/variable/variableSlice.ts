@@ -37,7 +37,6 @@ const variableSlice = createSlice({
         value,
       }));
       state.collectionVariables = collectionVariables;
-      console.log("variable list", state.collectionVariables, action.payload);
     },
     getCollectionVariable: (
       state,
@@ -56,7 +55,6 @@ const variableSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(updateCollectionVariables.pending, (state) => {
-        console.log("updateVariable.pending");
       })
       .addCase(
         updateCollectionVariables.fulfilled,
@@ -72,7 +70,6 @@ const variableSlice = createSlice({
               value,
             })
           );
-          console.log(collectionVariables);
 
           state.collectionVariables = collectionVariables;
         }
@@ -80,7 +77,6 @@ const variableSlice = createSlice({
 
     builder
       .addCase(renameVariable.pending, () => {
-        console.log("renameVariable.pending");
       })
       .addCase(
         renameVariable.fulfilled,
@@ -96,7 +92,6 @@ const variableSlice = createSlice({
               value,
             })
           );
-          console.log(collectionVariables);
 
           state.collectionVariables = collectionVariables;
         }
@@ -104,7 +99,6 @@ const variableSlice = createSlice({
 
     builder
       .addCase(deleteVariable.pending, () => {
-        console.log("deleteVariable.pending");
       })
       .addCase(
         deleteVariable.fulfilled,
@@ -120,7 +114,6 @@ const variableSlice = createSlice({
               value,
             })
           );
-          console.log(collectionVariables);
 
           state.collectionVariables = collectionVariables;
         }
@@ -133,7 +126,6 @@ export const updateCollectionVariables = createAsyncThunk(
   async (variableData: VariableParams) => {
     const { collection, variable } = variableData;
     if (!collection) {
-      console.log("no collection");
 
       return;
     }
@@ -144,7 +136,7 @@ export const updateCollectionVariables = createAsyncThunk(
       );
       return collection;
     } catch (err) {
-      console.log(err);
+     
     }
   }
 );
@@ -158,7 +150,7 @@ export const renameVariable = createAsyncThunk(
       }
       const { collection, oldName, newName } = renameParams;
       collection.environmentManagerView.renameVariable(oldName, newName);
-      return collection
+      return collection;
     } catch (error) {
       console.error("renameVariable", error);
     }
@@ -181,6 +173,7 @@ export const deleteVariable = createAsyncThunk(
   }
 );
 
-export const { fetchCollectionVariables } = variableSlice.actions;
+export const { fetchCollectionVariables, getCollectionVariable } =
+  variableSlice.actions;
 
 export default variableSlice.reducer;

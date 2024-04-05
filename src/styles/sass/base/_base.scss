@@ -7,7 +7,7 @@ html {
   --bonadocsEditorBackground: #0f141b;
   --bonadocsEditorBorder: #20262e;
   --bonadocsTextWhite: #ffffff;
-  --bonadocsTextCritical: #B50037;
+  --bonadocsTextCritical: #b50037;
 }
 
 .bona__bg {
@@ -61,7 +61,7 @@ body {
 }
 
 .bona__btl {
-  margin-top: .8rem;
+  margin-top: 0.8rem;
 }
 
 .ma-l {
@@ -70,4 +70,16 @@ body {
 
 .ma-auto {
   margin-left: auto;
+}
+// override react-tooltip styles
+.react-tooltip {
+  border: 1px solid var(--bonadocsEditorBorder) !important;
+  background-color: var(--bonadocsEditorBackground) !important;
+  color: var(--bonadocsText) !important;
+}
+
+.styles-module_arrow__K0L3T {
+  border-bottom: 1px solid var(--bonadocsEditorBorder) !important;
+  border-right: 1px solid var(--bonadocsEditorBorder) !important;
+  background-color: var(--bonadocsEditorBackground) !important;
 }
