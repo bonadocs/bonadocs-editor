@@ -34,6 +34,7 @@ export interface BonadocsWidgetParamProps {
   name: string;
   type: string;
   overrideKey: string;
+  description: string;
 }
 
 export const transactionOverridesParams: BonadocsWidgetParamProps[] = [
@@ -41,21 +42,25 @@ export const transactionOverridesParams: BonadocsWidgetParamProps[] = [
     name: "From",
     type: "address",
     overrideKey: "from",
+    description: "The address that's initiating the transaction",
   },
   {
     name: "Value",
     type: "number",
     overrideKey: "value",
+    description: "The token value to be used in the transaction",
   },
 
   {
     name: "Gas",
     type: "number",
     overrideKey: "gasLimit",
+    description: "The amount of gas to be used in the transaction",
   },
   {
     name: "Gas price",
     type: "gwei",
     overrideKey: "gasPrice",
+    description: "The gas price to be used in the transaction",
   },
 ];

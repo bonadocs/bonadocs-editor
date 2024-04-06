@@ -11,29 +11,30 @@ export const BonadocsEditorViewPlaygroundMethodDocsPreview: React.FC<
 > = ({ markdownInput }) => {
   // Component logic here
   return (
-    <Markdown
-      className="bonadocs__editor__dashboard__playground__method__view__preview"
-      children={markdownInput}
-      components={{
-        code(props) {
-          const { children, className, node, ...rest } = props;
-          const { ref, ...otherProps } = rest;
-          const match = /language-(\w+)/.exec(className || "");
-          return match ? (
-            <SyntaxHighlighter
-              {...otherProps}
-              PreTag="div"
-              children={String(children).replace(/\n$/, "")}
-              language={match[1]}
-              style={dark}
-            />
-          ) : (
-            <code {...rest} className={className}>
-              {children}
-            </code>
-          );
-        },
-      }}
-    />
+    <div className="bonadocs__editor__dashboard__playground__method__view__preview">
+      <Markdown
+        children={markdownInput}
+        components={{
+          code(props) {
+            const { children, className, node, ...rest } = props;
+            const { ref, ...otherProps } = rest;
+            const match = /language-(\w+)/.exec(className || "");
+            return match ? (
+              <SyntaxHighlighter
+                {...otherProps}
+                PreTag="div"
+                children={String(children).replace(/\n$/, "")}
+                language={match[1]}
+                style={dark}
+              />
+            ) : (
+              <code {...rest} className={className}>
+                {children}
+              </code>
+            );
+          },
+        }}
+      />
+    </div>
   );
 };

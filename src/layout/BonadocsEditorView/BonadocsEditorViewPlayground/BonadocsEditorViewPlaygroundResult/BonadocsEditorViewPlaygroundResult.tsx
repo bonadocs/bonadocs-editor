@@ -3,8 +3,9 @@ import { useCollectionContext } from "@/context/CollectionContext";
 import { BonadocsEditorViewPlaygroundResultHeader } from "./BonadocsEditorViewPlaygroundResultHeader";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { BonadocsEditorViewPlaygroundMethodControlbarItem } from "../BonadocsEditorViewPlaygroundMethod/BonadocsEditorViewPlaygroundMethodControlbar/BonadocsEditorViewPlaygroundMethodControlbarItem";
+import { BonadocsEditorViewPlaygroundResultControlbar } from "./BonadocsEditorViewPlaygroundResultControlbar";
 import { BonadocsEditorViewPlaygroundTransactionParamsList } from "../BonadocsEditorViewPlaygroundMethod/BonadocsEditorViewPlaygroundTransactionParams/BonadocsEditorViewPlaygroundTransactionParamsList";
+import { BonadocsEditorViewPlaygroundResultView } from "./BonadocsEditorViewPlaygroundResultView";
 interface BonadocsEditorViewPlaygroundResultProps {
   className?: string;
 }
@@ -47,24 +48,7 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
           className="bona__bt"
         />
       ) : (
-        <div className="bonadocs__editor__dashboard__playground__method__controlbar">
-          <BonadocsEditorViewPlaygroundMethodControlbarItem
-            active={false}
-            onClick={() => {
-              // setPreview(false);
-            }}
-          >
-            Output
-          </BonadocsEditorViewPlaygroundMethodControlbarItem>
-          <BonadocsEditorViewPlaygroundMethodControlbarItem
-            active={true}
-            onClick={() => {
-              // setPreview(true);
-            }}
-          >
-            Log
-          </BonadocsEditorViewPlaygroundMethodControlbarItem>
-        </div>
+        <BonadocsEditorViewPlaygroundResultControlbar/>
       )}
       <div className="bonadocs__editor__dashboard__playground__result__docs">
         {displayDoc !== "interaction" ? (
@@ -82,7 +66,7 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
           </>
         ) : (
           <div>
-            <input type="text" placeholder="Search for a method" />
+            <BonadocsEditorViewPlaygroundResultView/>
           </div>
         )}
       </div>

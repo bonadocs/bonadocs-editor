@@ -69,8 +69,8 @@
       border: 1px solid var(--bonadocsEditorBorder);
       padding: 1.2rem;
       color: var(--bonadocsTextWhite);
-      margin-top: .4rem;
-      border-radius: .4rem;
+      margin-top: 0.4rem;
+      border-radius: 0.4rem;
     }
     &__input::placeholder {
       color: var(--bonadocsText);
@@ -80,6 +80,51 @@
     ::-ms-input-placeholder {
       /* Edge 12 -18 */
       color: var(--bonadocsText);
+    }
+    &__param {
+      &__item {
+        &__popover {
+          &__input {
+            border: 1px solid var(--bonadocsButtonBg);
+            background-color: var(--bonadocsInfoBg);
+            width: 100%;
+          }
+        }
+      }
+      &__list {
+        padding: 1.6rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-content: space-between;
+      }
+      &__item {
+        width: inherit;
+        margin-bottom: 0.8rem;
+        &__input {
+          width: 100%;
+        }
+
+        &__popover {
+          z-index: 4;
+        }
+
+        &__header {
+          display: flex;
+          justify-content: space-between;
+          h3 {
+            color: var(--bonadocsTextWhite);
+          }
+        }
+
+        &__description {
+          background-color: var(--bonadocsBackground);
+          width: 36rem;
+          white-space: nowrap;
+          padding: 0.8rem;
+          border-radius: 0.8rem;
+        }
+      }
     }
   }
 }

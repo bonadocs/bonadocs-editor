@@ -1,0 +1,44 @@
+.bonadocs {
+  &__editor {
+    &__codeblock {
+      margin: 1rem;
+      overflow-x: auto;
+      pre {
+        background-color: var(--bonadocsCode);
+        padding: 1rem;
+        border-radius: 0.4rem;
+        /* width: 100%; */
+        overflow-x: auto;
+        font-family: "Menlo", monospace !important;
+      }
+      &__inner {
+        font-family: "Menlo";
+        line-height: 1.3;
+        overflow: auto;
+        &__param {
+          color: var(--bonadocsCodeSecondary);
+        }
+        &__name {
+          color: var(--bonadocsCodeSecondary);
+        }
+        &__type {
+          color: var(--bonadocsCodeSecondary);
+        }
+        &__view {
+          color: var(--bonadocsCodePrimary);
+          font-style: italic;
+        }
+        &__function {
+          color: var(--bonadocsCodePrimary);
+          font-style: italic;
+        }
+        &__paranthesis {
+          color: var(--bonadocsCodeTertiary);
+          &__ml-1 {
+            margin-left: 0.7rem;
+          }
+        }
+      }
+    }
+  }
+}

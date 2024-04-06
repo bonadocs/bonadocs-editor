@@ -5,6 +5,7 @@ type TextInputProps = {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string | number;
   className?: string;
+  disabled?: boolean;
 };
 
 export const TextInput = ({
@@ -12,9 +13,11 @@ export const TextInput = ({
   handleChange,
   value,
   className,
+  disabled,
 }: TextInputProps) => {
   return (
     <input
+      disabled={disabled}
       placeholder={placeholder}
       value={value?.toString() || ""}
       onChange={handleChange}

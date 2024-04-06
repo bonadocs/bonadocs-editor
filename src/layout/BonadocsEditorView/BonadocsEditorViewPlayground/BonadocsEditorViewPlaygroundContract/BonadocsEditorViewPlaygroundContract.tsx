@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { BonadocsEditorViewPlaygroundContractAccordionList } from "./BonadocsEditorViewPlaygroundContractAccordion/BonadocsEditorViewPlaygroundContractAccordionList";
 import { RootState } from "@/store";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { setWriteMethod } from "@/store/controlBoard/controlBoardSlice";
-
+import { Tooltip } from "react-tooltip";
 interface BonadocsEditorViewPlaygroundContractProps {
   className?: string;
 }
@@ -20,10 +20,30 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
   );
   const dispatch: AppDispatch = useDispatch();
 
+  // const [isOverflown, setIsOverflown] = useState(false);
+
+  // const ref = useRef<HTMLDivElement>(null);
+
+  // useEffect(() => {
+  //   const element = ref.current!;
+
+  //   setIsOverflown(element.scrollWidth > element.clientWidth);
+  //   const handleResize = () => {
+  //     setIsOverflown(element.scrollWidth > element.clientWidth);
+  //   };
+  //   window.addEventListener("resize", handleResize);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
+
   return (
     <div className={className}>
       <div className="bonadocs__editor__dashboard__playground__contract__header">
-        <h3 className="bonadocs__editor__dashboard__playground__contract__header__title">
+        <h3
+          // ref={ref}
+          className={`bonadocs__editor__dashboard__playground__contract__header__title`}
+        >
           {currentContract.name}
         </h3>
         <svg

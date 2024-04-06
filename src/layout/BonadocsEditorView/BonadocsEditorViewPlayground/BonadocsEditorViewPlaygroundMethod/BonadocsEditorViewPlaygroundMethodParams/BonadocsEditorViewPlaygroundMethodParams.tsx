@@ -11,6 +11,8 @@ export const BonadocsEditorViewPlaygroundMethodParams: React.FC = () => {
     (state: RootState) => state.controlBoard.playgroundState
   );
 
+ 
+
   return (
     <div
       className={`bonadocs__editor__dashboard__playground__method__view ${
