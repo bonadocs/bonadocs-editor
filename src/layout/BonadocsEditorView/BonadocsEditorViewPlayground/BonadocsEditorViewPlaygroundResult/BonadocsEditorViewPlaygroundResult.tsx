@@ -6,17 +6,21 @@ import { RootState } from "@/store";
 import { BonadocsEditorViewPlaygroundResultControlbar } from "./BonadocsEditorViewPlaygroundResultControlbar";
 import { BonadocsEditorViewPlaygroundTransactionParamsList } from "../BonadocsEditorViewPlaygroundMethod/BonadocsEditorViewPlaygroundTransactionParams/BonadocsEditorViewPlaygroundTransactionParamsList";
 import { BonadocsEditorViewPlaygroundResultView } from "./BonadocsEditorViewPlaygroundResultView";
+import { BonadocsEditorViewPlaygroundResultTab } from "./BonadocsEditorViewPlaygroundResultTab";
 interface BonadocsEditorViewPlaygroundResultProps {
   className?: string;
 }
 export const BonadocsEditorViewPlaygroundResult: React.FC<
   BonadocsEditorViewPlaygroundResultProps
 > = ({ className }) => {
-  const { getCollection } = useCollectionContext();
+  const { getCollection, response } = useCollectionContext();
   const collectionName = getCollection()?.data.name ?? "";
   const collectionDescription = getCollection()?.data.description ?? "";
   const displayDoc = useSelector(
     (state: RootState) => state.controlBoard.playgroundState
+  );
+  const contract = useSelector(
+    (state: RootState) => state.contract.currentContract
   );
 
   return (
@@ -48,25 +52,30 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
           className="bona__bt"
         />
       ) : (
-        <BonadocsEditorViewPlaygroundResultControlbar/>
+        <BonadocsEditorViewPlaygroundResultControlbar />
       )}
       <div className="bonadocs__editor__dashboard__playground__result__docs">
         {displayDoc !== "interaction" ? (
           <>
             <div className="bonadocs__editor__dashboard__playground__result__docs__title">
-              Pancake V3 Protocol
+              {contract?.name}
             </div>
-            <div className="bonadocs__editor__dashboard__playground__result__docs__content">
+            {/* <div className="bonadocs__editor__dashboard__playground__result__docs__content">
               <p>
                 The PancakeSwap V3 protocol is a decentralized exchange (DEX)
                 built on the Binance Smart Chain (BSC). It consists of the
                 following contracts:
               </p>
-            </div>
+            </div> */}
           </>
         ) : (
           <div>
-            <BonadocsEditorViewPlaygroundResultView/>
+            {response.length !== 0 && (
+              <>
+                <BonadocsEditorViewPlaygroundResultTab />
+                <BonadocsEditorViewPlaygroundResultView response={response} />
+              </>
+            )}
           </div>
         )}
       </div>

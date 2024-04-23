@@ -3,10 +3,16 @@ import { Accordion } from "@/components/accordion/Accordion";
 import { ContractItem } from "@/data/dataTypes";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { setMethodItem } from "@/store/method/methodSlice";
+import {
+  setMethodItem,
+  setTransactionOverrides,
+} from "@/store/method/methodSlice";
 import { setActiveContract } from "@/store/contract/contractSlice";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
+import { useCollectionContext } from "@/context/CollectionContext";
+import { setMethodViewValue } from "@/store/method/methodSlice";
+import { DisplayResult, ExecutionResult } from "@bonadocs/core";
 interface BonadocsEditorViewPlaygroundContractAccordionItemProps {
   index: number;
   contractItem: ContractItem;
@@ -19,6 +25,8 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
   const writeMethod = useSelector(
     (state: RootState) => state.controlBoard.writeMethod
   );
+  const method = useSelector((state: RootState) => state.method.methodItem);
+  const { getCollection, emptyResponse } = useCollectionContext();
   function setActiveMethod(
     methodName: string,
     fragmentKey: string,
@@ -34,7 +42,14 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
         readMethod,
       })
     );
+    console.log("instances", contractItem.instances);
+
+    dispatch(setMethodViewValue({ collection: getCollection()! }));
     dispatch(setActiveContract(contractItem));
+    if (method.fragmentKey !== fragmentKey) {
+      dispatch(setTransactionOverrides([]));
+      emptyResponse();
+    }
   }
 
   const options = () => {

@@ -9,11 +9,12 @@ export const BonadocsEditorSidebarOptions: React.FC = () => {
     <div className="bonadocs__editor__sidebar__options">
       <BonadocsEditorSidebarSimulatorItem className="bonadocs__editor__sidebar__simulation" />
 
-      {SidebarOptions.map(({ name, icon }, index) => (
+      {SidebarOptions.map(({ name, icon, link }, index) => (
         <BonadocsEditorSidebarOptionsItem
           key={index}
           name={name}
           icon={icon}
+          link={link ?? ""}
           className="bonadocs__editor__sidebar__item"
         />
       ))}

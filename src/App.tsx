@@ -9,6 +9,8 @@ import { store } from "./store";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "./store";
 
 Modal.setAppElement("#root");
 function App() {
@@ -30,7 +32,9 @@ function App() {
             toastClassName="toast"
             className="toast"
           />
-          <BonadocsEditorContainer />
+          <PersistGate loading={null} persistor={persistor}>
+            <BonadocsEditorContainer />
+          </PersistGate>
         </CollectionProvider>{" "}
       </BrowserRouter>
     </Provider>

@@ -9,6 +9,7 @@ interface SidebarItemsProp {
   name: string;
   route: string;
   icon?: JSX.Element;
+  link?: string;
 }
 
 export const SidebarItems: SidebarItemsProp[] = [
@@ -30,14 +31,15 @@ export const SidebarItems: SidebarItemsProp[] = [
 ];
 
 export const SidebarOptions: SidebarItemsProp[] = [
-  {
-    name: "Settings",
-    route: "",
-    icon: React.createElement(SettingIcon),
-  },
+  // {
+  //   name: "Settings",
+  //   route: "",
+  //   icon: React.createElement(SettingIcon),
+  // },
   {
     name: "Help",
     route: "",
     icon: React.createElement(HelpIcon),
+    link: "https://bonadocs.com",
   },
 ];

@@ -1,9 +1,35 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { MethodItem } from "@/data/dataTypes";
+import {
+  FunctionFragmentView,
+  FragmentDisplayData,
+  CollectionDataManager,
+  TransactionOverrides,
+} from "@bonadocs/core";
+import { toast } from "react-toastify";
+import { REHYDRATE } from "redux-persist";
 
 const initialState = {
   methodItem: {} as MethodItem,
+  methodDisplayData: [] as FragmentDisplayData | undefined,
+  methodFunctionFragment: {} as FunctionFragmentView,
+  transactionOverrides: [] as TransactionOverrides[],
+  updateChange: false as boolean,
 };
+
+interface FragmentParams {
+  collection: CollectionDataManager;
+  value?: string;
+  path?: string;
+  addIndex?: number;
+  arrayIndex?: number;
+  indexInArray?: number;
+}
+
+interface UpdateChainIdParams {
+  collection: CollectionDataManager;
+  chainId: number;
+}
 
 const methodSlice = createSlice({
   name: "method",
@@ -11,31 +37,141 @@ const methodSlice = createSlice({
   reducers: {
     setMethodItem: (state, action: PayloadAction<MethodItem>) => {
       state.methodItem = action.payload;
-      console.log(state.methodItem);
+    },
+    setMethodDisplayData: (
+      state,
+      action: PayloadAction<FragmentDisplayData>
+    ) => {
+      state.methodDisplayData = action.payload;
+    },
+    setTransactionOverrides: (
+      state,
+      action: PayloadAction<TransactionOverrides[]>
+    ) => {
+      state.transactionOverrides = action.payload;
     },
   },
-  //   extraReducers: (builder) => {
-  //     builder
-  //       .addCase(incrementAsync.pending, () => {
-  //         console.log("incrementAsync.pending");
-  //       })
-  //       .addCase(
-  //         incrementAsync.fulfilled,
-  //         (state, action: PayloadAction<number>) => {
-  //           state.value += action.payload;
-  //         }
-  //       );
-  //   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(setMethodViewValue.pending, () => {})
+      .addCase(
+        setMethodViewValue.fulfilled,
+        (state, action: PayloadAction<any>) => {
+          if (action.payload) {
+            const functionFragment = action.payload;
+
+            // state.methodDisplayData = functionFragment?.displayData.slice();
+            console.log(functionFragment?.displayData.slice());
+            state.updateChange = !state.updateChange;
+            state.methodDisplayData = functionFragment?.displayData.slice();
+          }
+        }
+      );
+
+    builder
+      .addCase(getMethodViewValue.pending, () => {})
+      .addCase(
+        getMethodViewValue.fulfilled,
+        (state, action: PayloadAction<string | undefined>) => {}
+      );
+
+    builder.addCase(REHYDRATE, (state) => {});
+  },
 });
 
-// export const incrementAsync = createAsyncThunk(
-//   "counter/incrementAsync",
-//   async (amount: number) => {
-//     await new Promise((resolve) => setTimeout(resolve, 1000));
-//     return amount;
+export const setMethodViewValue = createAsyncThunk(
+  "method/setMethodViewValue",
+  async (setFragmentParams: FragmentParams, { getState }) => {
+    const state: any = getState();
+    const { collection, value, path, addIndex, indexInArray, arrayIndex } =
+      setFragmentParams;
+
+    const variableRegex = /^{{.*}}$/;
+    if (state.method.methodItem.contractId) {
+      try {
+        const functionFragment = await collection.getFunctionFragmentView(
+          state.method.methodItem.contractId!,
+          state.method.methodItem.fragmentKey
+        );
+
+        if (typeof value !== "undefined" && typeof path !== "undefined") {
+          if (variableRegex.test(value)) {
+            const collectionVariable =
+              collection.environmentManagerView.getVariable(value.slice(2, -2));
+            functionFragment?.setDataValue(collectionVariable ?? value, path);
+            !collectionVariable &&
+              toast.error("Non-existent variable in collection", {
+                toastId: "non-existent-id",
+              });
+          } else {
+            functionFragment?.setDataValue(value, path);
+          }
+        }
+
+        if (typeof addIndex !== "undefined") {
+          await functionFragment?.addArrayItem(addIndex);
+        }
+        if (
+          typeof arrayIndex !== "undefined" &&
+          typeof indexInArray !== "undefined"
+        ) {
+          console.log(arrayIndex, indexInArray);
+
+          await functionFragment?.deleteArrayItem(arrayIndex, indexInArray!);
+          console.log("deleted");
+          // const viewValue = functionFragment?.getDataValue(
+          //   state.method.methodDisplayData[12].path
+          // );
+
+          // console.log(
+          //   viewValue,
+          //   "viewValue main",
+          //   state.method.methodDisplayData
+          // );
+        }
+        return functionFragment;
+      } catch (err) {
+        console.log("err", err);
+      }
+    }
+  }
+);
+
+// export const value = async () => {
+//   const viewValue = await dispatch(getMethodViewValue({ collection, path }));
+//   return viewValue.payload as string;
+// };
+
+// export const getMethodViewValue = createAsyncThunk(
+//   "method/getMethodViewValue",
+//   async (setFragmentParams: FragmentParams, { getState }) => {
+//     const state: any = getState();
+
 //   }
 // );
 
-export const { setMethodItem } = methodSlice.actions;
+export const getMethodViewValue = createAsyncThunk(
+  "method/getMethodViewValue",
+  async (setFragmentParams: FragmentParams, { getState }) => {
+    const state: any = getState();
+    const { collection, path } = setFragmentParams;
+    if (state.method.methodItem.contractId) {
+      try {
+        const functionFragment = await collection.getFunctionFragmentView(
+          state.method.methodItem.contractId!,
+          state.method.methodItem.fragmentKey
+        );
+        const viewValue = functionFragment?.getDataValue(path);
+
+        return viewValue;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+);
+
+export const { setMethodItem, setTransactionOverrides, setMethodDisplayData } =
+  methodSlice.actions;
 
 export default methodSlice.reducer;

@@ -4,13 +4,17 @@ interface BonadocsEditorViewPlaygroundMethodControlbarItemProps {
   children?: React.ReactNode | string;
   active?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }
 export const BonadocsEditorViewPlaygroundMethodControlbarItem: React.FC<
   BonadocsEditorViewPlaygroundMethodControlbarItemProps
-> = ({ children, active, onClick }) => {
+> = ({ children, active, onClick, disabled }) => {
   // Your component code here
   return (
-    <div onClick={onClick}>
+    <div
+      aria-disabled={disabled}
+      onClick={onClick}
+    >
       <div
         className={`bonadocs__editor__dashboard__controlbar__item ${
           active && "bona__bg"

@@ -2,6 +2,7 @@ import React from "react";
 import { BonadocsEditorContracts } from "./BonadocsEditorContracts/BonadocsEditorContracts";
 import { BonadocsEditorVariables } from "./BonadocsEditorVariables/BonadocsEditorVariables";
 import { Route, Routes } from "react-router-dom";
+import { BonadocsEditorActions } from "./BonadocsEditorActions/BonadocsEditorActions";
 
 interface BonadocsEditorProps {
   className?: string;
@@ -23,9 +24,14 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
         path="/variables"
         element={<BonadocsEditorVariables className={className} />}
       />
+      <Route
+        path="/actions"
+        element={<BonadocsEditorActions className={className} />}
+      />
+      //{" "}
       {/* <Route path="/page-2" component={Page2} />
-            <Route path="/page-3" component={Page3} />
-            <Route component={NotFound} /> */}
+      //       <Route path="/page-3" component={Page3} />
+      //       <Route component={NotFound} /> */}
     </Routes>
   );
 };

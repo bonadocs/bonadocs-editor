@@ -21,6 +21,7 @@ export const BonadocsEditorViewPlaygroundContractAccordionList: React.FC<
           <BonadocsEditorViewPlaygroundContractAccordionItem
             index={index}
             contractItem={contract!}
+            key={index}
           />
         ))}
     </div>

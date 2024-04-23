@@ -9,3 +9,5 @@ export const validateString = (input: string) => {
     return false; // String is empty or contains only spaces
   }
 };
+
+export const variableRegex = /^{{.*}}$/;

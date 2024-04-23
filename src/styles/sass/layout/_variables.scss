@@ -15,6 +15,9 @@
         flex-grow: 1;
         height: auto;
         overflow-y: auto;
+        &__placeholder {
+        padding-top: 20%;
+        }
 
         &__items {
           flex-grow: 1;

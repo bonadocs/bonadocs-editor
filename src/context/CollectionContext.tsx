@@ -1,17 +1,41 @@
 "use client";
 import React, { createContext, useContext, useRef, useState } from "react";
-import { Collection, CollectionDataManager } from "@bonadocs/core";
+import {
+  Collection,
+  CollectionDataManager,
+  FunctionFragmentView,
+} from "@bonadocs/core";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/index";
 import { fetchCollectionContracts } from "@/store/contract/contractSlice";
 import { openDB } from "idb";
 import { fetchCollectionVariables } from "@/store/variable/variableSlice";
+import {
+  setConnected,
+  setChainId,
+  setProvider,
+} from "@/store/controlBoard/controlBoardSlice";
+import { ethers } from "ethers";
+import { useSelector } from "react-redux";
+import { selectButtonText } from "@/store/controlBoard/controlBoardSlice";
+import { toast } from "react-toastify";
+import { RootState } from "../store/index";
+import {
+  FunctionExecutor,
+  DisplayResult,
+  ExecutionResult,
+} from "@bonadocs/core";
 
 // Create the context props
 interface CollectionContextProps {
   initializeEditor: (uri: string) => Promise<CollectionDataManager>; // Update the type to include Promise
   collection: CollectionDataManager | null;
   getCollection: () => CollectionDataManager | null;
+  showResult: boolean;
+  executionButton: (overlayRef: HTMLDivElement) => void;
+  walletId: number | undefined;
+  response: Array<DisplayResult | ExecutionResult>;
+  emptyResponse: () => void;
 }
 
 // Create the context
@@ -37,33 +61,51 @@ interface CollectionProviderProps {
 export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   children,
 }) => {
+  const [showResult, setShowResult] = useState<boolean>(false);
   const collectionRef = useRef<CollectionDataManager | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const displayButton = useSelector(selectButtonText);
+  const methodItem = useSelector((state: RootState) => state.method.methodItem);
+  const [walletId, setWalletId] = useState<number>();
+  const writeMethod = useSelector(
+    (state: RootState) => state.controlBoard.writeMethod
+  );
+  const simulation = useSelector(
+    (state: RootState) => state.controlBoard.simulation
+  );
+  const fragmentKey = useSelector(
+    (state: RootState) => state.method.methodItem.fragmentKey
+  );
+  const [response, setResponse] = useState<
+    Array<DisplayResult | ExecutionResult >
+  >([]);
+  const chainId = useSelector((state: RootState) => state.controlBoard.chainId);
+  const transactionOverrides = useSelector(
+    (state: RootState) => state.method.transactionOverrides
+  );
+  const provider = new ethers.BrowserProvider((window as any).ethereum);
   const loadCollection = async (uri: string) => {
     try {
-      const collectionState = await checkLocalCollection(uri);
-      if (collectionState) {
-        const collectionIndex = (await openDB("collections", 1))
-          .objectStoreNames[0];
-
-        const collection = await Collection.createFromLocalStore(
-          collectionIndex
+      if (localStorage.getItem(uri)) {
+        let collection = await Collection.createFromLocalStore(
+          localStorage.getItem(uri)!
         );
-
         collectionRef.current = collection.manager;
       } else {
-        const dbs = await window.indexedDB.databases();
-        dbs.forEach((db) => {
-          if (db.name) {
-            window.indexedDB.deleteDatabase(db.name);
-          }
-        });
-        const collection = await Collection.createFromIPFS(uri);
+        let collection = await Collection.createFromURI(uri);
 
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
+
+        localStorage.setItem(uri, collectionRef.current?.data.id);
       }
-    } catch (err) {}
+    } catch (error) {
+      toast.error((error as Error).toString());
+    }
+  };
+
+  const emptyResponse = () => {
+    setResponse([]);
   };
 
   const checkLocalCollection = async (uri: string) => {
@@ -88,11 +130,194 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     if (!collectionRef.current) {
       throw new Error("Collection not loaded");
     }
+
+    initialConnection();
     dispatch(fetchCollectionContracts(collectionRef.current));
     dispatch(fetchCollectionVariables(collectionRef.current));
 
     return collectionRef.current;
   };
+
+  function handleAccountsChanged(accounts: string[]) {
+    if (accounts.length === 0) {
+      dispatch(setConnected(false));
+    } else if (accounts[0]) {
+      dispatch(setConnected(true));
+    }
+  }
+
+  function handleChainChanged(chainId: number) {
+    if (isNaN(chainId)) {
+      throw new Error("Invalid chain ID");
+    }
+    const wallet =
+      String(chainId).slice(0, 2) == "0x"
+        ? parseInt(String(chainId), 16)
+        : chainId;
+
+    setWalletId(Number(wallet));
+  }
+
+  async function checkConnection() {
+    (window as any).ethereum
+      ?.request({ method: "eth_accounts" })
+      .then((accounts: string[]) => handleAccountsChanged(accounts))
+      .catch(console.error);
+    (window as any).ethereum
+      ?.request({ method: "eth_chainId" })
+      .then((chainId: string) => handleChainChanged(Number(chainId)))
+      .catch(console.error);
+  }
+
+  function initialConnection() {
+    if (!(window as any).ethereum) {
+      return;
+    }
+
+    dispatch(setProvider(provider));
+
+    if ((window as any).ethereum) {
+      (window as any).ethereum?.on("accountsChanged", handleAccountsChanged);
+      (window as any).ethereum?.on("chainChanged", handleChainChanged);
+      checkConnection();
+    }
+
+    return () => {
+      (window as any).ethereum?.removeListener(
+        "accountsChanged",
+        handleAccountsChanged
+      );
+      (window as any).ethereum?.removeListener(
+        "chainChanged",
+        handleChainChanged
+      );
+    };
+  }
+
+  const validateInputs = (functionFragment: FunctionFragmentView) => {
+    const displayData = functionFragment?.displayData;
+
+    for (let i = 0; displayData && i < displayData.length; i++) {
+      const param = displayData[i]; // Add null check here
+      if (param?.baseType === "array" || param?.baseType === "tuple") {
+        // Add null check here
+        continue;
+      }
+
+      if (functionFragment?.getDataValue(param?.path) == null) {
+        // Add null check here
+        console.log(false);
+
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const connectWallet = async () => {
+    if (!(window as any).ethereum) {
+      return;
+    }
+
+    (window as any).ethereum
+      ?.request({ method: "eth_requestAccounts" })
+      .then(handleAccountsChanged)
+      .catch((err: Record<string, unknown>) => {
+        toast.error(err.toString());
+      });
+  };
+
+  const executor = async () => {
+    return await FunctionExecutor.createFunctionExecutor(
+      collectionRef.current!,
+      [fragmentKey]
+    );
+  };
+
+  const populateExecutionContext = (methodExecutor: FunctionExecutor) => {
+    for (let i = 0; i < transactionOverrides.length; i++) {
+      methodExecutor.getExecutionContext(i).overrides = transactionOverrides[i];
+    }
+  };
+
+  async function setSigner(methodExecutor: FunctionExecutor) {
+    const signer = await provider?.getSigner();
+    if (signer) {
+      methodExecutor.setSigner(signer);
+    }
+  }
+
+  const toggleOverlay = (toogleState: boolean, overlayRef: HTMLDivElement) => {
+    toogleState
+      ? (overlayRef.style.display = "flex")
+      : (overlayRef.style.display = "none");
+  };
+
+  async function executionButton(overlayRef: HTMLDivElement) {
+    emptyResponse()
+    switch (displayButton) {
+      case `Query`:
+        const methodExecutor = await executor();
+
+        methodExecutor.setActiveChainId(chainId!);
+
+        const functionFragment =
+          await collectionRef.current?.getFunctionFragmentView(
+            methodItem.contractId!,
+            methodItem.fragmentKey
+          );
+        console.log("overlayRef", overlayRef);
+
+        if (!validateInputs(functionFragment!)) {
+          toast.info("Please fill out all the required fields", {
+            toastId: "required-id",
+          });
+          return;
+        }
+        toggleOverlay(true, overlayRef);
+        if (
+          writeMethod &&
+          !simulation &&
+          walletId !== methodExecutor.activeChainId
+        ) {
+          toast.info("Please connect to the correct widget network");
+          toggleOverlay(false, overlayRef);
+          return;
+        }
+
+        try {
+          let res: Array<DisplayResult | ExecutionResult>;
+          populateExecutionContext(methodExecutor);
+          if (!simulation) {
+            writeMethod && (await setSigner(methodExecutor));
+
+            res = await methodExecutor.execute();
+          } else {
+            res = await methodExecutor.simulate();
+          }
+          toggleOverlay(false, overlayRef);
+          setResponse(
+            res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
+          );
+          console.log(
+            "res",
+            res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
+          );
+
+          setShowResult(true);
+        } catch (error) {
+          toggleOverlay(false, overlayRef);
+
+          toast.error((error as Error).message);
+        }
+
+        break;
+      case `Connect Wallet`:
+        connectWallet();
+        break;
+    }
+  }
 
   return (
     <CollectionContext.Provider
@@ -100,6 +325,11 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         initializeEditor: initializeEditor,
         collection: collectionRef.current,
         getCollection: getCollection,
+        showResult,
+        executionButton,
+        walletId,
+        response,
+        emptyResponse,
       }}
     >
       {children}

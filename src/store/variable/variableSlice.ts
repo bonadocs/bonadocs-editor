@@ -36,6 +36,7 @@ const variableSlice = createSlice({
         name,
         value,
       }));
+      
       state.collectionVariables = collectionVariables;
     },
     getCollectionVariable: (

@@ -9,7 +9,15 @@ html {
   --bonadocsTextWhite: #ffffff;
   --bonadocsTextCritical: #b50037;
   --bonadocsCodeSecondary: #82aaff;
-  --bonadocsInfoBg: #01173D;
+  --bonadocsInfoBg: #01173d;
+  --bonadocsCircleBg: #94a3b8;
+  --bonadocsSuccessBg: #e6f8ee;
+   --bonadocsCode: #292d3e;
+  --bonadocsCodePrimary: #d05b32;
+  --bonadocsCodeSecondary: #e2e7ef;
+  --bonadocsSuccessCircleBg: #015d2a;
+  --bonadocsErrorBg: #f8e6e6;
+  --bonadocsDeleteColor: #f25081;
 }
 
 .bona__bg {
@@ -84,4 +92,63 @@ body {
   border-bottom: 1px solid var(--bonadocsEditorBorder) !important;
   border-right: 1px solid var(--bonadocsEditorBorder) !important;
   background-color: var(--bonadocsEditorBackground) !important;
+}
+
+.bonadocs__circle {
+  background-color: var(--bonadocsCircleBg);
+  height: 0.3rem;
+  width: 0.3rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.bonadocs__circle__simulation {
+  background-color: var(--bonadocsText);
+  height: 0.4rem;
+  width: 0.4rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.connected__green {
+  background-color: var(--bonadocsSuccessBg) !important;
+  span {
+    color: var(--bonadocsSuccessCircleBg);
+  }
+}
+
+.error__red {
+  background-color: var(--bonadocsErrorBg) !important;
+  color: var(--bonadocsDeleteColor);
+  span {
+    color: var(--bonadocsDeleteColor);
+  }
+}
+
+.error__red__circle {
+  background-color: var(--bonadocsDeleteColor);
+}
+
+.connected__green__circle {
+  background-color: var(--bonadocsSuccessCircleBg);
+}
+
+.bonadocs__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  background: url(data:;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAAATSURBVBhXY2RgYNgHxGAAYuwDAA78AjwwRoQYAAAAAElFTkSuQmCC)
+    repeat scroll transparent\9;
+  color: white;
+  display: none;
+  z-index: 1;
+  align-items: center;
+}
+
+.bonadocs__overlay__img {
+  height: 3rem;
+  margin: 0 auto;
 }

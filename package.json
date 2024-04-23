@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@bonadocs/core": "^1.0.1-alpha.2",
+    "@bonadocs/core": "^1.0.3-alpha.7",
     "@floating-ui/dom": "^1.6.3",
     "@headlessui/react": "^1.7.18",
     "@reduxjs/toolkit": "^2.1.0",
@@ -27,6 +27,7 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-toastify": "^10.0.5",
     "react-tooltip": "^5.26.3",
+    "redux-persist": "^6.0.0",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
@@ -60,6 +61,7 @@
     "@types/node": "^20.10.7",
     "@types/react-modal": "^3.16.3",
     "@types/react-syntax-highlighter": "^15.5.11",
+    "@types/redux-persist": "^4.3.1",
     "sass": "^1.69.6"
   }
 }

@@ -1,9 +1,13 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState, useRef } from "react";
 import { Dropdown } from "@/components/dropdown/Dropdown";
 import { supportedChains } from "@bonadocs/core";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { Option } from "@/data/dataTypes";
+import { setChainId } from "@/store/controlBoard/controlBoardSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
+import { useCollectionContext } from "@/context/CollectionContext";
 
 interface BonadocsEditorViewControlBarItemProps {
   className?: string;
@@ -12,14 +16,20 @@ export const BonadocsEditorViewPlaygroundMethodParamsNetworks: React.FC<
   BonadocsEditorViewControlBarItemProps
 > = ({ className }) => {
   const method = useSelector((state: RootState) => state.method.methodItem);
+  const chain = useSelector((state: RootState) => state.controlBoard.chainId);
   const fetchedNetworks = method.instances;
+  const dispatch = useDispatch<AppDispatch>();
+  const networksRef = useRef<Option[]>([]);
+  const [networks, setNetworks] = useState<Option[]>([]);
 
   const updateNetwork = (event: ChangeEvent<HTMLSelectElement>) => {
     const chain = event.target.value;
-    // console.log(chain);
+    dispatch(setChainId(Number(chain)));
   };
 
   function networkList() {
+    console.log(fetchedNetworks, "fetchedNetworks");
+    
     const untrimedChains = fetchedNetworks?.map((networkId) =>
       Array.from(supportedChains).find(
         (chain) => chain[1].chainId === networkId.chainId
@@ -34,22 +44,36 @@ export const BonadocsEditorViewPlaygroundMethodParamsNetworks: React.FC<
         value: (chain && chain[1].chainId) ?? "",
       })
     );
-    
-    return currentChains;
+    networksRef.current = currentChains;
+    setNetworks(currentChains);
+   
+    const currentChain = currentChains.find(
+      (network) => network.value === chain
+    );
+
+    if (currentChain) {
+      dispatch(setChainId(Number(currentChain.value)));
+    } else {
+      if (fetchedNetworks) {
+        dispatch(setChainId(fetchedNetworks[0].chainId));
+      }
+    }
   }
 
   useEffect(() => {
-    
-    // console.log(networkList());
-    
-  }, [method.name]);
+    networkList();
+  }, [method.fragmentKey]);
 
-  return fetchedNetworks ? (
-    <Dropdown
-      options={networkList()}
-      updateId={updateNetwork}
-      selectedValue={fetchedNetworks[0].chainId}
-      className={`bonadocs__header__networkDropdown ${className}`}
-    />
-  ) : null;
+  return (
+    <>
+      {fetchedNetworks !== null && (
+        <Dropdown
+          options={networks}
+          updateId={updateNetwork}
+          selectedValue={chain!}
+          className={`bonadocs__header__networkDropdown ${className}`}
+        />
+      )}
+    </>
+  );
 };

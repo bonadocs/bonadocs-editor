@@ -112,6 +112,7 @@
         &__header {
           display: flex;
           justify-content: space-between;
+
           h3 {
             color: var(--bonadocsTextWhite);
           }
@@ -125,6 +126,28 @@
           border-radius: 0.8rem;
         }
       }
+      &__select {
+        text-decoration: none;
+        -webkit-appearance: none;
+        border: 1px solid var(--bonadocsEditorBorder);
+        padding: 1.2rem;
+        color: var(--bonadocsTextWhite);
+        background-color: var(--bonadocsSecondaryBg);
+        color: var(--bonadocsTextTertiary);
+        border-radius: 0.4rem;
+        margin-left: auto;
+        // font-size: 0.8rem;
+        padding: 0.8rem;
+        width: 100%;
+        /* min-width: 60%; */
+        background-color: var(--bonadocsSecondaryBg);
+        background-image: url("https://res.cloudinary.com/dfkuxnesz/image/upload/v1704123676/Stepper_uz65vf.svg");
+        background-repeat: no-repeat;
+        background-size: 20% 65%;
+        background-position-x: 110%;
+        background-position-y: 50%;
+      }
     }
   }
 }
+

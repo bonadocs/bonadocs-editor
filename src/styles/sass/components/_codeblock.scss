@@ -1,15 +1,17 @@
 .bonadocs {
   &__editor {
-    &__codeblock {
+    &__codeblock, code {
       margin: 1rem;
       overflow-x: auto;
       pre {
         background-color: var(--bonadocsCode);
         padding: 1rem;
         border-radius: 0.4rem;
-        /* width: 100%; */
+        font-size: 1.6rem;
+        height: 100%;
         overflow-x: auto;
         font-family: "Menlo", monospace !important;
+        font-weight: 700;
       }
       &__inner {
         font-family: "Menlo";

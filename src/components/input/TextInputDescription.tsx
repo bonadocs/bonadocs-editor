@@ -3,9 +3,11 @@ import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
 
 import { TextInput } from "@/components/input/TextInput";
+import { ContractParam } from "@bonadocs/core";
+
 interface TextInputDescriptionProps {
   description: string;
-  inputValue: string;
+  inputValue: ContractParam;
   name: string;
   handleChangeInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleChangeDocs: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -50,7 +52,7 @@ export const TextInputDescription: React.FC<TextInputDescriptionProps> = ({
                 className="bonadocs__editor__param__item__popover__input"
                 placeholder="from"
                 value={description}
-                handleChange={handleChangeInput}
+                handleChange={handleChangeDocs}
               />
             </div>
           </Popover.Panel>
@@ -59,9 +61,9 @@ export const TextInputDescription: React.FC<TextInputDescriptionProps> = ({
 
       <TextInput
         className="bonadocs__editor__dashboard__playground__transaction__param__item__input"
-        placeholder="from"
-        value={inputValue}
-        handleChange={handleChangeDocs}
+        placeholder={name}
+        value={String(inputValue)}
+        handleChange={handleChangeInput}
       />
     </div>
   );
