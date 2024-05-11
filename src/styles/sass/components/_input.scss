@@ -30,13 +30,34 @@
   left: 3px;
   right: 2px;
   bottom: 1.5px;
-  background-color: var(--bonadocsStatusBg);
+  // background-color: var(--bonadocsButtonBg);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
-
-.bonadocs__editor__status__input:checked + .bonadocs__editor__status__slider {
+.bonadocs__editor__status__input:checked
+  + .bonadocs__editor__status__slider:before {
   background-color: var(--bonadocsButtonBg);
+}
+
+.bonadocs__editor__status__input:checked
+  + .bonadocs__editor__status__slider:before {
+  background-color: var(--bonadocsButtonBg);
+}
+
+.bonadocs__editor__status__input:not(:checked)
+  + .bonadocs__editor__status__slider:before {
+  background-color: var(--bonadocsEditorBackground);
+}
+
+.bonadocs__editor__status__input:checked {
+  .bonadocs__editor__status__slider {
+    background-color: var(--bonadocsButtonBg);
+  }
+}
+
+.bonadocs__editor__status__input
+  + .bonadocs__editor__status__slider {
+  background-color: var(--bonadocsStatusBgLight);
 }
 
 /* .bonadocs__editor__status__input:not(:checked)  + .bonadocs__editor__status__slider {
@@ -150,4 +171,3 @@
     }
   }
 }
-

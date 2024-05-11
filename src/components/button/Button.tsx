@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import clsx from "clsx";
 
 interface ButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
   children: ReactElement | string;
   type?: "action" | "inertia" | "critical";
   className?: string;

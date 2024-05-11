@@ -11,31 +11,34 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store";
+import { AuthProvider } from "./context/AuthContext";
 
 Modal.setAppElement("#root");
 function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <CollectionProvider>
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-            toastClassName="toast"
-            className="toast"
-          />
-          <PersistGate loading={null} persistor={persistor}>
-            <BonadocsEditorContainer />
-          </PersistGate>
-        </CollectionProvider>{" "}
+        <AuthProvider>
+          <CollectionProvider>
+            <ToastContainer
+              position="top-right"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              toastClassName="toast"
+              className="toast"
+            />
+            <PersistGate loading={null} persistor={persistor}>
+              <BonadocsEditorContainer />
+            </PersistGate>
+          </CollectionProvider>{" "}
+        </AuthProvider>
       </BrowserRouter>
     </Provider>
   );

@@ -48,7 +48,7 @@ const controlBoardSlice = createSlice({
   },
 });
 
-export const selectButtonText = (state: RootState) => {
+export const methodButtonText = (state: RootState) => {
   return state.method.methodItem.readMethod
     ? `Query`
     : !state.controlBoard.simulation
@@ -56,6 +56,14 @@ export const selectButtonText = (state: RootState) => {
       ? `Query`
       : `Connect Wallet`
     : `Query`;
+};
+
+export const workflowButtonText = (state: RootState) => {
+  return state.controlBoard.simulation
+    ? `Run`
+    : state.controlBoard.connected
+    ? `Run`
+    : `Connect wallet`;
 };
 
 export const {

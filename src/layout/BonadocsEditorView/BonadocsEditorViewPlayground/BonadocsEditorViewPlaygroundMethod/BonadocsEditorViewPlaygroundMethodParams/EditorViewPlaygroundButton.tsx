@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/button/Button";
 import { RootState } from "@/store/index";
 import { useSelector } from "react-redux";
-import { selectButtonText } from "@/store/controlBoard/controlBoardSlice";
+import { methodButtonText } from "@/store/controlBoard/controlBoardSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
 
 interface EditorViewPlaygroundButtonProps {
@@ -12,11 +12,11 @@ interface EditorViewPlaygroundButtonProps {
 export const EditorViewPlaygroundButton: React.FC<
   EditorViewPlaygroundButtonProps
 > = ({ overlayRef }) => {
-  const buttonText = useSelector(selectButtonText);
+  const buttonText = useSelector(methodButtonText);
   const provider = useSelector(
     (state: RootState) => state.controlBoard.provider
   );
-  const { executionButton } = useCollectionContext()
+  const { executionButton } = useCollectionContext();
   return (
     <>
       {provider ? (
@@ -25,11 +25,8 @@ export const EditorViewPlaygroundButton: React.FC<
           type="action"
           children={buttonText}
           onClick={() => {
-             console.log(overlayRef);
-            
-            executionButton(overlayRef)
-          }
-          }
+            executionButton(overlayRef);
+          }}
         />
       ) : (
         <Button

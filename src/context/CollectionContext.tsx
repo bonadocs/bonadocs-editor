@@ -17,7 +17,10 @@ import {
 } from "@/store/controlBoard/controlBoardSlice";
 import { ethers } from "ethers";
 import { useSelector } from "react-redux";
-import { selectButtonText } from "@/store/controlBoard/controlBoardSlice";
+import {
+  methodButtonText,
+  workflowButtonText,
+} from "@/store/controlBoard/controlBoardSlice";
 import { toast } from "react-toastify";
 import { RootState } from "../store/index";
 import {
@@ -36,6 +39,7 @@ interface CollectionContextProps {
   walletId: number | undefined;
   response: Array<DisplayResult | ExecutionResult>;
   emptyResponse: () => void;
+  connectWallet: () => void;
 }
 
 // Create the context
@@ -64,7 +68,8 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const [showResult, setShowResult] = useState<boolean>(false);
   const collectionRef = useRef<CollectionDataManager | null>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const displayButton = useSelector(selectButtonText);
+  const displayButton = useSelector(methodButtonText);
+  const workflowButton = useSelector(workflowButtonText);
   const methodItem = useSelector((state: RootState) => state.method.methodItem);
   const [walletId, setWalletId] = useState<number>();
   const writeMethod = useSelector(
@@ -77,7 +82,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     (state: RootState) => state.method.methodItem.fragmentKey
   );
   const [response, setResponse] = useState<
-    Array<DisplayResult | ExecutionResult >
+    Array<DisplayResult | ExecutionResult>
   >([]);
   const chainId = useSelector((state: RootState) => state.controlBoard.chainId);
   const transactionOverrides = useSelector(
@@ -255,7 +260,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   };
 
   async function executionButton(overlayRef: HTMLDivElement) {
-    emptyResponse()
+    emptyResponse();
     switch (displayButton) {
       case `Query`:
         const methodExecutor = await executor();
@@ -330,6 +335,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         walletId,
         response,
         emptyResponse,
+        connectWallet: connectWallet,
       }}
     >
       {children}

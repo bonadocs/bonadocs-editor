@@ -1,3 +1,24 @@
+@mixin header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.8rem;
+  height: 4rem;
+  min-height: 4rem;
+  border-bottom: 1px solid var(--bonadocsEditorBorder);
+}
+
+@mixin header__title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--bonadocsSecondaryText);
+  line-height: 2.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
 .bonadocs {
   &__editor {
     &__view {
@@ -99,7 +120,88 @@
             }
           }
         }
+        &__action {
+          &__list {
+            display: flex;
+            flex-direction: column;
+            width: 18%;
+            height: 100%;
+            overflow-y: hidden;
+            border-right: 1px solid var(--bonadocsEditorBorder);
 
+            &__header {
+              @include header;
+              &__title {
+                @include header__title;
+              }
+            }
+            &__children {
+              // padding: 0.4rem 0.8rem 0.4rem 2.4rem;
+              &__item {
+                padding: 0.4rem 0;
+                cursor: pointer;
+                font-size: 1.3rem;
+                padding: 0.4rem 0.8rem 0.4rem 2.4rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                svg {
+                  width: 1.9rem;
+                }
+                &__active {
+                  background-color: var(--bonadocsBackground);
+                }
+              }
+            }
+          }
+          &__code {
+            width: 45%;
+            border-right: 1px solid var(--bonadocsEditorBorder);
+            display: flex;
+            flex-direction: column;
+            &__docs {
+              background-color: transparent;
+              color: var(--bonadocsText);
+              width: 100%;
+              height: 100%;
+              font-size: 1.4rem;
+              line-height: 3rem;
+              resize: none;
+              overflow-x: hidden;
+              padding: 1.6rem;
+            }
+
+            &__button {
+              width: 100%;
+              border-top: 1px solid var(--bonadocsEditorBorder);
+              display: flex;
+              justify-content: flex-end;
+              padding: 0.8rem;
+              &__item {
+                display: inherit;
+                align-items: center;
+                img {
+                  margin-right: 0.4rem;
+                }
+              }
+            }
+            &__view {
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+              height: 100%;
+              overflow: auto;
+            }
+          }
+          &__output {
+            width: 37%;
+            display: flex;
+            flex-direction: column;
+          }
+        }
         &__contract {
           display: flex;
           flex-direction: column;
@@ -108,22 +210,9 @@
           overflow-y: hidden;
           border-right: 1px solid var(--bonadocsEditorBorder);
           &__header {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 0.8rem;
-            height: 4rem;
-            min-height: 4rem;
-            border-bottom: 1px solid var(--bonadocsEditorBorder);
+            @include header;
             &__title {
-              font-size: 1.4rem;
-              font-weight: 600;
-              color: var(--bonadocsSecondaryText);
-              line-height: 2.4rem;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              cursor: pointer;
+              @include header__title;
             }
             &__addIcon {
               margin-left: auto;
@@ -151,9 +240,6 @@
             }
           }
           &__list {
-            flex-grow: 1;
-            height: auto;
-            overflow-y: auto;
           }
         }
         &__method {
@@ -182,8 +268,13 @@
             overflow-y: auto;
             display: flex;
             z-index: 1;
-            // min-height: 42%;
-            // min-width: 60rem;
+            &__simulate {
+              margin-top: 1rem;
+              div {
+                display: flex;
+                gap: 0.6rem;
+              }
+            }
             &__doc {
               display: none;
             }
@@ -224,6 +315,11 @@
             display: flex;
             padding-top: 0.8rem;
             font-size: 1.3rem;
+
+            &__cloud {
+              margin-left: auto;
+              margin-right: 1.6rem;
+            }
 
             &__item {
               padding: 1.2rem 4rem 0.4rem 4rem;
@@ -298,4 +394,12 @@
       }
     }
   }
+}
+
+.monaco-editor,
+.monaco-editor-background,
+.monaco-editor .margin,
+.monaco-editor div {
+  background-color: var(--bonadocsEditorBackground);
+  font-family: Menlo, Monaco, "Courier New", monospace;
 }

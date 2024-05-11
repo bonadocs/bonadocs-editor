@@ -57,14 +57,14 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
           <path
             d="M4 8L12 8"
             stroke="#95A8C0"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
           <path
             d="M8 12L8 4"
             stroke="#95A8C0"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
         </svg>
       </div>

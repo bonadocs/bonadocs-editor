@@ -1,0 +1,80 @@
+.bonadocs {
+  &__editor {
+    &__projects {
+      background-color: var(--bonadocsLoginBg);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1;
+      padding: 1.6rem;
+
+      &__inner {
+        padding: 0 12rem;
+        width: 100%;
+        display: grid;
+        &__header {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          margin-top: 7.2rem;
+          &__left {
+            &__title {
+              color: var(--bonadocsTextWhite);
+              font-size: 2.4rem;
+            }
+            &__description {
+              font-size: 1.6rem;
+              padding-top: 0.8rem;
+            }
+          }
+          &__right {
+            display: flex;
+            gap: 1rem;
+            &__button {
+              display: flex;
+              height: fit-content;
+              padding: 0.8rem 1.6rem !important;
+              align-items: center;
+              gap: 0.4rem;
+            }
+          }
+        }
+        &__list {
+          display: grid;
+          gap: 1.6rem;
+          grid-template-columns: repeat(auto-fill, minmax(40rem, 1fr));
+          height: -moz-min-content;
+          height: min-content;
+          max-height: 64vh;
+          overflow-y: auto;
+          margin-top: 4rem;
+          padding: 3rem 0;
+          &__item {
+            border-radius: 0.8rem;
+            padding: 1.6rem;
+            border: 1px solid var(--bonadocsProtocolBorder);
+            cursor: pointer;
+            height: min-content;
+            display: flex;
+            &__icon {
+                width: 10%;
+                height: 3.2rem;
+            }
+            &__info {
+                width: 80%;
+                &__title {
+                    font-size: 1.4rem;
+                }
+              &__description {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

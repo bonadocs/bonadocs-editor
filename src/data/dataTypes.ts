@@ -1,4 +1,4 @@
-import { TransactionOverrides} from "@bonadocs/core";
+import { TransactionOverrides } from "@bonadocs/core";
 export type VariableItem = {
   name: string;
   value?: string;
@@ -23,6 +23,11 @@ export type ContractItem = {
   methodItem: Array<MethodItem>;
   instances: Array<Instance>;
   uri?: string;
+};
+
+export type ActionItem = {
+  name: string;
+  documentation?: string;
 };
 
 export type playgroundState = "interaction" | "documentation";
@@ -66,4 +71,3 @@ export const transactionOverridesParams: BonadocsWidgetParamProps[] = [
     description: "The gas price to be used in the transaction",
   },
 ];
-

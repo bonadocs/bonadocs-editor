@@ -19,7 +19,7 @@ export const BonadocsEditorViewVariables: React.FC = () => {
       ) : (
         <BonadocsEditorViewPlaygroundPlaceholder
           title="There are no variables yet."
-          description="The varibales created in your project are shown here."
+          description="The variables created in your project are shown here."
           className="bonadocs__editor__variables__table__placeholder"
         />
       )}

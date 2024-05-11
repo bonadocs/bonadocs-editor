@@ -1,8 +1,8 @@
-import { ReactComponent as ActionIcon } from "@/data/sidebar/SidebarIcons/action.svg";
-import { ReactComponent as ContractIcon } from "@/data/sidebar/SidebarIcons/contract.svg";
-import { ReactComponent as VariableIcon } from "@/data/sidebar/SidebarIcons/variable.svg";
-import { ReactComponent as SettingIcon } from "@/data/sidebar/SidebarIcons/setting.svg";
-import { ReactComponent as HelpIcon } from "@/data/sidebar/SidebarIcons/help.svg";
+import { ReactComponent as ActionIcon } from "@/assets/SidebarIcons/action.svg";
+import { ReactComponent as ContractIcon } from "@/assets/SidebarIcons/contract.svg";
+import { ReactComponent as VariableIcon } from "@/assets/SidebarIcons/variable.svg";
+import { ReactComponent as SettingIcon } from "@/assets/SidebarIcons/setting.svg";
+import { ReactComponent as HelpIcon } from "@/assets/SidebarIcons/help.svg";
 import React from "react";
 
 interface SidebarItemsProp {

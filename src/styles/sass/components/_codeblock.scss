@@ -1,46 +1,121 @@
 .bonadocs {
   &__editor {
-    &__codeblock, code {
+    &__codeblock,
+    code {
       margin: 1rem;
       overflow-x: auto;
+      // background-color: var(--bonadocsEditorBorder);
       pre {
-        background-color: var(--bonadocsCode);
-        padding: 1rem;
-        border-radius: 0.4rem;
-        font-size: 1.6rem;
-        height: 100%;
-        overflow-x: auto;
-        font-family: "Menlo", monospace !important;
-        font-weight: 700;
+        // background-color: var(--bonadocsCode);
+        // padding: 1rem;
+        // border-radius: 0.4rem;
+        // font-size: 1.6rem;
+        // height: 100%;
+        // overflow-x: auto;
+        // font-family: "Menlo", monospace !important;
+        // font-weight: 700;
       }
-      &__inner {
-        font-family: "Menlo";
-        line-height: 1.3;
-        overflow: auto;
-        &__param {
-          color: var(--bonadocsCodeSecondary);
-        }
-        &__name {
-          color: var(--bonadocsCodeSecondary);
-        }
-        &__type {
-          color: var(--bonadocsCodeSecondary);
-        }
-        &__view {
-          color: var(--bonadocsCodePrimary);
-          font-style: italic;
-        }
-        &__function {
-          color: var(--bonadocsCodePrimary);
-          font-style: italic;
-        }
-        &__paranthesis {
-          color: var(--bonadocsCodeTertiary);
-          &__ml-1 {
-            margin-left: 0.7rem;
-          }
-        }
-      }
+      // &__inner {
+      //   font-family: "Menlo";
+      //   line-height: 1.3;
+      //   overflow: auto;
+      //   &__param {
+      //     color: var(--bonadocsCodeSecondary);
+      //   }
+      //   &__name {
+      //     color: var(--bonadocsCodeSecondary);
+      //   }
+      //   &__type {
+      //     color: var(--bonadocsCodeSecondary);
+      //   }
+      //   &__view {
+      //     color: var(--bonadocsCodePrimary);
+      //     font-style: italic;
+      //   }
+      //   &__function {
+      //     color: var(--bonadocsCodePrimary);
+      //     font-style: italic;
+      //   }
+      //   &__paranthesis {
+      //     color: var(--bonadocsCodeTertiary);
+      //     &__ml-1 {
+      //       margin-left: 0.7rem;
+      //     }
+      //   }
+      // }
     }
   }
+}
+
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: var(--bonadocsEditorBackground);
+  &:focus {
+    outline: none;
+  }
+}
+
+.hljs-built_in,
+.hljs-selector-tag,
+.hljs-section,
+.hljs-link {
+  color: #8be9fd;
+}
+
+.hljs-keyword {
+  color: #ff79c6;
+}
+
+.hljs,
+.hljs-subst {
+  color: #f8f8f2;
+}
+
+.hljs-title,
+.hljs-attr,
+.hljs-meta-keyword {
+  font-style: italic;
+  color: #50fa7b;
+}
+
+.hljs-string,
+.hljs-meta,
+.hljs-name,
+.hljs-type,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable {
+  color: #f1fa8c;
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion {
+  color: #6272a4;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-title,
+.hljs-section,
+.hljs-doctag,
+.hljs-type,
+.hljs-name,
+.hljs-strong {
+  font-weight: bold;
+}
+
+.hljs-literal,
+.hljs-number {
+  color: #bd93f9;
+}
+
+.hljs-emphasis {
+  font-style: italic;
 }

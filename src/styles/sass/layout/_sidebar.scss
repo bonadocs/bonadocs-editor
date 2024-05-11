@@ -33,7 +33,20 @@
         height: min-content;
         gap: 0.8rem;
         font-size: 1.4rem;
-        padding: 0.8rem;
+        border-radius: 10rem;
+        /* max-width: 250px; */
+        padding: 1rem;
+        position: relative;
+        background: linear-gradient(to right, #8748ee, #9d1770);
+        padding: 1px;
+        width: fit-content;
+        &__inner {
+          width: 100%;
+          gap: 1rem;
+          &__active {
+            background: linear-gradient(to right, #8748ee, #9d1770);
+          }
+        }
         &__title {
           color: white;
         }
@@ -67,3 +80,22 @@
     }
   }
 }
+
+// .border-gradient {
+//   border: 10px solid;
+//   border-image-slice: 1;
+//   border-width: 1px;
+//   border-radius: 10rem;
+// }
+// .border-gradient-purple {
+//   border-image-source: linear-gradient(
+//     to top left,
+//     #ff75c3,
+//     #ffa647,
+//     #ffe83f,
+//     #9fff5b,
+//     #70e2ff,
+//     #cd93ff
+//   );
+//   border-radius: 10rem !important;
+// }

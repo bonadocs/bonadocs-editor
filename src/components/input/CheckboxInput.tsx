@@ -15,6 +15,7 @@ export const CheckboxInput: React.FC<CheckboxInputProps> = ({
         className="bonadocs__editor__status__input"
         type="checkbox"
         defaultChecked={checked}
+        checked={checked}
         onChange={(event) =>
           handleChange(
             "checked" in event.target &&

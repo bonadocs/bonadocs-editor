@@ -60,7 +60,6 @@ const methodSlice = createSlice({
           if (action.payload) {
             const functionFragment = action.payload;
 
-            // state.methodDisplayData = functionFragment?.displayData.slice();
             console.log(functionFragment?.displayData.slice());
             state.updateChange = !state.updateChange;
             state.methodDisplayData = functionFragment?.displayData.slice();
@@ -86,7 +85,6 @@ export const setMethodViewValue = createAsyncThunk(
     const { collection, value, path, addIndex, indexInArray, arrayIndex } =
       setFragmentParams;
 
-    const variableRegex = /^{{.*}}$/;
     if (state.method.methodItem.contractId) {
       try {
         const functionFragment = await collection.getFunctionFragmentView(
@@ -95,17 +93,7 @@ export const setMethodViewValue = createAsyncThunk(
         );
 
         if (typeof value !== "undefined" && typeof path !== "undefined") {
-          if (variableRegex.test(value)) {
-            const collectionVariable =
-              collection.environmentManagerView.getVariable(value.slice(2, -2));
-            functionFragment?.setDataValue(collectionVariable ?? value, path);
-            !collectionVariable &&
-              toast.error("Non-existent variable in collection", {
-                toastId: "non-existent-id",
-              });
-          } else {
-            functionFragment?.setDataValue(value, path);
-          }
+          functionFragment?.setDataValue(value, path);
         }
 
         if (typeof addIndex !== "undefined") {
@@ -115,19 +103,7 @@ export const setMethodViewValue = createAsyncThunk(
           typeof arrayIndex !== "undefined" &&
           typeof indexInArray !== "undefined"
         ) {
-          console.log(arrayIndex, indexInArray);
-
           await functionFragment?.deleteArrayItem(arrayIndex, indexInArray!);
-          console.log("deleted");
-          // const viewValue = functionFragment?.getDataValue(
-          //   state.method.methodDisplayData[12].path
-          // );
-
-          // console.log(
-          //   viewValue,
-          //   "viewValue main",
-          //   state.method.methodDisplayData
-          // );
         }
         return functionFragment;
       } catch (err) {
@@ -136,19 +112,6 @@ export const setMethodViewValue = createAsyncThunk(
     }
   }
 );
-
-// export const value = async () => {
-//   const viewValue = await dispatch(getMethodViewValue({ collection, path }));
-//   return viewValue.payload as string;
-// };
-
-// export const getMethodViewValue = createAsyncThunk(
-//   "method/getMethodViewValue",
-//   async (setFragmentParams: FragmentParams, { getState }) => {
-//     const state: any = getState();
-
-//   }
-// );
 
 export const getMethodViewValue = createAsyncThunk(
   "method/getMethodViewValue",

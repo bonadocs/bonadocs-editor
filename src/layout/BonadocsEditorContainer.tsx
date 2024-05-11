@@ -49,7 +49,7 @@ export const BonadocsEditorContainer: React.FC = () => {
     <>
       {display && (
         <div className="bonadocs__editor">
-          <BonadocsEditorSidebar className="bonadocs__editor__sidebar" />
+          {/* <BonadocsEditorSidebar className="bonadocs__editor__sidebar" /> */}
           <BonadocsEditor className="bonadocs__editor__dashboard" />
         </div>
       )}{" "}

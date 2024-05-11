@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import methodReducer from "./method/methodSlice";
 import variableReducer from "./variable/variableSlice";
 import contractReducer from "./contract/contractSlice";
+import actionReducer from "./action/actionSlice";
 import controlBoardReducer from "./controlBoard/controlBoardSlice";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
@@ -18,6 +19,12 @@ const methodPersistConfig = {
   // safelist: ["methodItem", "methodDisplayData"],
 };
 
+const actionPersistConfig = {
+  key: "action",
+  storage,
+  safelist: ["currentAction"],
+};
+
 const contractPersistConfig = {
   key: "contract",
   storage,
@@ -29,6 +36,7 @@ const rootReducer = combineReducers({
   method: persistReducer(methodPersistConfig, methodReducer),
   variable: variableReducer,
   controlBoard: controlBoardReducer,
+  action: persistReducer(actionPersistConfig, actionReducer),
 });
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer);

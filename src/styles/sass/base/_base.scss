@@ -12,12 +12,14 @@ html {
   --bonadocsInfoBg: #01173d;
   --bonadocsCircleBg: #94a3b8;
   --bonadocsSuccessBg: #e6f8ee;
-   --bonadocsCode: #292d3e;
+  --bonadocsCode: #292d3e;
   --bonadocsCodePrimary: #d05b32;
   --bonadocsCodeSecondary: #e2e7ef;
   --bonadocsSuccessCircleBg: #015d2a;
   --bonadocsErrorBg: #f8e6e6;
   --bonadocsDeleteColor: #f25081;
+  --bonadocsLoginBg: #0f141b;
+  --bonadocsStatusBgLight: #b8c8ff;
 }
 
 .bona__bg {
@@ -72,6 +74,21 @@ body {
 
 .bona__btl {
   margin-top: 0.8rem;
+  border-radius: none !important;
+}
+
+.bona__mat {
+  border-top: 1px solid var(--bonadocsEditorBorder);
+  border-radius: none !important;
+}
+
+.bona__header {
+  border-bottom: 1px solid var(--bonadocsEditorBorder);
+  border-radius: 0.8rem 0.8rem 0 0 !important;
+}
+
+.bona__play__actions {
+  border-radius: 0 0 0.8rem 0.8rem !important;
 }
 
 .ma-l {
@@ -111,9 +128,9 @@ body {
 }
 
 .connected__green {
-  background-color: var(--bonadocsSuccessBg) !important;
+  // background-color: var(--bonadocsSuccessBg) !important;
   span {
-    color: var(--bonadocsSuccessCircleBg);
+    color: var(--bonadocsTextWhite);
   }
 }
 
@@ -130,7 +147,12 @@ body {
 }
 
 .connected__green__circle {
-  background-color: var(--bonadocsSuccessCircleBg);
+  background-image: url("https://res.cloudinary.com/dfkuxnesz/image/upload/v1715228394/Online_fklfri.svg");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  width: 2rem;
+  height: 2rem;
+  margin-right: .4rem;
 }
 
 .bonadocs__overlay {

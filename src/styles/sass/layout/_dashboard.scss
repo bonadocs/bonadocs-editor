@@ -9,14 +9,67 @@
         display: flex;
         align-items: center;
         padding: 1.6rem;
+        &__connect {
+          background: linear-gradient(to right, #8748ee, #9d1770);
+          padding: 1px;
+          width: -moz-fit-content;
+          width: fit-content;
+          font-size: 1.4rem;
+          border-radius: 10rem;
+          margin-left: 1.6rem;
+          button {
+            padding: .4rem 1.2rem;
+          }
+        }
+        &__status {
+          margin-left: 1.6rem;
+        }
         &__title {
           font-size: 1.4rem;
           font-weight: 600;
           color: var(--bonadocsSecondaryText);
           line-height: 2.4rem;
         }
+        &__view {
+          position: absolute;
+          z-index: 4;
+          &__wrapper {
+            display: grid;
+            border: 1px solid var(--bonadocsEditorBorder);
+            border-radius: 0.8rem;
+            margin-top: 1rem;
+            padding: 1.2rem;
+            width: 19.1rem;
+            background-color: var(--bonadocsEditorBackground);
+
+            cursor: pointer;
+            &:hover {
+              background-color: var(--bonadocsBackground);
+            }
+          }
+        }
+        &__profile {
+          display: flex;
+          align-items: center;
+          color: var(--bonadocsTextWhite);
+          margin-left: 1rem;
+          font-size: 1.3rem;
+          background-color: var(--bonadocsBackground);
+          border-radius: 10rem;
+          padding: 0.4rem 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          &__image {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 10rem;
+            margin-right: 0.5rem;
+          }
+        }
         &__share {
           margin-left: auto;
+          display: flex;
+          align-items: center;
         }
         &__networkDropdown {
           align-self: end;
@@ -65,5 +118,17 @@
         }
       }
     }
+  }
+}
+
+@-webkit-keyframes background {
+  0% {
+    background-image: url("http://sipi.usc.edu/database/preview/aerials/2.1.07.png");
+  }
+  33% {
+    background-image: url("http://sipi.usc.edu/database/preview/aerials/2.1.06.png");
+  }
+  100% {
+    background-image: url("http://sipi.usc.edu/database/preview/aerials/2.1.12.png");
   }
 }
