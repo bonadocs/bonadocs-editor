@@ -8,6 +8,7 @@ import {
 } from "@bonadocs/core";
 import { toast } from "react-toastify";
 import { REHYDRATE } from "redux-persist";
+import { RootState } from "..";
 
 const initialState = {
   methodItem: {} as MethodItem,
@@ -81,7 +82,7 @@ const methodSlice = createSlice({
 export const setMethodViewValue = createAsyncThunk(
   "method/setMethodViewValue",
   async (setFragmentParams: FragmentParams, { getState }) => {
-    const state: any = getState();
+    const state: RootState = getState() as RootState;
     const { collection, value, path, addIndex, indexInArray, arrayIndex } =
       setFragmentParams;
 
@@ -116,7 +117,7 @@ export const setMethodViewValue = createAsyncThunk(
 export const getMethodViewValue = createAsyncThunk(
   "method/getMethodViewValue",
   async (setFragmentParams: FragmentParams, { getState }) => {
-    const state: any = getState();
+    const state = getState() as RootState;
     const { collection, path } = setFragmentParams;
     if (state.method.methodItem.contractId) {
       try {

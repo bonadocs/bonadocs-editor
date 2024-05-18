@@ -1,4 +1,8 @@
-import { TransactionOverrides } from "@bonadocs/core";
+import {
+  CollectionDataManager,
+  TransactionOverrides,
+  CodeSnippet,
+} from "@bonadocs/core";
 export type VariableItem = {
   name: string;
   value?: string;
@@ -26,8 +30,22 @@ export type ContractItem = {
 };
 
 export type ActionItem = {
+  id: string;
   name: string;
   documentation?: string;
+  code: CodeSnippet[] ;
+};
+
+export type WorkflowItem = {
+  collection: CollectionDataManager;
+  workflowName?: string;
+  workflowId?: string;
+};
+
+export type WorkflowCodeItem = {
+  collection: CollectionDataManager;
+  workflowId: string;
+  code: string;
 };
 
 export type playgroundState = "interaction" | "documentation";

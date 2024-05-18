@@ -6,7 +6,7 @@ interface ButtonProps {
   children: ReactElement | string;
   type?: "action" | "inertia" | "critical";
   className?: string;
-  disabled?: boolean
+  disabled?: boolean;
 }
 
 const buttonType = {
@@ -20,16 +20,12 @@ export const Button: React.FC<ButtonProps> = ({
   children,
   type = "inertia",
   className,
-  disabled
+  disabled,
 }) => {
   return (
     <button
       disabled={disabled}
-      className={clsx(
-        "bonadocs__button",
-        type === "action" ? buttonType[type] : buttonType[type],
-        className
-      )}
+      className={clsx("bonadocs__button", buttonType[type], className)}
       id="ctn__button"
       onClick={onClick}
       type="button"

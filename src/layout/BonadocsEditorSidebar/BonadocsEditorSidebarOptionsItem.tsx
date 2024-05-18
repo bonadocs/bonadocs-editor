@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import { setPackagesView } from "@/store/controlBoard/controlBoardSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store";
+import { RootState } from "@/store";
 
 interface BonadocsEditorSidebarOptionsItemProps {
   className?: string;
@@ -9,13 +13,22 @@ interface BonadocsEditorSidebarOptionsItemProps {
 export const BonadocsEditorSidebarOptionsItem: React.FC<
   BonadocsEditorSidebarOptionsItemProps
 > = ({ icon, name, className, link }) => {
-  // Component logic goes here
+  const dispatch: AppDispatch = useDispatch();
+  const packagesView = useSelector(
+    (state: RootState) => state.controlBoard.packagesView
+  );
+
   return (
     <div
       onClick={() => {
         if (link) window.open(link, "_blank");
+        if (name === "Packages") {
+          dispatch(setPackagesView(!packagesView));
+        }
       }}
-      className={className}
+      className={`${className} ${
+        name === "Packages" && packagesView === true && "bona__active"
+      }`}
     >
       <div>{icon}</div>
       <div>{name}</div>

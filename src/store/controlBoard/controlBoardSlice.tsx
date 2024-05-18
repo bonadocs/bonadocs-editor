@@ -9,6 +9,7 @@ const initialState = {
   provider: null as BrowserProvider | null,
   chainId: null as number | null,
   connected: false as boolean,
+  packagesView: false as boolean,
 };
 
 const controlBoardSlice = createSlice({
@@ -26,6 +27,9 @@ const controlBoardSlice = createSlice({
     },
     setProvider: (state, action: PayloadAction<BrowserProvider | null>) => {
       state.provider = action.payload;
+    },
+    setPackagesView: (state, action: PayloadAction<boolean>) => {
+      state.packagesView = action.payload;
     },
     setConnected: (state, action: PayloadAction<boolean>) => {
       state.connected = action.payload;
@@ -69,6 +73,7 @@ export const workflowButtonText = (state: RootState) => {
 export const {
   setWriteMethod,
   setPlaygroundState,
+  setPackagesView,
   setSimulation,
   setProvider,
   setConnected,

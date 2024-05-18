@@ -1,14 +1,14 @@
 import { ReactComponent as ActionIcon } from "@/assets/SidebarIcons/action.svg";
 import { ReactComponent as ContractIcon } from "@/assets/SidebarIcons/contract.svg";
 import { ReactComponent as VariableIcon } from "@/assets/SidebarIcons/variable.svg";
-import { ReactComponent as SettingIcon } from "@/assets/SidebarIcons/setting.svg";
+import { ReactComponent as PackagesIcon } from "@/assets/SidebarIcons/packages.svg";
 import { ReactComponent as HelpIcon } from "@/assets/SidebarIcons/help.svg";
 import React from "react";
 
 interface SidebarItemsProp {
   name: string;
   route: string;
-  icon?: JSX.Element;
+  icon?: React.ReactNode;
   link?: string;
 }
 
@@ -16,7 +16,7 @@ export const SidebarItems: SidebarItemsProp[] = [
   {
     name: "Contracts",
     route: "/contracts",
-    icon: React.createElement(ContractIcon),
+    icon: React.createElement(ContractIcon) as React.ReactNode,
   },
   {
     name: "Actions",
@@ -36,6 +36,11 @@ export const SidebarOptions: SidebarItemsProp[] = [
   //   route: "",
   //   icon: React.createElement(SettingIcon),
   // },
+  {
+    name: "Packages",
+    route: "",
+    icon: React.createElement(PackagesIcon),
+  },
   {
     name: "Help",
     route: "",

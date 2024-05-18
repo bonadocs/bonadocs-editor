@@ -20,3 +20,25 @@ export const customStyles = {
     width: "35%",
   },
 };
+
+export const customSideStyles = {
+  overlay: {
+    backgroundColor: "rgba(0, 0, 0, 0.80)",
+  },
+  content: {
+    display: "grid",
+    top: "50%",
+    // bottom:"1%",
+    left: "82.4%",
+    border: "none",
+    // overflowY: "hidden",
+    borderRadius: "0px",
+    right: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    height: "100%",
+    backgroundColor: "transparent",
+    width: "35%",
+    padding: "0",
+  },
+};

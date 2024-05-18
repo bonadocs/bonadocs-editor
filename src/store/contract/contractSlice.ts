@@ -33,6 +33,8 @@ const contractSlice = createSlice({
           contract.contractId
         ).functions;
 
+        //  collection.getContractDetailsView().getDocText()
+
         const methodItem: Array<MethodItem> = [];
         contractMethods.forEach((method) => {
           methodItem.push({
@@ -55,7 +57,7 @@ const contractSlice = createSlice({
           uri: queryParams.get("uri")!,
         });
       });
-      console.log(collectionContracts, "collectionContracts");
+      
       
       state.collectionContracts = collectionContracts;
     },

@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { BonadocsEditorViewActionsModalAdd } from "../BonadocsEditorViewActionsModal/BonadocsEditorViewActionsModalAdd";
+import { BonadocsEditorActionsModalPackageAdd } from "../BonadocsEditorViewActionsModal/BonadocsEditorActionsModalPackage/BonadocsEditorActionsModalPackageAdd/BonadocsEditorActionsModalPackageAdd";
 
-interface BonadocsEditorViewActionsSidebarHeaderProps {
-  // Add any props you need here
+interface BonadocsEditorViewActionsPackagesSidebarHeaderProps {
+  // Add any props you need for the component here
 }
 
-export const BonadocsEditorViewActionsSidebarHeader: React.FC<
-  BonadocsEditorViewActionsSidebarHeaderProps
-> = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+export const BonadocsEditorViewActionsPackagesSidebarHeader: React.FC<
+  BonadocsEditorViewActionsPackagesSidebarHeaderProps
+> = (props) => {
+  const [openModal, setOpenModal] = useState<boolean>(true);
 
   return (
     <div className="bonadocs__editor__dashboard__playground__action__list__header">
@@ -16,7 +16,7 @@ export const BonadocsEditorViewActionsSidebarHeader: React.FC<
         // ref={ref}
         className={`bonadocs__editor__dashboard__playground__contract__header__title`}
       >
-        Actions
+        Packages
       </h3>
       <svg
         onClick={() => setOpenModal(!openModal)}
@@ -40,9 +40,9 @@ export const BonadocsEditorViewActionsSidebarHeader: React.FC<
           strokeLinejoin="round"
         />
       </svg>
-      <BonadocsEditorViewActionsModalAdd
+      <BonadocsEditorActionsModalPackageAdd
         show={openModal}
-        closeEditModal={() => setOpenModal(!openModal)}
+        closeAddModal={() => setOpenModal(!openModal)}
       />
     </div>
   );

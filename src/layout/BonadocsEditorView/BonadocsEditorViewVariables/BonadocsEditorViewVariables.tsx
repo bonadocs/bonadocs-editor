@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { BonadocsEditorViewVariablesHeader } from "./BonadocsEditorViewVariablesHeader";
 import { BonadocsEditorViewVariablesTable } from "./BonadocsEditorViewVariablesTable/BonadocsEditorViewVariablesTable";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/index";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/index";
 import { BonadocsEditorViewPlaygroundPlaceholder } from "../BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundPlaceholder";
 
 export const BonadocsEditorViewVariables: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const variables = useSelector(
     (state: RootState) => state.variable.collectionVariables
   );

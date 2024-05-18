@@ -39,9 +39,9 @@
         position: relative;
         background: linear-gradient(to right, #8748ee, #9d1770);
         padding: 1px;
-        width: fit-content;
+        margin-bottom: 0.8rem;
         &__inner {
-          width: 100%;
+          width: 100% !important;
           gap: 1rem;
           &__active {
             background: linear-gradient(to right, #8748ee, #9d1770);

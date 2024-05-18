@@ -52,24 +52,32 @@
           &__item {
             border-radius: 0.8rem;
             padding: 1.6rem;
-            border: 1px solid var(--bonadocsProtocolBorder);
+            
             cursor: pointer;
             height: min-content;
             display: flex;
+            &:hover {
+              background-color: var(--bonadocsBackground);
+            }
             &__icon {
-                width: 10%;
-                height: 3.2rem;
+              width: 5%;
+              height: 2.4rem;
+              margin-right: 0.8rem;
             }
             &__info {
-                width: 80%;
-                &__title {
-                    font-size: 1.4rem;
-                }
+              width: 90%;
+              &__title {
+                font-size: 1.4rem;
+                color: var(--bonadocsTextWhite);
+                font-weight: 600;
+              }
               &__description {
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 overflow: hidden;
                 width: 100%;
+                font-size: 1.4rem;
+                margin-top: 0.4rem;
               }
             }
           }

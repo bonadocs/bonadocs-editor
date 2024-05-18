@@ -1,8 +1,17 @@
 import { Button } from "@/components/button/Button";
 import { Logo } from "@/components/logo/Logo";
-import React from "react";
+import React, { useState } from "react";
+import { usePopper } from "react-popper";
+import { Popover } from "@headlessui/react";
 
 export const BonadocsEditorProjects: React.FC = () => {
+  let [referenceElement, setReferenceElement] = useState<any>();
+  let [popperElement, setPopperElement] = useState<any>();
+  let { styles, attributes } = usePopper(referenceElement, popperElement, {
+    placement: "bottom-end",
+    strategy: "absolute",
+  });
+
   return (
     <div className="bonadocs__editor__projects">
       <div className="bonadocs__editor__projects__inner">
@@ -48,22 +57,51 @@ export const BonadocsEditorProjects: React.FC = () => {
                 Uniswap V3 is a binary smart contract system comprised of many
                 libraries, which together make the Core and Periphery. Core
                 contracts provide fundamental safety guarantees for all parties
-                interacting with Uniswap. They define the logic of pool
-                generation, the pools themselves, and the interactions involving
-                the respective assets therein. Periphery contracts interact with
-                one or more Core contracts but are not part of the core. They
-                are designed to provide methods of interacting with the core
-                that increase clarity and user safety.
+                interacting with Uniswap.
               </h5>
             </div>
-            <img
-              className="bonadocs__editor__projects__inner__list__item__icon"
-              src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715442416/code-circle_zzekez.svg"
-            />
+            <Popover className="relative ma-auto">
+              <Popover.Button
+                className="bonadocs__editor__projects__inner__list__item__icon"
+                ref={setReferenceElement}
+              >
+                <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715454229/More_aiemyt.svg" />
+              </Popover.Button>
+              <Popover.Panel
+                ref={setPopperElement}
+                style={styles.popper}
+                {...attributes.popper}
+                className="bonadocs__editor__variables__table__item__popover"
+              >
+                {({ close }) => (
+                  <>
+                    <div className="bonadocs__editor__variables__table__item__popover__item">
+                      <div
+                        onClick={() => {
+                          // setEditWidget(!editWidget);
+                          close();
+                        }}
+                        className="bonadocs__editor__variables__table__item__popover__item__edit"
+                      >
+                        Edit Variable
+                      </div>
+                      <div
+                        onClick={() => {
+                          // setDeleteWidget(!deleteWidget);
+                          close();
+                        }}
+                        className="bonadocs__editor__variables__table__item__popover__item__delete"
+                      >
+                        Delete Variable
+                      </div>
+                    </div>
+
+                    <img src="/solutions.jpg" alt="" />
+                  </>
+                )}
+              </Popover.Panel>
+            </Popover>
           </div>
-          <div className="bonadocs__editor__projects__inner__list__item"></div>
-          <div className="bonadocs__editor__projects__inner__list__item"></div>
-          <div className="bonadocs__editor__projects__inner__list__item"></div>
         </div>
       </div>
     </div>
