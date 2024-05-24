@@ -19,11 +19,11 @@ export const BonadocsEditorViewActionsSidebarChildren: React.FC = () => {
 
   return (
     <div className="bonadocs__editor__dashboard__playground__action__list__children">
-      {actionItems.map((action) => (
+      {actionItems.map((action,i) => (
         <BonadocsEditorViewActionsSidebarChildrenItem
           name={action.name}
           id={action.id}
-          key={action.id}
+          key={i}
         />
       ))}
     </div>

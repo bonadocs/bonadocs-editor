@@ -13,29 +13,47 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
   className,
 }) => {
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={<BonadocsEditorContracts className={className} />}
-      />
-      <Route
-        path="/contracts"
-        element={<BonadocsEditorContracts className={className} />}
-      />
-      <Route
-        path="/variables"
-        element={<BonadocsEditorVariables className={className} />}
-      />
-      <Route
-        path="/actions"
-        element={<BonadocsEditorActions className={className} />}
-      />
-      <Route path="/login" element={<BonadocsEditorLogin />} />
-      <Route path="/projects" element={<BonadocsEditorProjects />} />
-      //{" "}
-      {/* <Route path="/page-2" component={Page2} />
+    <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <BonadocsEditorContracts className={className} />
+            </>
+          }
+        />
+        <Route
+          path="/contracts"
+          element={
+            <>
+              <BonadocsEditorContracts className={className} />
+            </>
+          }
+        />
+        <Route
+          path="/variables"
+          element={
+            <>
+              <BonadocsEditorVariables className={className} />
+            </>
+          }
+        />
+        <Route
+          path="/actions"
+          element={
+            <>
+              <BonadocsEditorActions className={className} />
+            </>
+          }
+        />
+        <Route path="/login" element={<BonadocsEditorLogin />} />
+        <Route path="/projects" element={<BonadocsEditorProjects />} />
+        //{" "}
+        {/* <Route path="/page-2" component={Page2} />
       //       <Route path="/page-3" component={Page3} />
       //       <Route component={NotFound} /> */}
-    </Routes>
+      </Routes>
+    </>
   );
 };

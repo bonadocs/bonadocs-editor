@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Popover } from "@headlessui/react";
 import { BonadocsVariableEditModal } from "../BonadocsVariablesModal/BonadocsVariableEditModal";
 import { BonadocsVariableDeleteModal } from "../BonadocsVariablesModal/BonadocsVariableDeleteModal";

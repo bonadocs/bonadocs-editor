@@ -20,20 +20,9 @@ export const BonadocsEditorViewsActionsPackagesSidebarChildrenItem: React.FC<
         className="bonadocs__editor__dashboard__playground__package__list__children__item__tab"
         type="package"
         color="neutral"
-        children="JS"
+        children="v.0.1.0"
       />
-      <Tab
-        className="bonadocs__editor__dashboard__playground__package__list__children__item__tab"
-        type="package"
-        color="yellow"
-        children="ESM"
-      />
-      <Tab
-        className="bonadocs__editor__dashboard__playground__package__list__children__item__tab"
-        type="package"
-        color="blue"
-        children="CJS"
-      />
+     
       <>
         <svg
         //   onClick={() => setOpenDeleteModal(!openDeleteModal)}

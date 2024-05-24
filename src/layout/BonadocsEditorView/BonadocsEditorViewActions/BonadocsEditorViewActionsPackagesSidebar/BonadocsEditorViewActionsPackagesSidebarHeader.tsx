@@ -8,7 +8,7 @@ interface BonadocsEditorViewActionsPackagesSidebarHeaderProps {
 export const BonadocsEditorViewActionsPackagesSidebarHeader: React.FC<
   BonadocsEditorViewActionsPackagesSidebarHeaderProps
 > = (props) => {
-  const [openModal, setOpenModal] = useState<boolean>(true);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   return (
     <div className="bonadocs__editor__dashboard__playground__action__list__header">
@@ -16,7 +16,7 @@ export const BonadocsEditorViewActionsPackagesSidebarHeader: React.FC<
         // ref={ref}
         className={`bonadocs__editor__dashboard__playground__contract__header__title`}
       >
-        Packages
+        Installed Packages
       </h3>
       <svg
         onClick={() => setOpenModal(!openModal)}

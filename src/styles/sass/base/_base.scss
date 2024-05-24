@@ -20,8 +20,8 @@ html {
   --bonadocsDeleteColor: #f25081;
   --bonadocsLoginBg: #0f141b;
   --bonadocsStatusBgLight: #b8c8ff;
-  --bonadocsYellow: #F6DC39;
-  --bonadocsBlue: #4278ED;
+  --bonadocsYellow: #f6dc39;
+  --bonadocsBlue: #4278ed;
 }
 
 .bona__bg {
@@ -39,6 +39,10 @@ html {
 
 .bona__transition {
   transform: rotate(90deg);
+}
+
+.ma-0 {
+  margin: 0rem !important;
 }
 
 body {
@@ -154,7 +158,7 @@ body {
   background-size: 100%;
   width: 2rem;
   height: 2rem;
-  margin-right: .4rem;
+  margin-right: 0.4rem;
 }
 
 .bonadocs__overlay {
@@ -177,3 +181,7 @@ body {
   margin: 0 auto;
 }
 
+.flex {
+  display: flex;
+  align-items: center;
+}

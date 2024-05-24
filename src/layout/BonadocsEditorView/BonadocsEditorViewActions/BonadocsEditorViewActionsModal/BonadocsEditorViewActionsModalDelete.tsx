@@ -64,10 +64,10 @@ export const BonadocsEditorViewActionsModalDelete: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Delete Variable</h3>
+        <h3 className="modal__container__title">Delete Action</h3>
         <div className="modal__container__text">
-          Are you certain about your decision to delete this variable:{" "}
-          {actionItem.name} ? Please be aware that this action cannot be undone.
+          Are you certain about your decision to delete this action:{" "}
+          {actionItem.name} ? Please be aware that this cannot be undone.
         </div>
         <div className="modal__container__wrapper">
           <Button
@@ -83,7 +83,7 @@ export const BonadocsEditorViewActionsModalDelete: React.FC<
             }}
             className="modal__container__button"
           >
-            Delete Variable
+            Delete Action
           </Button>
         </div>
       </div>

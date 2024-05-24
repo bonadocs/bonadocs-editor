@@ -9,9 +9,10 @@ export const BonadocsEditorActionsModalPackageAddList: React.FC = () => {
   );
   return (
     <>
-      {packageList.map((collectionPackage: { name: any }) => (
+      {packageList.map((collectionPackage: { name: any },i) => (
         <BonadocsEditorActionsModalPackageAddListItem
           name={collectionPackage.name}
+          key={i}
         />
       ))}
     </>

@@ -7,6 +7,11 @@ interface BonadocsEditorViewPlaygroundMethodStatusProps {
 
 export const BonadocsEditorViewPlaygroundMethodStatus: React.FC<
   BonadocsEditorViewPlaygroundMethodStatusProps
-> = ({ children, className }) => {
-  return <Tab className={className}>{children}</Tab>;
+  > = ({ children, className }) => {
+  
+    return (
+      <>
+        <Tab className={className}>{children}</Tab>
+      </>
+    ); 
 };

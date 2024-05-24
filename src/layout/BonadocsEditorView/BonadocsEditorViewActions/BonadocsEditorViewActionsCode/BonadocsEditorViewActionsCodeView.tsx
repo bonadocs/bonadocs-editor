@@ -22,6 +22,9 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
     currentAction.code[0]?.code
   );
 
+  console.log("currentAction", currentAction);
+  
+
   const updateActionCode = (code: string) => {
     setCodeContent(code);
     dispatch(
@@ -31,6 +34,7 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
         code,
       })
     );
+    
   };
 
   return (

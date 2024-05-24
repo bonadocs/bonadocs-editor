@@ -31,11 +31,14 @@ const actionSlice = createSlice({
           id: workflow.id,
           name: workflow.name,
           documentation: "",
-          code: workflow.execution as CodeSnippet[],
+          code: (workflow.execution as CodeSnippet[]).map((c) => ({
+            language: c.language,
+            code: c.code,
+          })),
         });
       });
       console.log("collectionActions", collectionActions);
-      state.collectionActions = collectionActions.slice();
+      state.collectionActions = collectionActions;
     },
   },
   extraReducers: (builder) => {
@@ -103,7 +106,14 @@ export const updateWorkflowActionCode = createAsyncThunk(
   "action/updateWorkflowActionCode",
   async (setWorkflowCodeParams: WorkflowCodeItem, { dispatch }) => {
     const { collection, workflowId, code } = setWorkflowCodeParams;
-    console.log("workflowId", workflowId, "code", code, "collection", collection);
+    console.log(
+      "workflowId",
+      workflowId,
+      "code",
+      code,
+      "collection",
+      collection
+    );
     try {
       await collection.workflowManagerView.setWorkflowCode(
         workflowId,
@@ -111,7 +121,6 @@ export const updateWorkflowActionCode = createAsyncThunk(
         code
       );
       dispatch(getCollectionActions(collection));
-     
     } catch (err) {
       toast.error(`${err} Error updating action code`);
     }

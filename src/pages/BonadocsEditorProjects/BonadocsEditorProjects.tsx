@@ -32,6 +32,7 @@ export const BonadocsEditorProjects: React.FC = () => {
                 Import Project
               </>
             </Button>
+
             <Button
               type="action"
               className="bonadocs__editor__projects__inner__header__right__button"
