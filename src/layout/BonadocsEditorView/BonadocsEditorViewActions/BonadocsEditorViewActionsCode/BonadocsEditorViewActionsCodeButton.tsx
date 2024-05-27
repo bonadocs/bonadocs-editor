@@ -3,7 +3,7 @@ import { Button } from "@/components/button/Button";
 import { ReactComponent as RunIcon } from "@/assets/action/run.svg";
 import { workflowButtonText } from "@/store/controlBoard/controlBoardSlice";
 import { useSelector } from "react-redux";
-
+import { useCollectionContext } from "@/context/CollectionContext";
 interface BonadocsEditorViewActionsCodeButtonProps {
   // Add your props here
 }
@@ -11,13 +11,20 @@ interface BonadocsEditorViewActionsCodeButtonProps {
 export const BonadocsEditorViewActionsCodeButton: React.FC<
   BonadocsEditorViewActionsCodeButtonProps
 > = (props) => {
+  const { executionWorkflowButton, getCollection } = useCollectionContext();
   const buttonText = useSelector(workflowButtonText);
   return (
     <div className="bonadocs__editor__dashboard__playground__action__code__button">
       <Button
         className="bonadocs__editor__dashboard__playground__action__code__button__item"
         type="action"
-        onClick={() => {}}
+        onClick={() => {
+           executionWorkflowButton();
+          // getCollection()?.valueManagerView.removeLibrary(
+          //   "js",
+          //   `ethers@6.12.1`
+          // );
+        }}
       >
         <>
           {buttonText === "Run" && (

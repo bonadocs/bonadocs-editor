@@ -1,62 +1,46 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { TextInput } from "@/components/input/TextInput";
 import { Button } from "@/components/button/Button";
+import { customStyles } from "@/data/toast/toastConfig";
+import { ActionItem } from "@/data/dataTypes";
+import MoonLoader from "react-spinners/ClipLoader";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
+import { SelectInput } from "@/components/input/SelectInput";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { customStyles } from "@/data/toast/toastConfig";
 import { useCollectionContext } from "@/context/CollectionContext";
-import { ActionItem } from "@/data/dataTypes";
-import { toast } from "react-toastify";
-import MoonLoader from "react-spinners/ClipLoader";
-import { validateString } from "@/data/variables/variableValidation";
-import { renameWorkflowAction } from "@/store/action/actionSlice";
+import { setCurrentPackageVersion } from "@/store/package/packageSlice";
 
-interface BonadocsEditorViewActionsModalEditProps {
+interface BonadocsEditorActionsModalPackageEditProps {
   className?: string;
   show?: boolean;
   closeEditModal: () => void;
-  actionItem: ActionItem;
+  actionItem?: ActionItem;
+  selectedValue: string;
 }
-export const BonadocsEditorViewActionsModalEdit: React.FC<
-  BonadocsEditorViewActionsModalEditProps
-> = ({ show, closeEditModal, actionItem }) => {
-  const [actionName, setActionName] = useState<string>(actionItem.name);
+export const BonadocsEditorActionsModalPackageEdit: React.FC<
+  BonadocsEditorActionsModalPackageEditProps
+> = ({ show, closeEditModal, actionItem, selectedValue }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, isOpen] = useState<boolean>(false);
+  const [selectedPackage, setSelectedPackage] = useState<string>(selectedValue);
   const dispatch: AppDispatch = useDispatch();
-
   const { getCollection } = useCollectionContext();
+  const collectionPackages = useSelector(
+    (state: RootState) => state.package.collectionPackages
+  );
 
-  const editAction = async () => {
+  const editPackage = async () => {
     setLoading(true);
 
-    if (!validateString(actionName)) {
-      setLoading(false);
-      toast.error("Action name is invalid");
-      return;
-    }
-
-    if (actionItem.name !== actionName) {
-      await dispatch(
-        renameWorkflowAction({
-          collection: getCollection()!,
-          workflowName: actionName,
-          workflowId: actionItem.id,
-        })
-      );
-    }
     setLoading(false);
-    closeModal();
+    // closeModal();
   };
 
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
-
-  useEffect(() => {
-    setActionName(actionItem.name);
-  }, [actionItem]);
 
   const closeModal = () => {
     isOpen(!open);
@@ -71,7 +55,7 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
       isOpen={open}
       onRequestClose={closeModal}
     >
-      <div className="modal__close" onClick={closeModal}>
+      <div className="modal__close" onClick={() => closeModal()}>
         <svg
           className="modal__close__img"
           width="24"
@@ -97,21 +81,29 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Edit Action</h3>
-        <div className="modal__container__text">Action name</div>
-        <TextInput
-          placeholder="name"
-          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setActionName(event.target.value);
+        <h3 className="modal__container__title">Edit Package Version</h3>
+        <div className="modal__container__text">Package Version</div>
+        <SelectInput
+          handleInputChange={(item) => {
+            setSelectedPackage(item.target.value);
           }}
-          value={actionName}
+          options={collectionPackages[0].versionList}
+          selectedValue={selectedValue}
         />
 
         <div className="modal__container__wrapper">
           <Button
             disabled={loading}
             type="action"
-            onClick={() => editAction()}
+            onClick={() => {
+              dispatch(
+                setCurrentPackageVersion({
+                  collection: getCollection()!,
+                  packageVersion: selectedPackage,
+                })
+              );
+              closeEditModal();
+            }}
             className="modal__container__button"
           >
             <>
@@ -124,7 +116,7 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
                   data-testid="loader"
                 />
               ) : (
-                "Edit Action"
+                "Edit Package"
               )}
             </>
           </Button>

@@ -14,6 +14,7 @@ export type MethodItem = {
   readMethod: boolean;
   contractId?: string;
   instances?: Array<Instance>;
+  docs?: string;
 };
 
 export type Instance = {
@@ -27,12 +28,19 @@ export type ContractItem = {
   methodItem: Array<MethodItem>;
   instances: Array<Instance>;
   uri?: string;
+  docs?: string;
+};
+
+export type ContractItemDocs = {
+  collection: CollectionDataManager;
+  docs?: string;
+  contractId: string;
 };
 
 export type ActionItem = {
   id: string;
   name: string;
-  documentation?: string;
+  documentation?: string | undefined;
   code: CodeSnippet[] ;
 };
 
@@ -40,6 +48,7 @@ export type WorkflowItem = {
   collection: CollectionDataManager;
   workflowName?: string;
   workflowId?: string;
+  workflowDocs?: string
 };
 
 export type WorkflowCodeItem = {

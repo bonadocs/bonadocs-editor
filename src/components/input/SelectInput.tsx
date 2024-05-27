@@ -24,7 +24,7 @@ export const SelectInput: React.FC<SelectInputProps> = ({
     >
       {options.map((option, i) => (
         <option
-          key={option.value}
+          key={i}
           value={option.value}
           {...(i === selectedIndex ? { selected: true } : {})}
         >

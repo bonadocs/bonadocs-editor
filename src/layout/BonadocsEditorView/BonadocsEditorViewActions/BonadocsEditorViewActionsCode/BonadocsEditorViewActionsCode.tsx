@@ -10,6 +10,9 @@ export const BonadocsEditorViewActionsCode: React.FC = () => {
   const currentAction = useSelector(
     (state: RootState) => state.action.currentAction
   );
+  const cloudIcon = useSelector(
+    (state: RootState) => state.controlBoard.cloudIcon
+  );
   const [currentCode, setCurrentCode] = useState<boolean>(true);
 
   return (
@@ -29,10 +32,10 @@ export const BonadocsEditorViewActionsCode: React.FC = () => {
             >
               Documentation
             </BonadocsEditorViewPlaygroundMethodControlbarItem>
-            <img
+            {cloudIcon && <img
               className="bonadocs__editor__dashboard__playground__method__controlbar__cloud"
               src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715148623/cloud-off_xqq3nc.svg"
-            />
+            />}
           </div>
 
           {currentCode ? (

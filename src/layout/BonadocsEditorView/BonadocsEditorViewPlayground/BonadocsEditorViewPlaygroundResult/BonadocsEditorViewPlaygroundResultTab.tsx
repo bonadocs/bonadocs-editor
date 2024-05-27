@@ -19,7 +19,7 @@ export const BonadocsEditorViewPlaygroundResultTab: React.FC<
     <div
       className={`bonadocs__tab ${statusClass} bonadocs__tab__result__status`}
     >
-      <span className={`bonadocs__circle ${circleClass}`}></span>
+      <span className={`${circleClass}`}></span>
       <span>{hasError ? "Execution Failed" : "Execution Successful"}</span>
     </div>
   );

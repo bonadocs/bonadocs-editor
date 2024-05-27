@@ -2,6 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { playgroundState } from "@/data/dataTypes";
 import { BrowserProvider } from "ethers";
 import { RootState } from "@/store";
+import { set } from "lodash";
 const initialState = {
   writeMethod: false as boolean,
   playgroundState: "interaction" as playgroundState,
@@ -10,6 +11,7 @@ const initialState = {
   chainId: null as number | null,
   connected: false as boolean,
   packagesView: false as boolean,
+  cloudIcon: false as boolean,
 };
 
 const controlBoardSlice = createSlice({
@@ -36,6 +38,9 @@ const controlBoardSlice = createSlice({
     },
     setChainId: (state, action: PayloadAction<number | null>) => {
       state.chainId = action.payload;
+    },
+    setCloudIcon: (state, action: PayloadAction<boolean>) => {
+      state.cloudIcon = action.payload;
     },
     toggleOverlay: (
       state,
@@ -67,7 +72,7 @@ export const workflowButtonText = (state: RootState) => {
     ? `Run`
     : state.controlBoard.connected
     ? `Run`
-    : `Connect wallet`;
+    : `Run`; // connect wallet state will be here
 };
 
 export const {
@@ -79,6 +84,7 @@ export const {
   setConnected,
   setChainId,
   toggleOverlay,
+  setCloudIcon
 } = controlBoardSlice.actions;
 
 export default controlBoardSlice.reducer;

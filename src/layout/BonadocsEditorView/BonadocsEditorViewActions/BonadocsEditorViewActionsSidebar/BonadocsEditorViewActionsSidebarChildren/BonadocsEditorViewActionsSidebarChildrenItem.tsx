@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { ReactComponent as EditIcon } from "@/assets/action/edit.svg";
 import { BonadocsEditorViewActionsModalEdit } from "../../BonadocsEditorViewActionsModal/BonadocsEditorViewActionsModalEdit";
 import { BonadocsEditorViewActionsModalDelete } from "../../BonadocsEditorViewActionsModal/BonadocsEditorViewActionsModalDelete";
 interface BonadocsEditorViewActionsSidebarChildrenItemProps {
@@ -22,6 +23,8 @@ export const BonadocsEditorViewActionsSidebarChildrenItem: React.FC<
     collectionActions.map((action) => {
       if (action.id === id) {
         dispatch(setActiveAction(action));
+        console.log(action);
+        
       }
     });
   };
@@ -46,13 +49,11 @@ export const BonadocsEditorViewActionsSidebarChildrenItem: React.FC<
       {name}
       {id === currentAction.id && (
         <>
-          <img
-            onClick={() => setOpenModal(!openModal)}
-            className="bonadocs__editor__dashboard__playground__action__list__children__item__img"
+          <EditIcon
             width="19"
             height="19"
-            src="https://img.icons8.com/external-anggara-basic-outline-anggara-putra/24/external-create-social-media-interface-anggara-basic-outline-anggara-putra.png"
-            alt="external-create-social-media-interface-anggara-basic-outline-anggara-putra"
+            onClick={() => setOpenModal(!openModal)}
+            className="bonadocs__editor__dashboard__playground__package__list__children__item__img"
           />
           <svg
             onClick={() => setOpenDeleteModal(!openDeleteModal)}

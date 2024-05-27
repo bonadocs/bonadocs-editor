@@ -16,9 +16,9 @@ export const BonadocsEditorViewActionsPackagesSidebarHeader: React.FC<
         // ref={ref}
         className={`bonadocs__editor__dashboard__playground__contract__header__title`}
       >
-        Installed Packages
+        Packages
       </h3>
-      <svg
+      {/* <svg
         onClick={() => setOpenModal(!openModal)}
         className="bonadocs__editor__dashboard__playground__contract__header__addIcon"
         width="16"
@@ -39,7 +39,7 @@ export const BonadocsEditorViewActionsPackagesSidebarHeader: React.FC<
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-      </svg>
+      </svg> */}
       <BonadocsEditorActionsModalPackageAdd
         show={openModal}
         closeAddModal={() => setOpenModal(!openModal)}

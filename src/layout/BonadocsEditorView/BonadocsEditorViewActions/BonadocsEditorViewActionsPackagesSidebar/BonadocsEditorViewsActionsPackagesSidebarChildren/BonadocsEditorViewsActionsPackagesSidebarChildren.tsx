@@ -15,12 +15,15 @@ export const BonadocsEditorViewsActionsPackagesSidebarChildren: React.FC<
 
   return (
     <div className="bonadocs__editor__dashboard__playground__action__list__children">
-      {packageList.map((collectionPackage: { name: any },i) => (
-        <BonadocsEditorViewsActionsPackagesSidebarChildrenItem
-          name={collectionPackage.name}
-          key={i}
-        />
-      ))}
+      {packageList.map(
+        (collectionPackage: { name: string; version: string }, i) => (
+          <BonadocsEditorViewsActionsPackagesSidebarChildrenItem
+            name={collectionPackage.name}
+            version={collectionPackage.version}
+            key={i} 
+          />
+        )
+      )}
     </div>
   );
 };

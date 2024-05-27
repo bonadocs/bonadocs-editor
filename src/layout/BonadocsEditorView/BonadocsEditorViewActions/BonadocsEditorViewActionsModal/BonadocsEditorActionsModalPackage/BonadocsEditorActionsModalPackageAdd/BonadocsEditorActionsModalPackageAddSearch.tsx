@@ -3,7 +3,6 @@ import React, { useState, useCallback } from "react";
 import clsx from "clsx";
 import { BonadocsEditorActionsModalPackageAddSearchResult } from "./BonadocsEditorActionsModalPackageAddSearchResult";
 import MoonLoader from "react-spinners/ClipLoader";
-import axios from "axios";
 import _ from "lodash";
 
 interface BonadocsEditorActionsModalPackageAddSearchProps {

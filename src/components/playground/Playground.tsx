@@ -20,7 +20,7 @@ export const Playground: React.FC<PlaygroundProps> = ({
     <div className={className}>
       <Editor
         defaultLanguage="javascript"
-        defaultValue={code.trim()}
+        value={code.trim()}
         theme="editor-theme"
         beforeMount={(monaco) => {
           monaco.editor.defineTheme("editor-theme", {

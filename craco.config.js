@@ -8,6 +8,7 @@ module.exports = {
           path: false,
           os: false,
           "fs/promises": false,
+          "vm": false,
         },
       },
     },

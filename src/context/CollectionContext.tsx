@@ -12,7 +12,6 @@ import { openDB } from "idb";
 import { fetchCollectionVariables } from "@/store/variable/variableSlice";
 import {
   setConnected,
-  setChainId,
   setProvider,
 } from "@/store/controlBoard/controlBoardSlice";
 import { ethers } from "ethers";
@@ -27,6 +26,7 @@ import {
   FunctionExecutor,
   DisplayResult,
   ExecutionResult,
+  CodeWorkflowExecutor,
 } from "@bonadocs/core";
 
 // Create the context props
@@ -36,6 +36,7 @@ interface CollectionContextProps {
   getCollection: () => CollectionDataManager | null;
   showResult: boolean;
   executionButton: (overlayRef: HTMLDivElement) => void;
+  executionWorkflowButton: () => void;
   walletId: number | undefined;
   response: Array<DisplayResult | ExecutionResult>;
   emptyResponse: () => void;
@@ -80,6 +81,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   );
   const fragmentKey = useSelector(
     (state: RootState) => state.method.methodItem.fragmentKey
+  );
+  const currentAction = useSelector(
+    (state: RootState) => state.action.currentAction
   );
   const [response, setResponse] = useState<
     Array<DisplayResult | ExecutionResult>
@@ -240,6 +244,16 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     );
   };
 
+  const workflowExecutor = async () => {
+    collectionRef.current?.valueManagerView.addLibrary("js", `ethers@5.3.0`);
+    console.log(collectionRef.current?.valueManagerView.getLibraries("js"));
+
+    return await CodeWorkflowExecutor.create(
+      collectionRef.current!,
+      currentAction.id
+    );
+  };
+
   const populateExecutionContext = (methodExecutor: FunctionExecutor) => {
     for (let i = 0; i < transactionOverrides.length; i++) {
       methodExecutor.getExecutionContext(i).overrides = transactionOverrides[i];
@@ -324,6 +338,72 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     }
   }
 
+  async function executionWorkflowButton() {
+    emptyResponse();
+    switch (workflowButton) {
+      case `Run`:
+        console.log("start");
+
+        const executor = await workflowExecutor();
+
+        executor.setActiveChainId(chainId ?? 1);
+
+        // console.log("overlayRef", overlayRef);
+
+        // if (!validateInputs(functionFragment!)) {
+        //   toast.info("Please fill out all the required fields", {
+        //     toastId: "required-id",
+        //   });
+        //   return;
+        // }
+        // toggleOverlay(true, overlayRef);
+        // if (
+        //   writeMethod &&
+        //   !simulation &&
+        //   walletId !== methodExecutor.activeChainId
+        // ) {
+        //   toast.info("Please connect to the correct widget network");
+        //   toggleOverlay(false, overlayRef);
+        //   return;
+        // }
+
+        try {
+          let res: any;
+          // populateExecutionContext(methodExecutor);
+
+          if (!simulation) {
+            // writeMethod && (await setSigner(methodExecutor));
+            res = await executor.run();
+            // res = await methodExecutor.execute();
+          } else {
+            res = await executor.run();
+          }
+          // toggleOverlay(false, overlayRef);
+          // setResponse(
+          //   res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
+          // );
+          console.log(res, "res");
+
+          // console.log(
+          //   "res",
+          //   res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
+          // );
+
+          setShowResult(true);
+        } catch (error) {
+          // toggleOverlay(false, overlayRef);
+          console.log(error);
+
+          toast.error((error as Error).message);
+        }
+
+        break;
+      case `Connect wallet`:
+        connectWallet();
+        break;
+    }
+  }
+
   return (
     <CollectionContext.Provider
       value={{
@@ -332,6 +412,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         getCollection: getCollection,
         showResult,
         executionButton,
+        executionWorkflowButton,
         walletId,
         response,
         emptyResponse,

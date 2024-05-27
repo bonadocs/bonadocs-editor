@@ -1177,10 +1177,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bonadocs/core@^1.0.3-alpha.12":
-  version "1.0.3-alpha.12"
-  resolved "https://registry.yarnpkg.com/@bonadocs/core/-/core-1.0.3-alpha.12.tgz#e896f611bce6c9ee153c299255f2ed43c1eb5345"
-  integrity sha512-vWP2nfGmrNnViRuGR3xQirZ7a9IirR1KRj0kN7ZSyCRXGr5QYznOycQNRJvBFru8VUeom0vDjBiuNlzbZYGYFA==
+"@bonadocs/core@^1.0.3-alpha.24":
+  version "1.0.3-alpha.24"
+  resolved "https://registry.yarnpkg.com/@bonadocs/core/-/core-1.0.3-alpha.24.tgz#18210a3d305bea1edcda1efdcc035a084c97826b"
+  integrity sha512-VK2tlT4enwDISe5WafylEN+gHLTsy++GC7ZhiPEpii1g0HEtfIFlbTS9qU0GtGf1h5VPAu81hesLqQPYAbKiyw==
   dependencies:
     axios "^1.6.2"
     ethers "^6.9.0"

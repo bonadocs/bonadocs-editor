@@ -28,7 +28,6 @@ export const BonadocsEditorViewPlaygroundMethodParamsNetworks: React.FC<
   };
 
   function networkList() {
-    console.log(fetchedNetworks, "fetchedNetworks");
     
     const untrimedChains = fetchedNetworks?.map((networkId) =>
       Array.from(supportedChains).find(

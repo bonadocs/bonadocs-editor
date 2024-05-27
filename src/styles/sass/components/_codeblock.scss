@@ -51,7 +51,9 @@
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: var(--bonadocsEditorBackground);
+ background-color: var(--bonadocsCodeBg);
+  font-family: "Menlo", monospace !important;
+  font-size: 1.4rem;
   &:focus {
     outline: none;
   }
@@ -90,7 +92,7 @@
 .hljs-variable,
 .hljs-template-tag,
 .hljs-template-variable {
-  color: #f1fa8c;
+  color: #f1fa8c !important;
 }
 
 .hljs-comment,

@@ -6,9 +6,9 @@ import {
   CollectionDataManager,
   TransactionOverrides,
 } from "@bonadocs/core";
-import { toast } from "react-toastify";
 import { REHYDRATE } from "redux-persist";
 import { RootState } from "..";
+import { act } from "react";
 
 const initialState = {
   methodItem: {} as MethodItem,
@@ -25,6 +25,11 @@ interface FragmentParams {
   addIndex?: number;
   arrayIndex?: number;
   indexInArray?: number;
+  docs?: string;
+}
+interface UpdateMethodParams {
+  collection: CollectionDataManager;
+  methodItem: MethodItem;
 }
 
 interface UpdateChainIdParams {
@@ -75,6 +80,16 @@ const methodSlice = createSlice({
         (state, action: PayloadAction<string | undefined>) => {}
       );
 
+    builder
+      .addCase(updateMethodViewValue.pending, () => {})
+      .addCase(
+        updateMethodViewValue.fulfilled,
+        (state, action: PayloadAction<MethodItem | undefined>) => {
+          state.methodItem = action.payload!;
+          console.log(state.methodItem, "state.methodItem", action.payload);
+        }
+      );
+
     builder.addCase(REHYDRATE, (state) => {});
   },
 });
@@ -114,6 +129,44 @@ export const setMethodViewValue = createAsyncThunk(
   }
 );
 
+export const updateMethodViewValue = createAsyncThunk(
+  "method/updateMethodViewValue",
+  async (updateMethodParams: UpdateMethodParams, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    const { collection, methodItem } = updateMethodParams;
+    if (state.method.methodItem.contractId) {
+      try {
+        const functionFragment = await collection.getFunctionFragmentView(
+          state.method.methodItem.contractId!,
+          state.method.methodItem.fragmentKey
+        );
+        const methodDocs = functionFragment?.getDocText();
+        const { name, fragmentKey, contractId, instances, readMethod } =
+          methodItem;
+        console.log(methodDocs, methodItem, "methodDocs");
+        console.log({
+          name,
+          fragmentKey,
+          contractId,
+          instances,
+          docs: methodDocs,
+          readMethod,
+        });
+        return {
+          name,
+          fragmentKey,
+          contractId,
+          instances,
+          docs: methodDocs,
+          readMethod,
+        };
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }
+);
+
 export const getMethodViewValue = createAsyncThunk(
   "method/getMethodViewValue",
   async (setFragmentParams: FragmentParams, { getState }) => {
@@ -132,6 +185,21 @@ export const getMethodViewValue = createAsyncThunk(
         console.log(err);
       }
     }
+  }
+);
+
+export const setMethodViewDocs = createAsyncThunk(
+  "method/setMethodViewDocs",
+  async (setFragmentParams: FragmentParams, { getState, dispatch }) => {
+    const state = getState() as RootState;
+    const { collection, docs } = setFragmentParams;
+    const functionFragment = await collection.getFunctionFragmentView(
+      state.method.methodItem.contractId!,
+      state.method.methodItem.fragmentKey
+    );
+    await functionFragment?.setDocText(docs!);
+    dispatch(setMethodItem({ ...state.method.methodItem, docs }));
+    console.log(state.method.methodItem, "docs");
   }
 );
 

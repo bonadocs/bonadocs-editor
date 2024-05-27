@@ -6,6 +6,8 @@ import { Playground } from "@/components/playground/Playground";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { updateWorkflowActionCode } from "@/store/action/actionSlice";
+import _ from "lodash";
+
 interface BonadocsEditorViewActionsCodeViewProps {
   // Add any props you need for your component here
 }
@@ -18,15 +20,8 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
   );
   const { getCollection } = useCollectionContext();
   const dispatch = useDispatch<AppDispatch>();
-  const [codeContent, setCodeContent] = useState<string>(
-    currentAction.code[0]?.code
-  );
-
-  console.log("currentAction", currentAction);
-  
 
   const updateActionCode = (code: string) => {
-    setCodeContent(code);
     dispatch(
       updateWorkflowActionCode({
         collection: getCollection()!,
@@ -34,14 +29,15 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
         code,
       })
     );
-    
   };
 
   return (
-    <Playground
-      className="bonadocs__editor__dashboard__playground__action__code__view"
-      code={codeContent}
-      handleChange={(code) => updateActionCode(code!)}
-    />
+    <>
+      <Playground
+        className="bonadocs__editor__dashboard__playground__action__code__view"
+        code={currentAction.code[0]?.code}
+        handleChange={(code) => updateActionCode(code!)}
+      />
+    </>
   );
 };

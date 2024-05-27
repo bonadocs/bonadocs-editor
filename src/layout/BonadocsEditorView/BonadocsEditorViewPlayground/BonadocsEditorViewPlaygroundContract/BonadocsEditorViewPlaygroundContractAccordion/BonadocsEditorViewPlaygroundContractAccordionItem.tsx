@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import {
   setMethodItem,
+  updateMethodViewValue,
   setTransactionOverrides,
 } from "@/store/method/methodSlice";
 import { setActiveContract } from "@/store/contract/contractSlice";
@@ -12,7 +13,7 @@ import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { setMethodViewValue } from "@/store/method/methodSlice";
-import { DisplayResult, ExecutionResult } from "@bonadocs/core";
+import { log } from "console";
 interface BonadocsEditorViewPlaygroundContractAccordionItemProps {
   index: number;
   contractItem: ContractItem;
@@ -27,24 +28,33 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
   );
   const method = useSelector((state: RootState) => state.method.methodItem);
   const { getCollection, emptyResponse } = useCollectionContext();
-  function setActiveMethod(
+  async function setActiveMethod(
     methodName: string,
     fragmentKey: string,
     contractId: string,
     readMethod: boolean
   ) {
+    const functionFragment = await getCollection()?.getFunctionFragmentView(
+      contractId!,
+      fragmentKey
+    );
+    const methodDocs = functionFragment?.getDocText();
     dispatch(
       setMethodItem({
-        name: methodName,
-        fragmentKey,
-        contractId,
-        instances: contractItem.instances,
-        readMethod,
+        // collection: getCollection()!,
+        // methodItem: {
+          name: methodName,
+          fragmentKey,
+          contractId,
+          instances: contractItem.instances,
+          docs: methodDocs,
+          readMethod,
+        // },
       })
     );
-    console.log("instances", contractItem.instances);
 
     dispatch(setMethodViewValue({ collection: getCollection()! }));
+
     dispatch(setActiveContract(contractItem));
     if (method.fragmentKey !== fragmentKey) {
       dispatch(setTransactionOverrides([]));
