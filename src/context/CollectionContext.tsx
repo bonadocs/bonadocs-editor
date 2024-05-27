@@ -28,6 +28,8 @@ import {
   ExecutionResult,
   CodeWorkflowExecutor,
 } from "@bonadocs/core";
+import { setLoader } from "@/store/action/actionSlice";
+import { provide } from "vue";
 
 // Create the context props
 interface CollectionContextProps {
@@ -39,6 +41,7 @@ interface CollectionContextProps {
   executionWorkflowButton: () => void;
   walletId: number | undefined;
   response: Array<DisplayResult | ExecutionResult>;
+  workflowResponse: any;
   emptyResponse: () => void;
   connectWallet: () => void;
 }
@@ -88,11 +91,14 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const [response, setResponse] = useState<
     Array<DisplayResult | ExecutionResult>
   >([]);
+  const [workflowResponse, setWorkflowResponse] = useState<any>("");
   const chainId = useSelector((state: RootState) => state.controlBoard.chainId);
   const transactionOverrides = useSelector(
     (state: RootState) => state.method.transactionOverrides
   );
-  const provider = new ethers.BrowserProvider((window as any).ethereum);
+
+  // const provider = new ethers.BrowserProvider((window as any).ethereum);
+
   const loadCollection = async (uri: string) => {
     try {
       if (localStorage.getItem(uri)) {
@@ -179,11 +185,11 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   }
 
   function initialConnection() {
-    if (!(window as any).ethereum) {
+    if (typeof (window as any).ethereum === "undefined") {
       return;
     }
 
-    dispatch(setProvider(provider));
+    dispatch(setProvider(new ethers.BrowserProvider((window as any).ethereum)));
 
     if ((window as any).ethereum) {
       (window as any).ethereum?.on("accountsChanged", handleAccountsChanged);
@@ -245,7 +251,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   };
 
   const workflowExecutor = async () => {
-    collectionRef.current?.valueManagerView.addLibrary("js", `ethers@5.3.0`);
     console.log(collectionRef.current?.valueManagerView.getLibraries("js"));
 
     return await CodeWorkflowExecutor.create(
@@ -261,6 +266,10 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   };
 
   async function setSigner(methodExecutor: FunctionExecutor) {
+    if (typeof (window as any).ethereum === "undefined") {
+      return;
+    }
+    const provider = new ethers.BrowserProvider((window as any).ethereum);
     const signer = await provider?.getSigner();
     if (signer) {
       methodExecutor.setSigner(signer);
@@ -342,56 +351,20 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     emptyResponse();
     switch (workflowButton) {
       case `Run`:
-        console.log("start");
-
-        const executor = await workflowExecutor();
-
-        executor.setActiveChainId(chainId ?? 1);
-
-        // console.log("overlayRef", overlayRef);
-
-        // if (!validateInputs(functionFragment!)) {
-        //   toast.info("Please fill out all the required fields", {
-        //     toastId: "required-id",
-        //   });
-        //   return;
-        // }
-        // toggleOverlay(true, overlayRef);
-        // if (
-        //   writeMethod &&
-        //   !simulation &&
-        //   walletId !== methodExecutor.activeChainId
-        // ) {
-        //   toast.info("Please connect to the correct widget network");
-        //   toggleOverlay(false, overlayRef);
-        //   return;
-        // }
-
         try {
-          let res: any;
-          // populateExecutionContext(methodExecutor);
+          dispatch(setLoader(true));
+          const executor = await workflowExecutor();
+          console.log("executor added", executor);
 
-          if (!simulation) {
-            // writeMethod && (await setSigner(methodExecutor));
-            res = await executor.run();
-            // res = await methodExecutor.execute();
-          } else {
-            res = await executor.run();
-          }
-          // toggleOverlay(false, overlayRef);
-          // setResponse(
-          //   res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
-          // );
-          console.log(res, "res");
+          executor.setActiveChainId(chainId ?? 1);
+          console.log("executor chainid added");
+          const res = await executor.run();
 
-          // console.log(
-          //   "res",
-          //   res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
-          // );
-
-          setShowResult(true);
+          console.log("res", res);
+          setWorkflowResponse(res);
+          dispatch(setLoader(false));
         } catch (error) {
-          // toggleOverlay(false, overlayRef);
+          dispatch(setLoader(false));
           console.log(error);
 
           toast.error((error as Error).message);
@@ -415,6 +388,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         executionWorkflowButton,
         walletId,
         response,
+        workflowResponse,
         emptyResponse,
         connectWallet: connectWallet,
       }}

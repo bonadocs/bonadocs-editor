@@ -2,12 +2,12 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { playgroundState } from "@/data/dataTypes";
 import { BrowserProvider } from "ethers";
 import { RootState } from "@/store";
-import { set } from "lodash";
+import { ethers } from "ethers";
 const initialState = {
   writeMethod: false as boolean,
   playgroundState: "interaction" as playgroundState,
   simulation: false as boolean,
-  provider: null as BrowserProvider | null,
+  provider: undefined as BrowserProvider | undefined,
   chainId: null as number | null,
   connected: false as boolean,
   packagesView: false as boolean,
@@ -27,7 +27,7 @@ const controlBoardSlice = createSlice({
     setSimulation: (state, action: PayloadAction<boolean>) => {
       state.simulation = action.payload;
     },
-    setProvider: (state, action: PayloadAction<BrowserProvider | null>) => {
+    setProvider: (state, action: PayloadAction<BrowserProvider | undefined>) => {
       state.provider = action.payload;
     },
     setPackagesView: (state, action: PayloadAction<boolean>) => {

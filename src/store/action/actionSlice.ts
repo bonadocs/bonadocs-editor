@@ -10,6 +10,7 @@ import _ from "lodash";
 const initialState = {
   collectionActions: [] as Array<ActionItem>,
   currentAction: {} as ActionItem,
+  loader: false,
 };
 
 const actionSlice = createSlice({
@@ -19,6 +20,9 @@ const actionSlice = createSlice({
     setActiveAction: (state, action: PayloadAction<ActionItem>) => {
       state.currentAction = action.payload;
     },
+    setLoader: (state, action: PayloadAction<boolean>) => {
+      state.loader = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -235,6 +239,6 @@ export const deleteWorkflowAction = createAsyncThunk(
     }
   }
 );
-export const { setActiveAction } = actionSlice.actions;
+export const { setActiveAction, setLoader } = actionSlice.actions;
 
 export default actionSlice.reducer;
