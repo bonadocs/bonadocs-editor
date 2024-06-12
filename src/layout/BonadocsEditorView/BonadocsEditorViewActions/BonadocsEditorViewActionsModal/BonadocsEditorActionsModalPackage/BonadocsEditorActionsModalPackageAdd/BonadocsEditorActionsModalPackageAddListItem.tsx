@@ -1,6 +1,5 @@
 import { Tab } from '@/components/tab/Tab';
 import React from 'react';
-import { Prop } from 'vue';
 
 interface BonadocsEditorActionsModalPackageAddListItemProp {
     name: string;
