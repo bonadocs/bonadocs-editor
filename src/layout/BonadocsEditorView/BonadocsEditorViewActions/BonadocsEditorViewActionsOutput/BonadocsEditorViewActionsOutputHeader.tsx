@@ -1,20 +1,27 @@
-import React from 'react';
-import { BonadocsEditorViewPlaygroundMethodControlbarItem } from '../../BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundMethod/BonadocsEditorViewPlaygroundMethodControlbar/BonadocsEditorViewPlaygroundMethodControlbarItem';
+import React, { useState } from "react";
+import { BonadocsEditorViewPlaygroundMethodControlbarItem } from "../../BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundMethod/BonadocsEditorViewPlaygroundMethodControlbar/BonadocsEditorViewPlaygroundMethodControlbarItem";
 
-interface BonadocsEditorViewActionsOutputHeaderProps {
-    // Add any props you need here
-}
+interface BonadocsEditorViewActionsOutputHeaderProps {}
 
-const BonadocsEditorViewActionsOutputHeader: React.FC<BonadocsEditorViewActionsOutputHeaderProps> = (props) => {
-    // Add your component logic here
-
-    return (
-      <div className="bonadocs__editor__dashboard__playground__method__controlbar">
-        <BonadocsEditorViewPlaygroundMethodControlbarItem active={true}>
-          Output
-        </BonadocsEditorViewPlaygroundMethodControlbarItem>
-      </div>
-    );
+const BonadocsEditorViewActionsOutputHeader: React.FC<
+  BonadocsEditorViewActionsOutputHeaderProps
+> = () => {
+  const [active, setActive] = useState(true);
+  return (
+    <div className="bonadocs__editor__dashboard__playground__method__controlbar">
+      {/* <BonadocsEditorViewPlaygroundMethodControlbarItem
+        onClick={() => {
+          setActive(!active);
+        }}
+        active={active}
+      >
+        Output
+      </BonadocsEditorViewPlaygroundMethodControlbarItem> */}
+      <BonadocsEditorViewPlaygroundMethodControlbarItem active={active}>
+        Console
+      </BonadocsEditorViewPlaygroundMethodControlbarItem>
+    </div>
+  );
 };
 
 export default BonadocsEditorViewActionsOutputHeader;

@@ -12,7 +12,7 @@ import { persistReducer, persistStore } from "redux-persist";
 const rootPersistConfig = {
   key: "root",
   storage,
-  blocklist: ["controlBoard"],
+  blacklist: ["controlBoard", "action"],
 };
 const methodPersistConfig = {
   key: "method",
@@ -23,7 +23,7 @@ const methodPersistConfig = {
 const actionPersistConfig = {
   key: "action",
   storage,
-  safelist: ["currentAction"],
+  blacklist: ["currentAction", "collectionActions", "loader"],
 };
 
 const contractPersistConfig = {

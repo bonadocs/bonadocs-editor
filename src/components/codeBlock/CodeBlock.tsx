@@ -4,15 +4,16 @@ import javascript from "highlight.js/lib/languages/javascript";
 
 interface CodeBlockProps {
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }
 
-export const CodeBlock: React.FC<CodeBlockProps> = ({ children }) => {
+export const CodeBlock: React.FC<CodeBlockProps> = ({ children, style }) => {
   hljs.registerLanguage("javascript", javascript);
   useEffect(() => {
     hljs.highlightAll();
   });
   return (
-    <div className="bonadocs__editor__codeblock">
+    <div style={style} className="bonadocs__editor__codeblock">
       <pre>
         <code className="language-javascript">{children}</code>
       </pre>

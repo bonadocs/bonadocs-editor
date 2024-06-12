@@ -23,7 +23,6 @@ export const BonadocsEditorViewActionsSidebarChildrenItem: React.FC<
     collectionActions.map((action) => {
       if (action.id === id) {
         dispatch(setActiveAction(action));
-        console.log(action);
         
       }
     });

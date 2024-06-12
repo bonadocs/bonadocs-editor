@@ -348,33 +348,33 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   }
 
   async function executionWorkflowButton() {
-    emptyResponse();
-    switch (workflowButton) {
-      case `Run`:
-        try {
-          dispatch(setLoader(true));
-          const executor = await workflowExecutor();
-          console.log("executor added", executor);
+    setWorkflowResponse("");
+    try {
+      dispatch(setLoader(true));
+      const executor = await workflowExecutor();
+      console.log("executor added", executor);
 
-          executor.setActiveChainId(chainId ?? 1);
-          console.log("executor chainid added");
-          const res = await executor.run();
+      executor.setActiveChainId(chainId ?? 1);
+      console.log("executor chainid added");
+      const res = await executor.run();
 
-          console.log("res", res);
-          setWorkflowResponse(res);
-          dispatch(setLoader(false));
-        } catch (error) {
-          dispatch(setLoader(false));
-          console.log(error);
+      console.log("res", res);
+      setWorkflowResponse(res);
+      dispatch(setLoader(false));
+    } catch (error) {
+      dispatch(setLoader(false));
+      console.log(error);
 
-          toast.error((error as Error).message);
-        }
-
-        break;
-      case `Connect wallet`:
-        connectWallet();
-        break;
+      toast.error((error as Error).message);
+    } finally {
+      console.log("finally");
     }
+
+    //   break;
+    // case `Connect wallet`:
+    //   connectWallet();
+    //   break;
+    // }
   }
 
   return (

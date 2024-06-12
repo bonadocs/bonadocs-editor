@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import Editor from "@monaco-editor/react";
 
 interface PlaygroundProps {
@@ -11,13 +11,34 @@ export const Playground: React.FC<PlaygroundProps> = ({
   className,
   handleChange,
 }: PlaygroundProps) => {
+  const observedDivRef = useRef(null);
+  const observerCallback: ResizeObserverCallback = (
+    entries: ResizeObserverEntry[]
+  ) => {
+    window.requestAnimationFrame((): void | undefined => {
+      if (!Array.isArray(entries) || !entries.length) {
+        return;
+      }
+      // yourResizeHandler();
+    });
+  };
+  const resizeObserver = new ResizeObserver(observerCallback);
+
   function handleEditorValidation(markers: any[]) {
     // model markers
     markers.forEach((marker) => console.log("onValidate:", marker.message));
   }
 
+  useEffect(() => {
+    if (observedDivRef.current) resizeObserver.observe(observedDivRef.current!);
+    return () => {
+      if (observedDivRef.current)
+        resizeObserver.unobserve(observedDivRef.current!);
+    };
+  }, [observedDivRef.current]);
+
   return (
-    <div className={className}>
+    <div ref={observedDivRef} className={className}>
       <Editor
         defaultLanguage="javascript"
         value={code.trim()}

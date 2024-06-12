@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import { BonadocsEditorActions } from "./BonadocsEditorActions/BonadocsEditorActions";
 import { BonadocsEditorLogin } from "./BonadocsEditorLogin/BonadocsEditorLogin";
 import { BonadocsEditorProjects } from "./BonadocsEditorProjects/BonadocsEditorProjects";
+import { BonadocsEditorProjectsCreation } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation";
 
 interface BonadocsEditorProps {
   className?: string;
@@ -48,11 +49,10 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
           }
         />
         <Route path="/login" element={<BonadocsEditorLogin />} />
-        <Route path="/projects" element={<BonadocsEditorProjects />} />
-        //{" "}
-        {/* <Route path="/page-2" component={Page2} />
-      //       <Route path="/page-3" component={Page3} />
-      //       <Route component={NotFound} /> */}
+        <Route path="/projects" element={<BonadocsEditorProjects />} >
+          <Route path="create" element={<BonadocsEditorProjectsCreation/>} /> 
+          
+        </Route>
       </Routes>
     </>
   );

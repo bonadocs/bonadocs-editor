@@ -5,7 +5,7 @@ export const BonadocsEditorProjectsCreation: React.FC = () => {
 
     return (
         <div>
-            {/* Your component JSX here */}
+            creation
         </div>
     );
 };

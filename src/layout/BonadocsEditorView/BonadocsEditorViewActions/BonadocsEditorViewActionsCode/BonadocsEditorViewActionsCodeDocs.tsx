@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { updateWorkflowActionDocs } from "@/store/action/actionSlice";
@@ -15,12 +15,15 @@ export const BonadocsEditorViewActionsCodeDocs: React.FC<
   BonadocsEditorViewActionsCodeDocsProps
 > = ({ docs, className }) => {
   const dispatch = useDispatch<AppDispatch>();
+
   const currentAction = useSelector(
     (state: RootState) => state.action.currentAction
   );
+  const [docsState, setDocsState] = useState(currentAction.documentation);
   const { getCollection } = useCollectionContext();
 
   const updateActionDocs = (docs: string) => {
+    setDocsState(docs);
     dispatch(
       updateWorkflowActionDocs({
         collection: getCollection()!,
@@ -35,7 +38,7 @@ export const BonadocsEditorViewActionsCodeDocs: React.FC<
       <textarea
         onChange={(e) => updateActionDocs(e.target.value)}
         className={`bonadocs__editor__dashboard__playground__action__code__docs ${className}`}
-        value={currentAction.documentation}
+        value={docsState}
       />
     </>
   );

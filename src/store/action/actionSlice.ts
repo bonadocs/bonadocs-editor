@@ -170,7 +170,7 @@ export const updateWorkflowActionDocs = createAsyncThunk(
         workflowDocs!
       );
 
-      console.log(await collection.workflowManagerView.getDocText(workflowId!));
+      console.log('available docs', await collection.workflowManagerView.getDocText(workflowId!));
 
       dispatch(getCollectionActions(collection));
       return workflowDocs;

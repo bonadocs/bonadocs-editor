@@ -49,7 +49,10 @@ export const BonadocsEditorViewHeader: React.FC<
       <div className="bonadocs__editor__dashboard__header__share">
         <Button
           className="bonadocs__editor__dashboard__header__share"
-          onClick={() => {}}
+          onClick={async() => {
+            // console.log(await getCollection()?.publishToIPFS());
+             
+          }}
           type="action"
         >
           <>

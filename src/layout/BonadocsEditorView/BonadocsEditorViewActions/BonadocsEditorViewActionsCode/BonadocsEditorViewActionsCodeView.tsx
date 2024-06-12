@@ -1,12 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { Playground } from "@/components/playground/Playground";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
+import { ActionItem } from "@/data/dataTypes";
 import { updateWorkflowActionCode } from "@/store/action/actionSlice";
 import _ from "lodash";
+import { get } from "https";
 
 interface BonadocsEditorViewActionsCodeViewProps {
   // Add any props you need for your component here
@@ -15,28 +17,44 @@ interface BonadocsEditorViewActionsCodeViewProps {
 export const BonadocsEditorViewActionsCodeView: React.FC<
   BonadocsEditorViewActionsCodeViewProps
 > = (props) => {
-  const currentAction = useSelector(
+  const currentAction: ActionItem = useSelector(
     (state: RootState) => state.action.currentAction
   );
+  const [codeState, setCodeState] = useState(currentAction.code[0]?.code);
   const { getCollection } = useCollectionContext();
   const dispatch = useDispatch<AppDispatch>();
 
-  const updateActionCode = (code: string) => {
-    dispatch(
-      updateWorkflowActionCode({
-        collection: getCollection()!,
-        workflowId: currentAction.id,
-        code,
-      })
-    );
-  };
+  const updateActionCode = useCallback(
+    _.debounce(async (code: string, id: string) => {
+      console.log(code, id, "updateActionParams");
+      if (code && id)
+        await dispatch(
+          updateWorkflowActionCode({
+            collection: getCollection()!,
+            workflowId: id,
+            code,
+          })
+        );
+    }, 500),
+    []
+  );
+
+  useEffect(() => {
+    // console.log(currentAction.id, "currentAction id");
+    // console.log(Array.from(getCollection()!.workflowManagerView.workflows));
+    setCodeState(currentAction.code[0]?.code);
+    console.log(currentAction.code[0]?.code, "currentAction code");
+  }, [currentAction.id]);
 
   return (
     <>
       <Playground
         className="bonadocs__editor__dashboard__playground__action__code__view"
-        code={currentAction.code[0]?.code}
-        handleChange={(code) => updateActionCode(code!)}
+        code={codeState}
+        handleChange={(code) => {
+          setCodeState(code!);
+          updateActionCode(code!, currentAction.id);
+        }}
       />
     </>
   );

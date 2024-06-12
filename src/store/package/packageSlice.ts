@@ -33,6 +33,9 @@ const packageSlice = createSlice({
     setCurrentPackage: (state, action: PayloadAction<string>) => {
       state.collectionPackages[0].version = action.payload;
     },
+    setCurrentPackageVersion: (state, action: PayloadAction<string>) => {
+      state.collectionPackages[0].version = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -41,18 +44,13 @@ const packageSlice = createSlice({
         getLatestEthersVersion.fulfilled,
         (state, action: PayloadAction<PackageDetails | any>) => {
           if (action.payload) {
-            const { versions, currentVersion } = action.payload;
+            const versions = action.payload;
             state.collectionPackages[0].versionList = versions.map(
               (item: any) => ({
                 label: item.version,
                 value: item.version,
               })
             );
-
-            if (currentVersion) {
-              state.collectionPackages[0].version = currentVersion;
-            } else
-              state.collectionPackages[0].version = versions[0].version.slice();
           }
         }
       );
@@ -93,7 +91,7 @@ export const setCurrentPackageVersion = createAsyncThunk(
 
 export const getLatestEthersVersion = createAsyncThunk(
   "package/getLatestEthersVersion",
-  async (collection: CollectionDataManager) => {
+  async (collection: CollectionDataManager, { dispatch }) => {
     const regex = /^([^@]+)@(.+)$/;
 
     let currentVersion;
@@ -111,7 +109,24 @@ export const getLatestEthersVersion = createAsyncThunk(
       );
       const data = await response.json();
 
-      return { versions: data["versions"], currentVersion };
+      const versions = data["versions"];
+      console.log('currentVersion', currentVersion);
+      
+      if (currentVersion) {
+        await collection.valueManagerView.addLibrary(
+          "js",
+          `${packageName}@${currentVersion}`
+        );
+        dispatch(setCurrentPackage(currentVersion));
+      } else {
+        await collection.valueManagerView.addLibrary(
+          "js",
+          `${packageName}@${versions[0].version.slice()}`
+        );
+        dispatch(setCurrentPackage(versions[0].version.slice()));
+      }
+
+      return versions;
     } catch (error) {
       console.error("Error fetching data:", error);
     }
