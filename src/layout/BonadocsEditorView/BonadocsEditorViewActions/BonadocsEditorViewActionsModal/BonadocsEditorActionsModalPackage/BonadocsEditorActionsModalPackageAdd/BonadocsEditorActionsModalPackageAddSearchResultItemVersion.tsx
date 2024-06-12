@@ -30,26 +30,19 @@ export const BonadocsEditorActionsModalPackageAddSearchResultItemVersion: React.
   useEffect(() => {}, []);
 
   function searchFunction() {
-    console.log(name);
-    console.log(name[0]);
     
     if (name[0] === "@") {
-      console.log(name);
       const regex = /@([^\/]+)\/(.+)/;
       const matches = name.match(regex);
 
       if (matches) {
         const scope = matches[1];
         const packageName = matches[2];
-
-        console.log("First String:", scope);
-        console.log("Second String:", packageName);
         axios
           .get(
             `https://data.jsdelivr.com/v1/packages/npm/@${scope}/${packageName}`
           )
           .then((res) => {
-            console.log(res.data);
           })
           .catch((error) => toast.error(error));
       }
@@ -57,7 +50,7 @@ export const BonadocsEditorActionsModalPackageAddSearchResultItemVersion: React.
       axios
         .get(`https://data.jsdelivr.com/v1/packages/npm/${name}`)
         .then((res) => {
-          console.log(res.data);
+       
         })
         .catch((error) => toast.error(error));
     }

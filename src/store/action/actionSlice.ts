@@ -30,7 +30,6 @@ const actionSlice = createSlice({
       .addCase(
         getCollectionActions.fulfilled,
         (state, action: PayloadAction<any>) => {
-          console.log(action.payload);
 
           state.collectionActions = action.payload;
         }
@@ -62,7 +61,6 @@ const actionSlice = createSlice({
       .addCase(
         updateWorkflowActionCode.fulfilled,
         (state, action: PayloadAction<string | undefined>) => {
-          // console.log(state.currentAction.code
           const code = action.payload;
           console.log(code);
           state.currentAction = {
@@ -74,7 +72,6 @@ const actionSlice = createSlice({
               },
             ],
           };
-          console.log(state.currentAction);
         }
       );
 
@@ -83,13 +80,11 @@ const actionSlice = createSlice({
       .addCase(
         updateWorkflowActionDocs.fulfilled,
         (state, action: PayloadAction<string | undefined>) => {
-          // console.log(state.currentAction.code
           const docs = action.payload;
           state.currentAction = {
             ...state.currentAction,
             documentation: docs,
           };
-          console.log(state.currentAction);
         }
       );
   },
@@ -102,13 +97,11 @@ export const getCollectionActions = createAsyncThunk(
     const workflowList = Array.from(collection.workflowManagerView.workflows);
     const collectionActions: Array<ActionItem> = [];
     let documentation: any;
-    console.log(workflowList);
 
     for (const workflow of workflowList) {
       documentation = await collection.workflowManagerView.getDocText(
         workflow.id
       );
-      console.log("docs", documentation);
 
       collectionActions.push({
         id: workflow.id,
@@ -120,7 +113,6 @@ export const getCollectionActions = createAsyncThunk(
         })),
       });
     }
-    console.log("collectionActions", collectionActions);
 
     return collectionActions;
   }
@@ -170,8 +162,6 @@ export const updateWorkflowActionDocs = createAsyncThunk(
         workflowDocs!
       );
 
-      console.log('available docs', await collection.workflowManagerView.getDocText(workflowId!));
-
       dispatch(getCollectionActions(collection));
       return workflowDocs;
     } catch (err) {
@@ -191,10 +181,7 @@ export const updateWorkflowActionCode = createAsyncThunk(
         code
       );
       setCloudIcon(false);
-      console.log(
-        "get workflow",
-        collection.workflowManagerView.getWorkflow(workflowId)
-      );
+     
 
       dispatch(getCollectionActions(collection));
       return code;
@@ -209,7 +196,6 @@ export const renameWorkflowAction = createAsyncThunk(
   "action/renameWorkflowAction",
   async (setWorkflowParams: WorkflowItem, { dispatch }) => {
     const { collection, workflowId, workflowName } = setWorkflowParams;
-    console.log("workflowId", workflowId, "workflowName", workflowName);
 
     try {
       await collection.workflowManagerView.renameWorkflow(

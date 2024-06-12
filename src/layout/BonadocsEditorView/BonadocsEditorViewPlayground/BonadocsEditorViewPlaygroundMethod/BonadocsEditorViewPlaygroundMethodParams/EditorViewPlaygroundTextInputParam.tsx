@@ -29,7 +29,7 @@ export const EditorViewPlaygroundTextInputParam: React.FC<
   );
   const value = async () => {
     const viewValue = await dispatch(getMethodViewValue({ collection, path }));
-    console.log(viewValue, "viewValue");
+   
     return viewValue.payload as string;
   };
 

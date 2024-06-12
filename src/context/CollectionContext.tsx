@@ -41,6 +41,7 @@ interface CollectionContextProps {
   walletId: number | undefined;
   response: Array<DisplayResult | ExecutionResult>;
   workflowResponse: any;
+  setWorkflowResponse: (resp: string) => void;
   emptyResponse: () => void;
   connectWallet: () => void;
 }
@@ -220,7 +221,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
       if (functionFragment?.getDataValue(param?.path) == null) {
         // Add null check here
-        console.log(false);
 
         return false;
       }
@@ -250,8 +250,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   };
 
   const workflowExecutor = async () => {
-    console.log(collectionRef.current?.valueManagerView.getLibraries("js"));
-
     return await CodeWorkflowExecutor.create(
       collectionRef.current!,
       currentAction.id
@@ -294,7 +292,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
             methodItem.contractId!,
             methodItem.fragmentKey
           );
-        console.log("overlayRef", overlayRef);
 
         if (!validateInputs(functionFragment!)) {
           toast.info("Please fill out all the required fields", {
@@ -327,10 +324,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
           setResponse(
             res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
           );
-          console.log(
-            "res",
-            res.map((r) => (r instanceof ExecutionResult ? r.simpleData : r))
-          );
 
           setShowResult(true);
         } catch (error) {
@@ -351,13 +344,11 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     try {
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
-      console.log("executor added", executor);
 
       executor.setActiveChainId(chainId ?? 1);
-      console.log("executor chainid added");
+
       const res = await executor.run();
 
-      console.log("res", res);
       setWorkflowResponse(res);
       dispatch(setLoader(false));
     } catch (error) {
@@ -366,7 +357,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
       toast.error((error as Error).message);
     } finally {
-      console.log("finally");
     }
 
     //   break;
@@ -388,6 +378,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         walletId,
         response,
         workflowResponse,
+        setWorkflowResponse,
         emptyResponse,
         connectWallet: connectWallet,
       }}

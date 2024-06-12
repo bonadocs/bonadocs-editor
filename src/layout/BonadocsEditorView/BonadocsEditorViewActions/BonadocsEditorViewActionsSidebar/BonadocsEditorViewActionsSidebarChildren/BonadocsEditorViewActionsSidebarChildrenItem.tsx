@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ReactComponent as ActionIcon } from "@/assets/SidebarIcons/action.svg";
 import { setActiveAction } from "@/store/action/actionSlice";
 import { useDispatch } from "react-redux";
+import { useCollectionContext } from "@/context/CollectionContext";
 import { AppDispatch } from "@/store";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
@@ -19,11 +20,12 @@ export const BonadocsEditorViewActionsSidebarChildrenItem: React.FC<
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+  const { setWorkflowResponse } = useCollectionContext();
   const setCurrentAction = () => {
     collectionActions.map((action) => {
       if (action.id === id) {
         dispatch(setActiveAction(action));
-        
+        setWorkflowResponse("")
       }
     });
   };

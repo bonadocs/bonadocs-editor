@@ -16,7 +16,6 @@ export const BonadocsEditorActionsModalPackageAddSearch: React.FC<
   const [loading, setLoading] = useState<boolean>(false);
   const [results, setResults] = useState<Array<any>>([]);
   const showLoader = (loader: boolean) => {
-    console.log(loader);
 
     setLoading(loader);
   };
@@ -32,7 +31,6 @@ export const BonadocsEditorActionsModalPackageAddSearch: React.FC<
           const data = await response.json();
           setLoading(false);
           showLoader(false);
-          console.log(data);
           const resultList = data["results"].map((result: any) => {
             return {
               name: result.package.name,
@@ -41,7 +39,6 @@ export const BonadocsEditorActionsModalPackageAddSearch: React.FC<
               popular: result.score.detail.popularity,
             };
           });
-          console.log(resultList);
           
           setResults(resultList);
         } catch (error) {

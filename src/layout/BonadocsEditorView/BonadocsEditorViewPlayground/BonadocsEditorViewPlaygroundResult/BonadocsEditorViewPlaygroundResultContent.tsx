@@ -25,10 +25,10 @@ export const BonadocsEditorViewPlaygroundResultContent: React.FC<
 
   const setCurrentContractDocs = useCallback(
       _.debounce(async (docs: string) => {
-        console.log('start');
+        
         
       await dispatch(updateActiveContractDocs({ collection: getCollection()!, docs }));
-        console.log('finish');
+       
         
       //   setDocs(contract.docs || "");
     }, 1000),
@@ -53,7 +53,6 @@ export const BonadocsEditorViewPlaygroundResultContent: React.FC<
   useEffect(() => {
      getActiveContract();
 
-    console.log(contract.contractId, "contractId");
   }, [contract.contractId, contract.docs]);
   return (
     <div className="bonadocs__editor__dashboard__playground__result__docs__content">

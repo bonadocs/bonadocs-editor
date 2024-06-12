@@ -20,7 +20,6 @@ export const BonadocsEditorViewPlaygroundMethodParams: React.FC = () => {
   );
 
   useEffect(() => {
-    console.log(simulation, "simulate");
     setOverlay(!overlay);
   }, [overlayRef.current]);
 

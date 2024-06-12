@@ -27,7 +27,6 @@ export const BonadocsEditorViewPlaygroundMethodDocsInput: React.FC<
           docs,
         })
       );
-      console.log(docs, "docs");
     }, 1000),
     []
   );

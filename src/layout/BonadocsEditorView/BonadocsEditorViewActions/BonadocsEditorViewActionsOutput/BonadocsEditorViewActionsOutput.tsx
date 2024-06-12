@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import BonadocsEditorViewActionsOutputHeader from "./BonadocsEditorViewActionsOutputHeader";
 import { BonadocsEditorViewActionsOutputResponse } from "./BonadocsEditorViewActionsOutputResponse";
 
 const BonadocsEditorViewActionsOutput: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (ref.current)
-      console.log("width", ref.current ? ref.current.offsetWidth : 0);
-  }, [ref.current]);
   return (
     <div
       ref={ref}

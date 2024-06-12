@@ -26,7 +26,6 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
 
   const updateActionCode = useCallback(
     _.debounce(async (code: string, id: string) => {
-      console.log(code, id, "updateActionParams");
       if (code && id)
         await dispatch(
           updateWorkflowActionCode({
@@ -43,7 +42,6 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
     // console.log(currentAction.id, "currentAction id");
     // console.log(Array.from(getCollection()!.workflowManagerView.workflows));
     setCodeState(currentAction.code[0]?.code);
-    console.log(currentAction.code[0]?.code, "currentAction code");
   }, [currentAction.id]);
 
   return (

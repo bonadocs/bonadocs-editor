@@ -13,7 +13,7 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
   className,
 }) => {
   const logGoogleUser = async () => {
-    console.log("jkk");
+   
 
     const response = await signInWithGooglePopup();
     console.log(response);
@@ -21,7 +21,7 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
 
   const logGithubUser = async () => {
     const response = await signInWithGithubPopup();
-    console.log(response);
+    
   };
 
   return (
@@ -35,10 +35,10 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
           <Button
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
-              console.log("jkk");
+           
 
               const response = await signInWithGooglePopup();
-              console.log(response);
+              
             }}
           >
             <>
@@ -86,7 +86,6 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
               const response = await signInWithGithubPopup();
-              console.log(response);
             }}
           >
             <>

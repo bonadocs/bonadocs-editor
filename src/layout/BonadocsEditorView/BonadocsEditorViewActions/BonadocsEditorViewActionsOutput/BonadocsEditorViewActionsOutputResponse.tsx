@@ -20,7 +20,6 @@ export const BonadocsEditorViewActionsOutputResponse: React.FC<
             ? `\n\n${arg["args"][0]["execResult"]["returnValue"]}` ?? ""
             : `\n\n${arg["args"]}`;
       });
-      console.log("responseText", responseText);
 
       return responseText.substring(2);
     }

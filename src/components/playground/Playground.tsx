@@ -26,7 +26,7 @@ export const Playground: React.FC<PlaygroundProps> = ({
 
   function handleEditorValidation(markers: any[]) {
     // model markers
-    markers.forEach((marker) => console.log("onValidate:", marker.message));
+    markers.forEach((marker) => {});
   }
 
   useEffect(() => {

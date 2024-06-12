@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     auth.onAuthStateChanged((user: any) => {
       setLoading(true);
       if (user) {
-        console.log(user);
+      
         setUser(user);
         // navigate({
         //   pathname: "/contracts",

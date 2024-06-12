@@ -73,7 +73,7 @@ export const BonadocsEditorViewPlaygroundMethodParamsList: React.FC<{}> =
                         );
 
                         setCounts(counts + 1);
-                        console.log(counts);
+                      
                       }}
                     >
                       <svg

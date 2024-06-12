@@ -21,7 +21,6 @@ const contractSlice = createSlice({
   initialState,
   reducers: {
     setActiveContract: (state, action: PayloadAction<ContractItem>) => {
-      console.log(action.payload, "action.payload");
 
       state.currentContract = action.payload;
     },
@@ -47,7 +46,6 @@ const contractSlice = createSlice({
           const contractDocs = action.payload;
           // state.viewDocs = contractDocs
           state.currentContract.docs = contractDocs;
-          console.log(state.currentContract, "state.currentContract");
           
         }
       );
@@ -123,14 +121,12 @@ export const updateActiveContractDocs = createAsyncThunk(
     setContractDocsParams: ContractsDocsParams,
     { dispatch, getState }
   ) => {
-    console.log("update");
 
     const { collection, docs } = setContractDocsParams;
     const state = getState() as RootState;
     let contractDocs = await collection
       ?.getContractDetailsView(state.contract.currentContract.contractId)
       .setDocText(docs);
-    console.log(contractDocs, "updatedcontractDocs");
   }
 );
 
@@ -145,7 +141,6 @@ export const getActiveContractDocs = createAsyncThunk(
     let contractDocs = await collection
       ?.getContractDetailsView(state.contract.currentContract.contractId)
       .getDocText();
-    console.log(contractDocs, "getcontractDocs");
     return contractDocs;
   }
 );

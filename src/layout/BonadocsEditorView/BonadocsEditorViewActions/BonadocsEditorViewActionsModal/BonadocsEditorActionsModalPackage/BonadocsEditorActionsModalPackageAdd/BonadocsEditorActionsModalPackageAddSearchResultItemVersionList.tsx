@@ -11,9 +11,8 @@ export const BonadocsEditorActionsModalPackageAddSearchResultItemVersionList: Re
   BonadocsEditorActionsModalPackageAddSearchResultItemVersionListProps
 > = ({ name }) => {
   function searchFunction() {
-    console.log(name);
+  
     if (name[0] === "@") {
-      console.log(name);
       const regex = /@([^\/]+)\/(.+)/;
       const matches = name.match(regex);
 
@@ -21,8 +20,7 @@ export const BonadocsEditorActionsModalPackageAddSearchResultItemVersionList: Re
         const scope = matches[1];
         const packageName = matches[2];
 
-        console.log("First String:", scope);
-        console.log("Second String:", packageName);
+
         // axios
         //   .get(
         //     `https://data.jsdelivr.com/v1/packages/npm/@${scope}/${packageName}`
@@ -36,7 +34,7 @@ export const BonadocsEditorActionsModalPackageAddSearchResultItemVersionList: Re
       axios
         .get(`https://data.jsdelivr.com/v1/packages/npm/${name}`)
         .then((res) => {
-          console.log(res.data);
+        
         })
         .catch((error) => toast.error(error));
     }

@@ -65,8 +65,6 @@ const methodSlice = createSlice({
         (state, action: PayloadAction<any>) => {
           if (action.payload) {
             const functionFragment = action.payload;
-
-            console.log(functionFragment?.displayData.slice());
             state.updateChange = !state.updateChange;
             state.methodDisplayData = functionFragment?.displayData.slice();
           }
@@ -86,7 +84,6 @@ const methodSlice = createSlice({
         updateMethodViewValue.fulfilled,
         (state, action: PayloadAction<MethodItem | undefined>) => {
           state.methodItem = action.payload!;
-          console.log(state.methodItem, "state.methodItem", action.payload);
         }
       );
 
@@ -143,15 +140,7 @@ export const updateMethodViewValue = createAsyncThunk(
         const methodDocs = functionFragment?.getDocText();
         const { name, fragmentKey, contractId, instances, readMethod } =
           methodItem;
-        console.log(methodDocs, methodItem, "methodDocs");
-        console.log({
-          name,
-          fragmentKey,
-          contractId,
-          instances,
-          docs: methodDocs,
-          readMethod,
-        });
+
         return {
           name,
           fragmentKey,
@@ -199,7 +188,6 @@ export const setMethodViewDocs = createAsyncThunk(
     );
     await functionFragment?.setDocText(docs!);
     dispatch(setMethodItem({ ...state.method.methodItem, docs }));
-    console.log(state.method.methodItem, "docs");
   }
 );
 

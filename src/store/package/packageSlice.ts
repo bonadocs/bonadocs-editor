@@ -110,7 +110,6 @@ export const getLatestEthersVersion = createAsyncThunk(
       const data = await response.json();
 
       const versions = data["versions"];
-      console.log('currentVersion', currentVersion);
       
       if (currentVersion) {
         await collection.valueManagerView.addLibrary(
