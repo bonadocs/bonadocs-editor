@@ -29,7 +29,6 @@ import {
   CodeWorkflowExecutor,
 } from "@bonadocs/core";
 import { setLoader } from "@/store/action/actionSlice";
-import { provide } from "vue";
 
 // Create the context props
 interface CollectionContextProps {
