@@ -8,6 +8,24 @@
     @media screen and (min-width: 1200px) {
       height: auto;
     }
-    
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
+
+    &__mobile {
+      display: none;
+      width: 100%;
+      background-color: var(--bonadocsBackground);
+      min-height: 100vh;
+      overflow-y: auto;
+      font-size: 2rem;
+      h3 {
+        align-self: center;
+        margin: 0 auto;
+      }
+      @media screen and (max-width: 600px) {
+        display: flex;
+      }
+    }
   }
 }
