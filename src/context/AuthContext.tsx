@@ -46,10 +46,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       if (user) {
       
         setUser(user);
-        navigate({
-          pathname: "/contracts",
-          search: `?uri=${uri}`,
-        });
+        // navigate({
+        //   pathname: "/contracts",
+        //   search: `?uri=${uri}`,
+        // });
         setLoading(false);
       } else {
         //  toast.error("No user found");

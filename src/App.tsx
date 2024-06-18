@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store";
 import { AuthProvider } from "./context/AuthContext";
-
+import { HelmetProvider } from "react-helmet-async";
 Modal.setAppElement("#root");
 function App() {
   return (
@@ -35,7 +35,9 @@ function App() {
               className="toast"
             />
             <PersistGate loading={null} persistor={persistor}>
-              <BonadocsEditorContainer />
+              <HelmetProvider>
+                <BonadocsEditorContainer />
+              </HelmetProvider>
             </PersistGate>
           </CollectionProvider>{" "}
         </AuthProvider>

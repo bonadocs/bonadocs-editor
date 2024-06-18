@@ -1,10 +1,9 @@
 import React from "react";
 import { BonadocsEditorViewHeader } from "../../layout/BonadocsEditorView/BonadocsEditorViewHeader/BonadocsEditorViewHeader";
 import { BonadocsEditorViewPlaygroundWrapper } from "../../layout/BonadocsEditorView/BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundWrapper";
-import { BonadocsEditorViewPlaygroundPlaceholder } from "@/layout/BonadocsEditorView/BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundPlaceholder";
 import { BonadocsEditorViewActionsWrapper } from "@/layout/BonadocsEditorView/BonadocsEditorViewActions/BonadocsEditorViewActionsWrapper";
-import { BonadocsEditorSidebar } from "@/layout/BonadocsEditorSidebar/BonadocsEditorSidebar";
 import { BonadocsEditorLayout } from "../BonadocsEditorLayout";
+
 interface BonadocsEditorActionsProps {
   className?: string;
 }
