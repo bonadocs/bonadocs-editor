@@ -8,6 +8,9 @@ export const Logo: React.FC<LogoProps> = ({ className }) => {
   return (
     <svg
       className={className}
+      onClick={() => {
+        window.open("https://bonadocs.com/", "_blank");
+      }}
       width="118"
       height="24"
       viewBox="0 0 118 24"
