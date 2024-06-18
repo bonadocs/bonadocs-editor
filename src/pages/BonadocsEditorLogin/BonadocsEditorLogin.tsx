@@ -1,10 +1,12 @@
 import { Button } from "@/components/button/Button";
 import { Logo } from "@/components/logo/Logo";
-import React from "react";
+import React, { useState } from "react";
 import {
   signInWithGooglePopup,
   signInWithGithubPopup,
 } from "../../utils/firebase.utils";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 interface BonadocsEditorLoginProps {
   className?: string;
 }
@@ -12,15 +14,22 @@ interface BonadocsEditorLoginProps {
 export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
   className,
 }) => {
-  const logGoogleUser = async () => {
-   
+  const [queryParameters] = useSearchParams();
+  const navigate = useNavigate();
+  const uri = queryParameters.get("uri");
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const logGoogleUser = async () => {
     const response = await signInWithGooglePopup();
   };
 
   const logGithubUser = async () => {
     const response = await signInWithGithubPopup();
-    
+    console.log(response);
+    navigate({
+      pathname: "/contracts",
+      search: `?uri=${uri}`,
+    });
   };
 
   return (
@@ -32,13 +41,21 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
         </h2>
         <div className="bonadocs__editor__login__inner__cta">
           <Button
+            disabled={loading}
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
-           
-
-              const response = await signInWithGooglePopup();
-              console.log(response);
-              
+              setLoading(true);
+              try {
+                const response = await signInWithGooglePopup();
+                console.log(response);
+                navigate({
+                  pathname: "/contracts",
+                  search: `?uri=${uri}`,
+                });
+              } catch (err) {
+                console.log(err);
+                setLoading(false);
+              }
             }}
           >
             <>
@@ -83,9 +100,21 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
             </>
           </Button>
           <Button
+            disabled={loading}
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
-              const response = await signInWithGithubPopup();
+              setLoading(true);
+              try {
+                const response = await signInWithGithubPopup();
+                console.log(response);
+                navigate({
+                  pathname: "/contracts",
+                  search: `?uri=${uri}`,
+                });
+              } catch (err) {
+                console.log(err);
+                setLoading(false);
+              }
             }}
           >
             <>
