@@ -21,8 +21,9 @@ export const BonadocsEditorSidebarItem: React.FC<
       : "" || (route === "/contracts" && pathname === "/" && "bona__active");
   const [queryParameters] = useSearchParams();
   const uri = queryParameters.get("uri");
+  const id = queryParameters.get("id");
   return (
-    <Link to={`${route}?uri=${uri}`}>
+    <Link to={`${route}?uri=${uri}&id=${id ?? ""}`}>
       <li className={`bonadocs__editor__sidebar__item ${active} ${className}`}>
         {icon && <div>{icon}</div>}
         <div>{name}</div>

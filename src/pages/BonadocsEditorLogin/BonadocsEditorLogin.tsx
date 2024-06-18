@@ -16,7 +16,6 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
    
 
     const response = await signInWithGooglePopup();
-    console.log(response);
   };
 
   const logGithubUser = async () => {
@@ -38,6 +37,7 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
            
 
               const response = await signInWithGooglePopup();
+              console.log(response);
               
             }}
           >

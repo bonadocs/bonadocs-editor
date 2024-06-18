@@ -38,7 +38,6 @@ const actionSlice = createSlice({
     builder
       .addCase(deleteWorkflowAction.pending, () => {})
       .addCase(deleteWorkflowAction.fulfilled, (state) => {
-        console.log("only run for delete");
 
         state.currentAction = {} as ActionItem;
       });
@@ -62,7 +61,6 @@ const actionSlice = createSlice({
         updateWorkflowActionCode.fulfilled,
         (state, action: PayloadAction<string | undefined>) => {
           const code = action.payload;
-          console.log(code);
           state.currentAction = {
             ...state.currentAction,
             code: [
@@ -126,7 +124,7 @@ export const createWorkflowAction = createAsyncThunk(
     try {
       await collection.workflowManagerView.addWorkflow({
         id: `00${Math.floor(Math.random() * 1000)}`,
-        name: workflowName?.trim()!,
+        name: workflowName?.replace(/\s+/g, '')!,
         variables: [
           {
             name: "var1",
@@ -147,6 +145,7 @@ export const createWorkflowAction = createAsyncThunk(
       dispatch(getCollectionActions(collection));
     } catch (err) {
       console.log(err, "error creating action");
+      toast.error("error creating action");
     }
   }
 );
@@ -200,7 +199,7 @@ export const renameWorkflowAction = createAsyncThunk(
     try {
       await collection.workflowManagerView.renameWorkflow(
         workflowId!,
-        workflowName!
+        workflowName?.replace(/\s+/g, "")!
       );
       dispatch(getCollectionActions(collection));
       toast.success(`Successfully renamed action`);

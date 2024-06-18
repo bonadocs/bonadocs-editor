@@ -94,7 +94,7 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
                 }
                 dispatch(
                   createWorkflowAction({
-                    workflowName: actionName,
+                    workflowName: actionName.replace(/\s+/g, ''),
                     collection: getCollection()!,
                   })
                 );

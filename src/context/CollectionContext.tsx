@@ -14,6 +14,7 @@ import {
   setConnected,
   setProvider,
 } from "@/store/controlBoard/controlBoardSlice";
+import { useSearchParams } from "react-router-dom";
 import { ethers } from "ethers";
 import { useSelector } from "react-redux";
 import {
@@ -76,6 +77,10 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const workflowButton = useSelector(workflowButtonText);
   const methodItem = useSelector((state: RootState) => state.method.methodItem);
   const [walletId, setWalletId] = useState<number>();
+  const [queryParameters] = useSearchParams();
+
+  const uri = queryParameters.get("uri");
+  const id = queryParameters.get("id");
   const writeMethod = useSelector(
     (state: RootState) => state.controlBoard.writeMethod
   );
@@ -341,11 +346,13 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
   async function executionWorkflowButton() {
     setWorkflowResponse("");
+    const activeNetwork = id?.length !== 0 && id !== null ? Number(id) : 1;
     try {
+      console.log("id", activeNetwork);
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
 
-      executor.setActiveChainId(chainId ?? 1);
+      executor.setActiveChainId(activeNetwork);
 
       const res = await executor.run();
 
