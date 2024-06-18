@@ -20,6 +20,8 @@ export const MetaTags: React.FC<MetaTagsProps> = ({
       <title>{title}</title>
       <link rel="canonical" href={window.location.href} />
       <meta name="description" content={description} />
+      <meta property="og:image:width" content="600" />
+      <meta property="og:image:height" content="314" />
       {/* Open Graph tags (OG) */}
       <meta property="og:url" content={window.location.href} />
       <meta property="og:type" content="website" />
