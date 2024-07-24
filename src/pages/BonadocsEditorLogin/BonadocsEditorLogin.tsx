@@ -5,7 +5,10 @@ import {
   signInWithGooglePopup,
   signInWithGithubPopup,
 } from "../../utils/firebase.utils";
+
 import { useNavigate, useSearchParams } from "react-router-dom";
+import axios from "axios";
+import { log } from "console";
 
 interface BonadocsEditorLoginProps {
   className?: string;
@@ -19,17 +22,77 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
   const uri = queryParameters.get("uri");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const logGoogleUser = async () => {
-    const response = await signInWithGooglePopup();
+  // function convertToBase64EncodedJSON(data: any): string {
+
+  //   let jsonString: string = JSON.stringify(data);
+  //   console.log(jsonString);
+
+  //   let utf8Array: Uint8Array = new TextEncoder().encode(jsonString);
+
+  //   let base64String: string = window.btoa(
+  //     String.fromCharCode(...Array.from(utf8Array))
+  //   );
+  //   console.log(base64String);
+
+  //   return base64String;
+  // }
+
+  const loginGoogleUser = async () => {
+    setLoading(true);
+    try {
+      const response = await signInWithGooglePopup();
+      console.log(response);
+      await bonadocsLogin(response);
+      navigate({
+        pathname: "/contracts",
+        search: `?uri=${uri}`,
+      });
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
 
-  const logGithubUser = async () => {
-    const response = await signInWithGithubPopup();
-    console.log(response);
-    navigate({
-      pathname: "/contracts",
-      search: `?uri=${uri}`,
+  const loginGithubUser = async () => {
+    setLoading(true);
+    try {
+      const response = await signInWithGithubPopup();
+      console.log(response);
+      await bonadocsLogin(response);
+      navigate({
+        pathname: "/contracts",
+        search: `?uri=${uri}`,
+      });
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
+  };
+
+  const bonadocsLogin = async (userInfo: any) => {
+    const { localId, firstName, lastName, email, idToken } =
+      userInfo._tokenResponse;
+    console.log(userInfo);
+    console.log(localId, firstName, lastName, email, idToken);
+    
+
+    const encodedAuthData = {
+      userId: localId,
+      idToken: idToken,
+    };
+    console.log(window.btoa(JSON.stringify(encodedAuthData)));
+
+    const response = await axios.post("http://localhost:8080/register", {
+      firstName,
+      lastName,
+      username: email,
+      emailAddress: email,
+      authSource: "firebase",
+      encodedAuthData: window
+        .btoa(JSON.stringify(encodedAuthData))
+        .slice(0, -1),
     });
+    console.log("bonadocs response", response);
   };
 
   return (
@@ -44,18 +107,7 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
             disabled={loading}
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
-              setLoading(true);
-              try {
-                const response = await signInWithGooglePopup();
-                console.log(response);
-                navigate({
-                  pathname: "/contracts",
-                  search: `?uri=${uri}`,
-                });
-              } catch (err) {
-                console.log(err);
-                setLoading(false);
-              }
+              await loginGoogleUser();
             }}
           >
             <>
@@ -103,18 +155,7 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
             disabled={loading}
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
-              setLoading(true);
-              try {
-                const response = await signInWithGithubPopup();
-                console.log(response);
-                navigate({
-                  pathname: "/contracts",
-                  search: `?uri=${uri}`,
-                });
-              } catch (err) {
-                console.log(err);
-                setLoading(false);
-              }
+              await loginGithubUser();
             }}
           >
             <>
