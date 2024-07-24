@@ -2,6 +2,7 @@ import {
   CollectionDataManager,
   TransactionOverrides,
   CodeSnippet,
+  ContractDefinition,
 } from "@bonadocs/core";
 export type VariableItem = {
   name: string;
@@ -15,6 +16,27 @@ export type MethodItem = {
   contractId?: string;
   instances?: Array<Instance>;
   docs?: string;
+};
+
+export type ProjectItem = {
+  name: string;
+  description: string;
+};
+
+export type ContractInfo = {
+  contractInstances?: ContractInstance[];
+  description?: string;
+};
+
+export type ContractsState = ContractDefinition & ContractInfo;
+
+export type ContractInstance = {
+  chainId?: number;
+  address?: string;
+  abi?: string;
+  name?: string;
+  logo?: string;
+  verification?: boolean;
 };
 
 export type Instance = {
@@ -41,14 +63,14 @@ export type ActionItem = {
   id: string;
   name: string;
   documentation?: string | undefined;
-  code: CodeSnippet[] ;
+  code: CodeSnippet[];
 };
 
 export type WorkflowItem = {
   collection: CollectionDataManager;
   workflowName?: string;
   workflowId?: string;
-  workflowDocs?: string
+  workflowDocs?: string;
 };
 
 export type WorkflowCodeItem = {
@@ -62,6 +84,8 @@ export type playgroundState = "interaction" | "documentation";
 export interface Option {
   label: string;
   value: string | number;
+  description?: string;
+  truthyValue?: boolean;
 }
 
 export interface BonadocsWidgetParamProps {

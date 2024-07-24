@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CheckboxInput } from "@/components/input/CheckboxInput";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/index";
@@ -17,6 +17,8 @@ export const BonadocsEditorSidebarSimulatorItem: React.FC<
   const simulation = useSelector(
     (state: RootState) => state.controlBoard.simulation
   );
+
+  useEffect(() => { }, [simulation]);
   return (
     <div className={className}>
       <Tab
@@ -26,8 +28,12 @@ export const BonadocsEditorSidebarSimulatorItem: React.FC<
       >
         <>
           <CheckboxInput
-            handleChange={(simulationState) =>
+            handleChange={(simulationState) => {
+               console.log(simulationState)
+              
               dispatch(setSimulation(simulationState))
+            }
+             
             }
             checked={simulation}
           />

@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BonadocsEditorActionsModalPackageAddSearchResultItem } from "./BonadocsEditorActionsModalPackageAddSearchResultItem";
-import axios from "axios";
-import { toast } from "react-toastify";
 
 interface BonadocsEditorActionsModalPackageAddSearchResultProps {
   show?: boolean;

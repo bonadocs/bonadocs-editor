@@ -23,6 +23,8 @@ html {
   --bonadocsYellow: #f6dc39;
   --bonadocsBlue: #4278ed;
   --bonadocsCodeBg: #0d1117;
+  --bonadocsNetworkBg: #131921;
+  --bonaodocsPlaceholder: #252f3b;
 }
 
 .bona__bg {
@@ -46,6 +48,10 @@ html {
   margin: 0rem !important;
 }
 
+textarea {
+  resize: none;
+}
+
 body {
   scrollbar-width: thin; /* "auto" or "thin" */
   scrollbar-color: var(--bonadocsProtocolBackground)
@@ -60,7 +66,7 @@ body {
 
 /* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 12px;
+  width: 0px;
 }
 
 *::-webkit-scrollbar-track {
@@ -70,7 +76,7 @@ body {
 *::-webkit-scrollbar-thumb {
   background-color: var(--bonadocsText);
   border-radius: 20px;
-  border: 4px solid var(--bonadocsBackground);
+  // border: 4px solid var(--bonadocsBackground);
 }
 
 .bona__active {
@@ -109,7 +115,8 @@ body {
 .react-tooltip {
   border: 1px solid var(--bonadocsEditorBorder) !important;
   background-color: var(--bonadocsEditorBackground) !important;
-  color: var(--bonadocsText) !important;
+  color: var(--bonadocsTextWhite) !important;
+  font-size: 1.2rem !important;
 }
 
 .styles-module_arrow__K0L3T {
@@ -186,3 +193,12 @@ body {
   display: flex;
   align-items: center;
 }
+
+.bona__disabled {
+  pointer-events: none;
+}
+
+.input-group label {
+  font-size: 2.8rem;
+}
+

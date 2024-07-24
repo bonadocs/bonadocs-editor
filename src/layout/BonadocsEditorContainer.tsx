@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { BonadocsEditorSidebar } from "./BonadocsEditorSidebar/BonadocsEditorSidebar";
+
 import { BonadocsEditor } from "../pages/BonadocsEditor";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { useSearchParams } from "react-router-dom";
 import { RootState } from "@/store";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
 import {
   setMethodItem,
@@ -34,9 +33,9 @@ export const BonadocsEditorContainer: React.FC = () => {
   }, []);
 
   const initializeCollection = async () => {
-    if (!uri) return;
+    //  if (!uri) return;
 
-    await initializeEditor(uri);
+    // await initializeEditor(uri!);
     if (queryParams.get("uri") !== contract.uri) {
       dispatch(setMethodItem({} as MethodItem));
       dispatch(setMethodDisplayData([]));

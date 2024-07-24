@@ -110,7 +110,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         let collection = await Collection.createFromLocalStore(
           localStorage.getItem(uri)!
         );
+        // await Collection.createBlankCollection
         collectionRef.current = collection.manager;
+         
       } else {
         let collection = await Collection.createFromURI(uri);
 

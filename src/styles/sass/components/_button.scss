@@ -17,6 +17,11 @@
       color: var(--bonadocsTextWhite);
       background-color: var(--bonadocsTextCritical);
     }
+    &__default {
+      color: var(--bonadocsText);
+      background-color: transparent;
+      border: 1px solid var(--bonadocsText);
+    }
     &:disabled {
       opacity: .2;
     }

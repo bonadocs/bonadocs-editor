@@ -34,11 +34,15 @@ export const customSideStyles = {
     // overflowY: "hidden",
     borderRadius: "0px",
     right: "auto",
+    // overflow: "hidden",
     marginRight: "-50%",
     transform: "translate(-50%, -50%)",
     height: "100%",
     backgroundColor: "transparent",
-    width: "35%",
+    width: "55%",
     padding: "0",
+    inset: "50% auto 40px 97.4%",
   },
 };
+
+

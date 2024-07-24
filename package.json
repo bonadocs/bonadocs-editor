@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@bonadocs/core": "^1.0.3-alpha.62",
+    "@bonadocs/core": "^1.0.3-alpha.64",
     "@firebase/app": "^0.10.2",
     "@firebase/auth": "^1.7.2",
     "@floating-ui/dom": "^1.6.3",
