@@ -53,6 +53,8 @@ export const BonadocsEditorProjectsCreationActionContractNetworkItem: React.FC<
               chainId: networkItem.chainId,
               name: networkItem.name,
               logo: networkItem.logo,
+              address: "",
+              abi: "",
             });
             dispatch(
               setCurrentContract({

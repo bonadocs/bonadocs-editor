@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import {
   setMethodItem,
-  updateMethodViewValue,
   setTransactionOverrides,
 } from "@/store/method/methodSlice";
 import { setActiveContract } from "@/store/contract/contractSlice";
@@ -13,7 +12,6 @@ import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { setMethodViewValue } from "@/store/method/methodSlice";
-import { log } from "console";
 interface BonadocsEditorViewPlaygroundContractAccordionItemProps {
   index: number;
   contractItem: ContractItem;

@@ -92,6 +92,10 @@
       color: var(--bonadocsTextWhite);
       margin-top: 0.4rem;
       border-radius: 0.4rem;
+      &__textarea {
+        height: 10rem;
+        resize: none;
+      }
       &__radio {
         align-items: center;
         font-size: 1.3rem;

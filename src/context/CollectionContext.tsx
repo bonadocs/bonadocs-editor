@@ -1,5 +1,11 @@
 "use client";
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import {
   Collection,
   CollectionDataManager,
@@ -36,6 +42,7 @@ interface CollectionContextProps {
   initializeEditor: (uri: string) => Promise<CollectionDataManager>; // Update the type to include Promise
   collection: CollectionDataManager | null;
   getCollection: () => CollectionDataManager | null;
+  setCollection: (collection: CollectionDataManager) => void;
   showResult: boolean;
   executionButton: (overlayRef: HTMLDivElement) => void;
   executionWorkflowButton: () => void;
@@ -45,6 +52,7 @@ interface CollectionContextProps {
   setWorkflowResponse: (resp: string) => void;
   emptyResponse: () => void;
   connectWallet: () => void;
+  reloadFunction: () => void;
 }
 
 // Create the context
@@ -77,6 +85,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const workflowButton = useSelector(workflowButtonText);
   const methodItem = useSelector((state: RootState) => state.method.methodItem);
   const [walletId, setWalletId] = useState<number>();
+  const [value, setValue] = useState(0);
   const [queryParameters] = useSearchParams();
 
   const uri = queryParameters.get("uri");
@@ -110,9 +119,8 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         let collection = await Collection.createFromLocalStore(
           localStorage.getItem(uri)!
         );
-        // await Collection.createBlankCollection
+        await Collection.createBlankCollection;
         collectionRef.current = collection.manager;
-         
       } else {
         let collection = await Collection.createFromURI(uri);
 
@@ -124,6 +132,12 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     } catch (error) {
       toast.error((error as Error).toString());
     }
+  };
+
+  const reloadFunction = () => {
+    // Function logic here
+    console.log("Function triggered!");
+    setValue((prev) => prev + 1);
   };
 
   const emptyResponse = () => {
@@ -147,6 +161,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   };
 
   const getCollection = () => collectionRef.current;
+  const setCollection = (collection: CollectionDataManager) => {
+    collectionRef.current = collection;
+  };
   const initializeEditor = async (uri: string) => {
     await loadCollection(uri);
     if (!collectionRef.current) {
@@ -381,6 +398,8 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         initializeEditor: initializeEditor,
         collection: collectionRef.current,
         getCollection: getCollection,
+        setCollection: setCollection,
+        reloadFunction: reloadFunction,
         showResult,
         executionButton,
         executionWorkflowButton,

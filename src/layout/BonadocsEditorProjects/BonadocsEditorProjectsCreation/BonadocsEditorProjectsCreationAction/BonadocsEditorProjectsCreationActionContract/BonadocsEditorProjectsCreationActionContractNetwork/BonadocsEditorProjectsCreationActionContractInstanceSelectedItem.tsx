@@ -130,11 +130,11 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       </div>{" "}
       {open && (
         <div className="bonadocs__editor__projects__creation__selection__item__deets">
-          <RadioInput
+          {/* <RadioInput
             checked={instance.verification ?? false}
             options={options}
             handleChange={handleChange}
-          />
+          /> */}
           <h2 className="bonadocs__editor__projects__creation__selection__item__deets__header">
             Contract address
           </h2>
@@ -195,11 +195,11 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
             </Button>
           )}
           <h2 className="bonadocs__editor__projects__creation__selection__item__deets__header">
-            Contract ABI
+            Contract ABI (read only)
           </h2>
           <TextareaInput
-            placeholder="Paste ABI"
-            value={contractABI}
+            value={currentContract.abi}
+            disabled
             handleChange={(e) => {
               handleABIChange(e.target.value);
             }}

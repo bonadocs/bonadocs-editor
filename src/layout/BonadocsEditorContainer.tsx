@@ -23,40 +23,37 @@ export const BonadocsEditorContainer: React.FC = () => {
   const contract = useSelector(
     (state: RootState) => state.contract.currentContract
   );
-  const method = useSelector(
-    (state: RootState) => state.method.methodDisplayData
-  );
+
   const queryParams = new URLSearchParams(window.location.search);
 
-  useEffect(() => {
-    void initializeCollection();
-  }, []);
+  // useEffect(() => {
+  //   void initializeCollection();
+  // }, []);
 
-  const initializeCollection = async () => {
-    //  if (!uri) return;
+  // const initializeCollection = async () => {
 
-    // await initializeEditor(uri!);
-    if (queryParams.get("uri") !== contract.uri) {
-      dispatch(setMethodItem({} as MethodItem));
-      dispatch(setMethodDisplayData([]));
-      dispatch(setActiveContract({} as ContractItem));
-      dispatch(setTransactionOverrides([]));
-    }
-    setDisplay(true);
-  };
+  //    if (!uri) return;
+
+  //   await initializeEditor(uri!);
+  //   if (queryParams.get("uri") !== contract.uri) {
+  //     dispatch(setMethodItem({} as MethodItem));
+  //     dispatch(setMethodDisplayData([]));
+  //     dispatch(setActiveContract({} as ContractItem));
+  //     dispatch(setTransactionOverrides([]));
+  //   }
+  //    setDisplay(true);
+  // };
   return (
     <>
-      {display && (
-        <>
-          <div className="bonadocs__editor">
-            {/* <BonadocsEditorSidebar className="bonadocs__editor__sidebar" /> */}
-            <BonadocsEditor className="bonadocs__editor__dashboard" />
-          </div>
-          <div className="bonadocs__editor__mobile">
-            <h3>Kindly view on desktop</h3>
-          </div>
-        </>
-      )}{" "}
+      <>
+        <div className="bonadocs__editor">
+          {/* <BonadocsEditorSidebar className="bonadocs__editor__sidebar" /> */}
+          <BonadocsEditor className="bonadocs__editor__dashboard" />
+        </div>
+        <div className="bonadocs__editor__mobile">
+          <h3>Kindly view on desktop</h3>
+        </div>
+      </>
     </>
   );
 };

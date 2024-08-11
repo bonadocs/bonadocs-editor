@@ -6,6 +6,7 @@
       width: inherit;
       display: flex;
       flex-direction: column;
+      min-height: max-content;
       &__header {
         display: flex;
         width: 100%;
@@ -189,6 +190,11 @@
     &__wrapper {
       justify-self: flex-end;
       color: var(--bonadocsTextWhite);
+    }
+    &__dropdown {
+      width: 100% !important;
+      border-radius: 0.4rem !important;
+      margin-top: 1rem !important;
     }
     &__title {
       //justify-self: center;

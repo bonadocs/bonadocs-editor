@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Logo } from "@/components/logo/Logo";
 import { Button } from "@/components/button/Button";
-import { BonadocsEditorProjectsCreationAction } from "./BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationAction";
 
+import { BonadocsEditorProjectsCreationAction } from "./BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationAction";
+import { BonadocsEditorProjectsCreationModal } from "./BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationModal";
 export const BonadocsEditorProjectsCreation: React.FC = () => {
-  // Your component logic here
+  const [showImportModal, setShowImportModal] = useState<boolean>(false);
 
   return (
+    
     <div className="bonadocs__editor__projects">
       <div className="bonadocs__editor__projects__inner">
         <Logo />
@@ -27,6 +29,7 @@ export const BonadocsEditorProjectsCreation: React.FC = () => {
           <Button
             className="bonadocs__editor__projects__inner__header__button"
             type="inertia"
+            onClick={() => setShowImportModal(!showImportModal)}
           >
             <>
               <img
@@ -47,6 +50,11 @@ export const BonadocsEditorProjectsCreation: React.FC = () => {
         </div>
         <BonadocsEditorProjectsCreationAction />
       </div>
+      <BonadocsEditorProjectsCreationModal
+        show={showImportModal}
+        closeImportModal={() => setShowImportModal(!showImportModal)}
+        handleImportCollection={() => {}}
+      />
     </div>
   );
 };

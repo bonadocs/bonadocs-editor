@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/button/Button";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { useAuthContext } from "@/context/AuthContext";
@@ -49,9 +49,8 @@ export const BonadocsEditorViewHeader: React.FC<
       <div className="bonadocs__editor__dashboard__header__share">
         <Button
           className="bonadocs__editor__dashboard__header__share"
-          onClick={async() => {
-             console.log(await getCollection()?.publishToIPFS());
-             
+          onClick={async () => {
+            console.log(await getCollection()?.publishToIPFS());
           }}
           type="action"
         >

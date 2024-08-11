@@ -2,28 +2,41 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { customStyles } from "@/data/toast/toastConfig";
 import { Button } from "@/components/button/Button";
-
-interface BonadocsEditorProjectsCreationActionContractDeleteModalProps {
+import { Dropdown } from "@/components/dropdown/Dropdown";
+import { Option } from "@/data/dataTypes";
+interface BonadocsEditorViewPlaygroundContractModalContractItemInstancesAddProps {
   className?: string;
   show?: boolean;
-  closeDeleteModal: () => void;
-  handleDeleteContract: () => void;
-  contractName: string;
+  closeInstanceAddModal: () => void;
+  handleAddContractInstance: (chainId: number) => void;
+  options: Option[];
 }
 
-export const BonadocsEditorProjectsCreationActionContractDeleteModal: React.FC<
-  BonadocsEditorProjectsCreationActionContractDeleteModalProps
-> = ({ show, closeDeleteModal, handleDeleteContract, contractName }) => {
+export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesAdd: React.FC<
+  BonadocsEditorViewPlaygroundContractModalContractItemInstancesAddProps
+> = ({
+  className,
+  show,
+  closeInstanceAddModal,
+  handleAddContractInstance,
+  options,
+}) => {
   const [open, isOpen] = useState<boolean>(false);
-
+  const [selectedChainId, setSelectedChainId] = useState<number>(
+    options[0].value as number
+  );
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
 
   const closeModal = () => {
     isOpen(!open);
-    closeDeleteModal();
+    closeInstanceAddModal();
   };
+
+  useEffect(() => {
+    setSelectedChainId(options[0].value as number);
+  },[options])
 
   return (
     <Modal
@@ -31,8 +44,14 @@ export const BonadocsEditorProjectsCreationActionContractDeleteModal: React.FC<
       contentLabel="Contract Modal"
       isOpen={open}
       onRequestClose={closeModal}
+      className={className}
     >
-      <div className="modal__close" onClick={closeModal}>
+      <div
+        className="modal__close"
+        onClick={() => {
+          closeModal();
+        }}
+      >
         <svg
           className="modal__close__img"
           width="24"
@@ -58,21 +77,24 @@ export const BonadocsEditorProjectsCreationActionContractDeleteModal: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Delete Contract</h3>
-        <div className="modal__container__text">
-          Are you certain about your decision to delete this contract:{" "}
-          {contractName} ? Please be aware that this cannot be undone.
-        </div>
+        <h3 className="modal__container__title">Add Instance</h3>
+        <Dropdown
+          options={options}
+          updateId={(e) => setSelectedChainId(Number(e.target.value))}
+          className="modal__container__dropdown"
+        />
         <div className="modal__container__wrapper">
           <Button
-            type="critical"
+            type="action"
             onClick={async () => {
-              handleDeleteContract();
+              handleAddContractInstance(selectedChainId);
+              console.log(selectedChainId);
+
               closeModal();
             }}
             className="modal__container__button"
           >
-            Delete Contract
+            Add Instance
           </Button>
         </div>
       </div>

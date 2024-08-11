@@ -26,17 +26,24 @@ export type ProjectItem = {
 export type ContractInfo = {
   contractInstances?: ContractInstance[];
   description?: string;
+  abi?: string;
 };
 
 export type ContractsState = ContractDefinition & ContractInfo;
 
 export type ContractInstance = {
-  chainId?: number;
-  address?: string;
+  chainId: number;
+  address: string;
   abi?: string;
   name?: string;
   logo?: string;
   verification?: boolean;
+};
+
+export type CollectionDetailsParams = {
+  collection: CollectionDataManager;
+  projectItem: "name" | "description";
+  value: string;
 };
 
 export type Instance = {

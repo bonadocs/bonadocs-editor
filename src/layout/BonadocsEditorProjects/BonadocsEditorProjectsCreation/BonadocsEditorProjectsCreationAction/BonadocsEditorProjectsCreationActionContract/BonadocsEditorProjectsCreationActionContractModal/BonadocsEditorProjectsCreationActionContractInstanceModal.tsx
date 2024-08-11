@@ -9,11 +9,14 @@ import { AppDispatch, RootState } from "@/store";
 import { ContractInstance } from "@/data/dataTypes";
 import {
   setCurrentContract,
+  updateContract,
   updateContractInstances,
 } from "@/store/project/projectSlice";
 import { BonadocsEditorProjectsCreationActionContractInstanceDeleteModal } from "./BonadocsEditorProjectsCreationActionContractInstanceDeleteModal";
 import { BonadocsEditorProjectsCreationActionContractInstanceSelected } from "../BonadocsEditorProjectsCreationActionContractNetwork/BonadocsEditorProjectsCreationActionContractInstanceSelected";
 import { Button } from "@/components/button/Button";
+import { TextareaInput } from "@/components/input/TextareaInput";
+import { set } from "lodash";
 
 interface BonadocsEditorProjectsCreationActionContractInstanceModalProps {
   className?: string;
@@ -35,7 +38,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
 
   const [selectedInstance, setSelectedInstance] =
     useState<ContractInstance | null>(null);
-
+  const [contractAbi, setContractAbi] = useState<string>(currentContract.abi!);
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
@@ -64,11 +67,22 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
     dispatch(updateContractInstances(instances!));
   };
 
+  const updateContractAbi = (abi: string) => {
+    setContractAbi(abi);
+    const updatedContract = {
+      ...currentContract,
+      abi,
+    };
+    dispatch(setCurrentContract(updatedContract));
+
+    dispatch(updateContract(updatedContract));
+  };
+
   useEffect(() => {
     if (currentContract) {
       setContractInstances(currentContract.contractInstances!);
+      // setContractAbi(currentContract.abi!);
     }
-   
   }, [currentContract]);
 
   return (
@@ -80,31 +94,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
       onRequestClose={closeModal}
     >
       <div className="modal__side__container">
-        <div className="modal__side__close" onClick={() => closeModal()}>
-          <svg
-            className="modal__side__close__img"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18 6L6 18"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M6 6L18 18"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </div>
+        
         <h2 className="modal__side__container__header__title">
           Add Contract Instance ( {currentContract.name} )
         </h2>
@@ -250,6 +240,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
             </>
           )}
         </div>
+
         <BonadocsEditorProjectsCreationActionContractInstanceDeleteModal
           handleDeleteContractInstance={deleteInstance}
           networkName={selectedInstance?.name}
@@ -258,6 +249,14 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
         />
         {!openNetworkList && contractInstances?.length > 0 && (
           <>
+            <h5 className="bonadocs__editor__projects__action__select__name">
+              Add contract ABI
+            </h5>
+            <TextareaInput
+              placeholder="Paste contract ABI"
+              value={contractAbi}
+              handleChange={(e) => updateContractAbi(e.target.value)}
+            />
             <h5 className="bonadocs__editor__projects__action__select__name">
               Add instances
             </h5>

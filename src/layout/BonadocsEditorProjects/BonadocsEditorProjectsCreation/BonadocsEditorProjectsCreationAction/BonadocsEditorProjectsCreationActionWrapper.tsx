@@ -5,19 +5,26 @@ import { BonadocsEditorProjectsCreationActionContract } from "./BonadocsEditorPr
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "@/store";
 import { setProjectView } from "@/store/project/projectSlice";
-import { projectFilled, projectValidation } from "@/store/project/projectSlice";
+import {
+  projectFilled,
+  projectValidation,
+  createCollection,
+} from "@/store/project/projectSlice";
 import { Tooltip } from "react-tooltip";
+import { useCollectionContext } from "@/context/CollectionContext";
+import { CollectionDataManager } from "@bonadocs/core";
+import { useNavigate } from "react-router-dom";
 
 export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
+  const { setCollection } = useCollectionContext();
   const projectView = useSelector(
     (state: RootState) => state.project.projectView
   );
-  const projectItem = useSelector(
-    (state: RootState) => state.project.projectItem
-  );
+ 
   const dispatch: AppDispatch = useDispatch();
   const filled = useSelector(projectFilled);
   const validation = useSelector(projectValidation);
+  const navigate = useNavigate();
 
   return (
     <div className="bonadocs__editor__projects__action__wrapper">
@@ -48,12 +55,18 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
             ? false
             : true
         }
-        onClick={() => {
+        onClick={async () => {
           if (projectView) {
             dispatch(setProjectView(false));
           } else {
             console.log("create project");
+            const newCollection = await dispatch(createCollection());
+            setCollection(newCollection.payload as CollectionDataManager);
+            navigate({
+              pathname: "/contracts",
+            });
           }
+
           // dispatch(setProjectView(!projectView));
         }}
       >

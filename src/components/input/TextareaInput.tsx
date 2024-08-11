@@ -21,7 +21,7 @@ export const TextareaInput = ({
       placeholder={placeholder}
       value={value?.toString() || ""}
       onChange={handleChange}
-      className={`bonadocs__editor__input ${className}`}
+      className={`bonadocs__editor__input bonadocs__editor__input__textarea ${className}`}
     />
   );
 };

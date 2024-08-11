@@ -32,11 +32,6 @@ interface UpdateMethodParams {
   methodItem: MethodItem;
 }
 
-interface UpdateChainIdParams {
-  collection: CollectionDataManager;
-  chainId: number;
-}
-
 const methodSlice = createSlice({
   name: "method",
   initialState,

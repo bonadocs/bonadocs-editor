@@ -1,5 +1,4 @@
 import React from "react";
-import { Accordion } from "@/components/accordion/Accordion";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { BonadocsEditorViewPlaygroundContractAccordionItem } from "./BonadocsEditorViewPlaygroundContractAccordionItem";

@@ -16,43 +16,40 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
   return (
     <>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <BonadocsEditorContracts className={className} />
-            </>
-          }
-        />
-        <Route
-          path="/contracts"
-          element={
-            <>
-              <BonadocsEditorContracts className={className} />
-            </>
-          }
-        />
-        <Route
-          path="/variables"
-          element={
-            <>
-              <BonadocsEditorVariables className={className} />
-            </>
-          }
-        />
-        <Route
-          path="/actions"
-          element={
-            <>
-              <BonadocsEditorActions className={className} />
-            </>
-          }
-        />
+        <Route path={"/"}>
+          <Route
+            index
+            element={<BonadocsEditorContracts className={className} />}
+          />
+          <Route
+            path="contracts"
+            element={
+              <>
+                <BonadocsEditorContracts className={className} />
+              </>
+            }
+          />
+          <Route
+            path="variables"
+            element={
+              <>
+                <BonadocsEditorVariables className={className} />
+              </>
+            }
+          />
+          <Route
+            path="actions"
+            element={
+              <>
+                <BonadocsEditorActions className={className} />
+              </>
+            }
+          />
+        </Route>
         <Route path="/login" element={<BonadocsEditorLogin />} />
-        <Route path={"projects"} >
+        <Route path={"projects"}>
           <Route index element={<BonadocsEditorProjects />} />
-          <Route path="create" element={<BonadocsEditorProjectsCreation/>} /> 
-          
+          <Route path="create" element={<BonadocsEditorProjectsCreation />} />
         </Route>
       </Routes>
     </>
