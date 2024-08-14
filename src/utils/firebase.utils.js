@@ -1,11 +1,12 @@
-import { initializeApp, signInWithRedirect } from "@firebase/app";
+import { initializeApp } from "firebase/app";
 import {
   getAuth,
   signInWithPopup,
   GoogleAuthProvider,
-    GithubAuthProvider,
-  onAuthStateChanged,
-} from "@firebase/auth";
+  GithubAuthProvider,
+} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBTpv1JcZvTNiiEJu488bAdA7P7KXifGa4",
   authDomain: "bonadocs-cebc1.firebaseapp.com",
@@ -17,22 +18,21 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase
-const firebaseApp = initializeApp(firebaseConfig);
 // Initialize Firebase Auth provider
 const provider = new GoogleAuthProvider();
 const gitProvider = new GithubAuthProvider();
-  
+
 // whenever a user interacts with the provider, we force them to select an account
-provider.setCustomParameters({   
-    prompt : "select_account "
+provider.setCustomParameters({
+  prompt: "select_account ",
 });
 
-gitProvider.addScope('repo');
+gitProvider.addScope("repo");
 gitProvider.setCustomParameters({
-  'allow_signup': 'false'
-})
+  allow_signup: "false",
+});
 
-export const auth = getAuth();
+export const db = getFirestore(app);
+export const auth = getAuth(app);
 export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const signInWithGithubPopup = () => signInWithPopup(auth, gitProvider);
