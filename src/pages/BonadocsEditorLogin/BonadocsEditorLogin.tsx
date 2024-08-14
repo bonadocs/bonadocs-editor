@@ -43,7 +43,6 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                   search: `?uri=${uri}`,
                 });
               } catch (err) {
-                console.log("inside login component", err);
                 setLoading(false);
               }
             }}
