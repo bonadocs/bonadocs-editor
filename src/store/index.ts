@@ -3,6 +3,7 @@ import methodReducer from "./method/methodSlice";
 import variableReducer from "./variable/variableSlice";
 import contractReducer from "./contract/contractSlice";
 import actionReducer from "./action/actionSlice";
+import authReducer from "./action/actionSlice";
 import controlBoardReducer from "./controlBoard/controlBoardSlice";
 import packageReducer from "./package/packageSlice";
 import storage from "redux-persist/lib/storage";
@@ -38,6 +39,7 @@ const rootReducer = combineReducers({
   variable: variableReducer,
   controlBoard: controlBoardReducer,
   package: packageReducer,
+  auth: authReducer,
   action: persistReducer(actionPersistConfig, actionReducer),
 });
 

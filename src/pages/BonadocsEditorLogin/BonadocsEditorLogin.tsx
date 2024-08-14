@@ -1,14 +1,10 @@
 import { Button } from "@/components/button/Button";
 import { Logo } from "@/components/logo/Logo";
 import React, { useState } from "react";
-import {
-  signInWithGooglePopup,
-  signInWithGithubPopup,
-} from "../../utils/firebase.utils";
-
+import { loginGoogleUser, loginGithubUser } from "@/store/auth/authSlice";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
-import { log } from "console";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store";
 
 interface BonadocsEditorLoginProps {
   className?: string;
@@ -19,81 +15,9 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
 }) => {
   const [queryParameters] = useSearchParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   const uri = queryParameters.get("uri");
   const [loading, setLoading] = useState<boolean>(false);
-
-  // function convertToBase64EncodedJSON(data: any): string {
-
-  //   let jsonString: string = JSON.stringify(data);
-  //   console.log(jsonString);
-
-  //   let utf8Array: Uint8Array = new TextEncoder().encode(jsonString);
-
-  //   let base64String: string = window.btoa(
-  //     String.fromCharCode(...Array.from(utf8Array))
-  //   );
-  //   console.log(base64String);
-
-  //   return base64String;
-  // }
-
-  const loginGoogleUser = async () => {
-    setLoading(true);
-    try {
-      const response = await signInWithGooglePopup();
-      console.log(response);
-      await bonadocsLogin(response);
-      navigate({
-        pathname: "/contracts",
-        search: `?uri=${uri}`,
-      });
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
-  const loginGithubUser = async () => {
-    setLoading(true);
-    try {
-      const response = await signInWithGithubPopup();
-      console.log(response);
-      await bonadocsLogin(response);
-      navigate({
-        pathname: "/contracts",
-        search: `?uri=${uri}`,
-      });
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
-  };
-
-  const bonadocsLogin = async (userInfo: any) => {
-    const { localId, firstName, lastName, email, idToken } =
-      userInfo._tokenResponse;
-    console.log(userInfo);
-    console.log(localId, firstName, lastName, email, idToken);
-    
-
-    const encodedAuthData = {
-      userId: localId,
-      idToken: idToken,
-    };
-    console.log(window.btoa(JSON.stringify(encodedAuthData)));
-
-    const response = await axios.post("http://localhost:8080/register", {
-      firstName,
-      lastName,
-      username: email,
-      emailAddress: email,
-      authSource: "firebase",
-      encodedAuthData: window
-        .btoa(JSON.stringify(encodedAuthData))
-        .slice(0, -1),
-    });
-    console.log("bonadocs response", response);
-  };
 
   return (
     <div className="bonadocs__editor__login">
@@ -107,7 +31,21 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
             disabled={loading}
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
-              await loginGoogleUser();
+              setLoading(true);
+              try {
+                const res = await dispatch(loginGoogleUser());
+                if (!res.payload) {
+                  setLoading(false);
+                  return;
+                }
+                navigate({
+                  pathname: "/contracts",
+                  search: `?uri=${uri}`,
+                });
+              } catch (err) {
+                console.log("inside login component", err);
+                setLoading(false);
+              }
             }}
           >
             <>
@@ -155,7 +93,21 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
             disabled={loading}
             className="bonadocs__editor__login__inner__cta__button"
             onClick={async () => {
-              await loginGithubUser();
+              setLoading(true);
+              try {
+                const res = await dispatch(loginGithubUser());
+                if (!res.payload) {
+                  setLoading(false);
+                  return;
+                }
+                navigate({
+                  pathname: "/contracts",
+                  search: `?uri=${uri}`,
+                });
+              } catch (err) {
+                console.log(err);
+                setLoading(false);
+              }
             }}
           >
             <>
