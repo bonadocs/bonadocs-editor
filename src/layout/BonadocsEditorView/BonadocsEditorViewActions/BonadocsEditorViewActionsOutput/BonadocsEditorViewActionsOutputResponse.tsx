@@ -29,7 +29,7 @@ export const BonadocsEditorViewActionsOutputResponse: React.FC<
     <>
       {workflowResponse["consoleLogs"] && (
         <CodeBlock style={{ maxWidth: `${width}px` }}>
-          {(workflowResponse["consoleLogs"], null, 2)}
+          {JSON.stringify(workflowResponse["consoleLogs"], null, 2)}
         </CodeBlock>
       )}
     </>
