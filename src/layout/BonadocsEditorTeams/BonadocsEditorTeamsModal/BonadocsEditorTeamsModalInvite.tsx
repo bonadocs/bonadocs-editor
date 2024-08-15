@@ -126,81 +126,92 @@ export const BonadocsEditorTeamsModalInvite: React.FC<
             </svg>
           </div>
         </div>
-        <></>
-        <div
-          className="bonadocs__editor__projects__creation__add"
-          onClick={() => setAddEmail(!addEmail)}
-        >
-          <svg
-            className="bonadocs__editor__dashboard__playground__contract__header__addIconn bonadocs__editor__projects__creation__add__icon"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+        {/* {!addEmail && (
+          <div
+            className="bonadocs__editor__projects__creation__add"
+            onClick={() => setAddEmail(!addEmail)}
           >
-            <path
-              d="M4 8L12 8"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-            <path
-              d="M8 12L8 4"
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></path>
-          </svg>
-          <h3 className="bonadocs__editor__projects__creation__add__title">
-            Add user
-          </h3>
-        </div>
+            <svg
+              className="bonadocs__editor__dashboard__playground__contract__header__addIconn bonadocs__editor__projects__creation__add__icon"
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4 8L12 8"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+              <path
+                d="M8 12L8 4"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+            <h3 className="bonadocs__editor__projects__creation__add__title">
+              Add user
+            </h3>
+          </div>
+        )} */}
 
         {addEmail && (
-          <div className="modal__container__wrapper__inner">
-            <h5 className="modal__container__text">Invite new member</h5>
-            <TextInput
-              value={inviteEmail}
-              handleChange={(e) => {
-                setInviteEmail(e.target.value);
-              }}
-              placeholder="Enter the user's email"
-              className="modal__container__wrapper__inner__input"
-            />
-            <Button
-              type="action"
-              onClick={async () => {
-                setLoading(true);
-                try {
-                  const creation = await dispatch(teamCreation(teamName));
-                  if (creation.payload === false) {
+          <>
+            <div className="modal__container__wrapper__inner">
+              <h5 className="modal__container__text">Invite new member</h5>
+              <TextInput
+                value={inviteEmail}
+                handleChange={(e) => {
+                  setInviteEmail(e.target.value);
+                }}
+                placeholder="Enter the user's email"
+                className="modal__container__wrapper__inner__input"
+              />
+              <Button
+                type="action"
+                onClick={async () => {
+                  setLoading(true);
+                  try {
+                    const creation = await dispatch(teamCreation(teamName));
+                    if (creation.payload === false) {
+                      setLoading(false);
+                      return;
+                    }
                     setLoading(false);
-                    return;
+                    closeInviteModal();
+                  } catch (err) {
+                    setLoading(false);
                   }
-                  setLoading(false);
-                  closeInviteModal();
-                } catch (err) {
-                  setLoading(false);
-                }
-              }}
-              className="modal__container__wrapper__inner__button"
+                }}
+                className="modal__container__wrapper__inner__button"
+              >
+                <>
+                  {loading ? (
+                    <MoonLoader
+                      color="#fff"
+                      loading={true}
+                      size={10}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                  ) : (
+                    "Invite user"
+                  )}
+                </>
+              </Button>
+            </div>
+
+            <Button
+              onClick={() => setAddEmail(!addEmail)}
+              className="bonadocs__editor__projects__creation__selection__item__deets__delete"
+              type="critical"
             >
-              <>
-                {loading ? (
-                  <MoonLoader
-                    color="#fff"
-                    loading={true}
-                    size={10}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                ) : (
-                  "Invite user"
-                )}
-              </>
+              Cancel
             </Button>
-          </div>
+          </>
         )}
       </div>
     </Modal>
