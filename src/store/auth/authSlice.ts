@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { api } from "@/utils/axios";
 import {
   signInWithGooglePopup,
   signInWithGithubPopup,
@@ -12,6 +12,7 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+
 import { toast } from "react-toastify";
 
 interface UserState {
@@ -48,6 +49,7 @@ export const loginGoogleUser = createAsyncThunk(
       if (!login) {
         return false;
       }
+      dispatch(setUserState(login));
       return true;
     } catch (err) {
       console.log("login google user err", err);
@@ -67,6 +69,7 @@ export const loginGithubUser = createAsyncThunk(
       if (!login) {
         return false;
       }
+      dispatch(setUserState(login));
       return true;
     } catch (err) {
       console.log("login github user err", err);
@@ -101,33 +104,30 @@ const bonadocsLogin = async (userInfo: any) => {
     );
 
     if (getAccountExists) {
-      response = await axios.post(
-        `${process.env.REACT_APP_BONADOCS_ENDPOINT}/login`,
-        {
-          authSource: "firebase",
-          encodedAuthData: window.btoa(JSON.stringify(encodedAuthData)),
-        }
-      );
+      response = await api.post(`/login`, {
+        authSource: "firebase",
+        encodedAuthData: window.btoa(JSON.stringify(encodedAuthData)),
+      });
     } else {
-      response = await axios.post(
-        `${process.env.REACT_APP_BONADOCS_ENDPOINT}/register`,
-        {
-          firstName,
-          lastName: lastName ?? "bonadocs",
-          username: email,
-          emailAddress: email,
-          authSource: "firebase",
-          encodedAuthData: window.btoa(JSON.stringify(encodedAuthData)),
-        }
-      );
+      response = await api.post(`/register`, {
+        firstName,
+        lastName: lastName ?? "bonadocs",
+        username: email,
+        emailAddress: email,
+        authSource: "firebase",
+        encodedAuthData: window.btoa(JSON.stringify(encodedAuthData)),
+      });
       const usersRef = doc(db, "users", "email");
-      
+
       await updateDoc(usersRef, {
         email: arrayUnion(email),
       });
     }
 
-    return true;
+    return {
+      email: email,
+      authToken: response.data.data.token,
+    };
   } catch (err: any) {
     toast.error(err.response.data.message);
     console.log("bonadocs login err", err);

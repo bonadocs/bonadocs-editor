@@ -6,6 +6,7 @@ import { BonadocsEditorActions } from "./BonadocsEditorActions/BonadocsEditorAct
 import { BonadocsEditorLogin } from "./BonadocsEditorLogin/BonadocsEditorLogin";
 import { BonadocsEditorProjects } from "./BonadocsEditorProjects/BonadocsEditorProjects";
 import { BonadocsEditorProjectsCreation } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreation";
+import { BonadocsEditorTeams } from "./BonadocsEditorTeams/BonadocsEditorTeams";
 
 interface BonadocsEditorProps {
   className?: string;
@@ -51,6 +52,7 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
           <Route index element={<BonadocsEditorProjects />} />
           <Route path="create" element={<BonadocsEditorProjectsCreation />} />
         </Route>
+        <Route path="/teams" element={<BonadocsEditorTeams />} />
       </Routes>
     </>
   );

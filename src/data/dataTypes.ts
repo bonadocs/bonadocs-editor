@@ -46,6 +46,12 @@ export type CollectionDetailsParams = {
   value: string;
 };
 
+export type TeamItem = {
+  name: string;
+  slug: string;
+  permission?: string;
+};
+
 export type Instance = {
   chainId: number;
   address: string;

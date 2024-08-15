@@ -17,6 +17,7 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const uri = queryParameters.get("uri");
+  const redirect = queryParameters.get("redirect");
   const [loading, setLoading] = useState<boolean>(false);
 
   return (
@@ -38,8 +39,13 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                   setLoading(false);
                   return;
                 }
-                navigate({
-                  pathname: "/contracts",
+                if (!redirect) {
+                  navigate({
+                    pathname: "/teams",
+                    
+                  });
+                } else navigate({
+                  pathname: redirect,
                   search: `?uri=${uri}`,
                 });
               } catch (err) {
@@ -99,10 +105,15 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                   setLoading(false);
                   return;
                 }
-                navigate({
-                  pathname: "/contracts",
-                  search: `?uri=${uri}`,
-                });
+                if (!redirect) {
+                  navigate({
+                    pathname: "/teams"
+                  });
+                } else
+                  navigate({
+                    pathname: redirect,
+                    search: `?uri=${uri}`,
+                  });
               } catch (err) {
                 console.log(err);
                 setLoading(false);

@@ -3,10 +3,11 @@ import methodReducer from "./method/methodSlice";
 import variableReducer from "./variable/variableSlice";
 import contractReducer from "./contract/contractSlice";
 import actionReducer from "./action/actionSlice";
-import authReducer from "./action/actionSlice";
+import authReducer from "./auth/authSlice";
 import projectReducer from "./project/projectSlice";
 import controlBoardReducer from "./controlBoard/controlBoardSlice";
 import packageReducer from "./package/packageSlice";
+import teamReducer from "./team/teamSlice";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   package: packageReducer,
   auth: authReducer,
   project: projectReducer,
+  team: teamReducer,
   action: persistReducer(actionPersistConfig, actionReducer),
 });
 

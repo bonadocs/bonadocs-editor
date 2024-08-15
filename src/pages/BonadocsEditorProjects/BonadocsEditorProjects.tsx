@@ -63,7 +63,7 @@ export const BonadocsEditorProjects: React.FC = () => {
                   parties interacting with Uniswap.
                 </h5>
               </div>
-              <Popover className="relative ma-auto">
+              {/* <Popover className="relative ma-auto">
                 <Popover.Button
                   className="bonadocs__editor__projects__inner__list__item__icon"
                   ref={setReferenceElement}
@@ -103,7 +103,7 @@ export const BonadocsEditorProjects: React.FC = () => {
                     </>
                   )}
                 </Popover.Panel>
-              </Popover>
+              </Popover> */}
             </div>
             <div className="bonadocs__editor__projects__inner__list__item">
               <img
@@ -121,47 +121,13 @@ export const BonadocsEditorProjects: React.FC = () => {
                   parties interacting with Uniswap.
                 </h5>
               </div>
-              <Popover className="relative ma-auto">
-                <Popover.Button
-                  className="bonadocs__editor__projects__inner__list__item__icon"
-                  ref={setReferenceElement}
-                >
-                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715454229/More_aiemyt.svg" />
-                </Popover.Button>
-                <Popover.Panel
-                  ref={setPopperElement}
-                  style={styles.popper}
-                  {...attributes.popper}
-                  className="bonadocs__editor__variables__table__item__popover"
-                >
-                  {({ close }) => (
-                    <>
-                      <div className="bonadocs__editor__variables__table__item__popover__item">
-                        <div
-                          onClick={() => {
-                            // setEditWidget(!editWidget);
-                            close();
-                          }}
-                          className="bonadocs__editor__variables__table__item__popover__item__edit"
-                        >
-                          Edit Variable
-                        </div>
-                        <div
-                          onClick={() => {
-                            // setDeleteWidget(!deleteWidget);
-                            close();
-                          }}
-                          className="bonadocs__editor__variables__table__item__popover__item__delete"
-                        >
-                          Delete Variable
-                        </div>
-                      </div>
 
-                      <img src="/solutions.jpg" alt="" />
-                    </>
-                  )}
-                </Popover.Panel>
-              </Popover>
+              {/* <Button
+                className="bonadocs__editor__projects__inner__list__item__icon"
+                
+              >
+                <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715454229/More_aiemyt.svg" />
+              </Button> */}
             </div>
             <div className="bonadocs__editor__projects__inner__list__item">
               <img
@@ -179,7 +145,7 @@ export const BonadocsEditorProjects: React.FC = () => {
                   parties interacting with Uniswap.
                 </h5>
               </div>
-              <Popover className="relative ma-auto">
+              {/* <Popover className="relative ma-auto">
                 <Popover.Button
                   className="bonadocs__editor__projects__inner__list__item__icon"
                   ref={setReferenceElement}
@@ -219,7 +185,7 @@ export const BonadocsEditorProjects: React.FC = () => {
                     </>
                   )}
                 </Popover.Panel>
-              </Popover>
+              </Popover> */}
             </div>
           </div>
         </>

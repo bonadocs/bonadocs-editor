@@ -13,6 +13,7 @@ import {
 } from "@bonadocs/core";
 import { toast } from "react-toastify";
 import { fetchCollectionContracts } from "../contract/contractSlice";
+import { api } from "@/utils/axios";
 
 const emptyContract = {
   id: "0",
@@ -34,6 +35,7 @@ const initialState = {
   contracts: contracts,
   currentContract: contracts[0] as ContractsState,
   projectView: true as boolean,
+  projectList: [] as Array<ProjectItem>,
 };
 
 interface updateContractListParams {
