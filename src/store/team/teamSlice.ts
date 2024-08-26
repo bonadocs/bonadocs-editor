@@ -1,17 +1,23 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { api } from "@/utils/axios";
-import { TeamItem } from "@/data/dataTypes";
+import { TeamItem, TeamInvite } from "@/data/dataTypes";
 
 const initialState = {
   teamList: [] as TeamItem[],
+  currentTeam: {} as TeamItem,
 };
 
 const teamSlice = createSlice({
   name: "method",
   initialState,
   reducers: {
-    reset: () => initialState,
+    // reset: () => initialState,
+    setTeamId: (state, action: PayloadAction<string>) => {
+      console.log(action.payload);
+
+      state.currentTeam.id = action.payload.toString();
+    },
     setTeamItems: (state, action: PayloadAction<TeamItem[]>) => {
       state.teamList = action.payload;
     },
@@ -53,6 +59,8 @@ export const getTeams = createAsyncThunk(
         return {
           name: team.name,
           slug: team.slug,
+          id: team.id,
+          permissions: [],
         };
       });
       dispatch(setTeamItems(teamList));
@@ -63,6 +71,57 @@ export const getTeams = createAsyncThunk(
   }
 );
 
-export const { setTeamItems } = teamSlice.actions;
+export const acceptInvite = createAsyncThunk(
+  "project/acceptInvite",
+  async (inviteToken: string, { getState, dispatch, rejectWithValue }) => {
+    try {
+      await api.get(`/projects/accept-invitation?token=${inviteToken}`);
+      toast.success("Invitation accepted");
+      return true;
+    } catch (err: any) {
+      console.log(err.response.data.message);
+
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
+export const inviteMember = createAsyncThunk(
+  "project/inviteMember",
+  async (inviteParam: TeamInvite, { getState, dispatch, rejectWithValue }) => {
+    try {
+      await api.post(`/projects/${inviteParam.projectId}/invitations`, {
+        memberName: inviteParam.name,
+        emailAddress: inviteParam.email,
+        permissions: inviteParam.permission,
+      });
+      toast.success(`Invitation sent to ${inviteParam.name}`);
+      return true;
+    } catch (err: any) {
+      console.log(err.response.data.message);
+
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
+export const fetchTeamMembers = createAsyncThunk(
+  "project/fetchTeamMembers",
+  async (projectId: string, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const members = await api.get(`/projects/${projectId}/invitations`);
+      console.log(members.data.data);
+      return members.data.data;
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message);
+      return false;
+    }
+  }
+);
+
+export const { setTeamItems, setTeamId } = teamSlice.actions;
 
 export default teamSlice.reducer;

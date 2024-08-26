@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { Logo } from "@/components/logo/Logo";
 import { Button } from "@/components/button/Button";
-
+import { useNavigate } from "react-router-dom";
 import { BonadocsEditorProjectsCreationAction } from "./BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationAction";
 import { BonadocsEditorProjectsCreationModal } from "./BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationModal";
 export const BonadocsEditorProjectsCreation: React.FC = () => {
   const [showImportModal, setShowImportModal] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   return (
-    
     <div className="bonadocs__editor__projects">
       <div className="bonadocs__editor__projects__inner">
         <Logo />
         <div className="bonadocs__editor__projects__inner__header">
           <Button
-            disabled
+            onClick={() => navigate(-1)}
             type="default"
             className="bonadocs__editor__projects__inner__header__button"
           >
@@ -23,7 +23,7 @@ export const BonadocsEditorProjectsCreation: React.FC = () => {
                 alt="go back"
                 src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1720339940/Arrow-Back_tn27nc.svg"
               />
-              Back to Project
+              Back to Projects
             </>
           </Button>
           <Button

@@ -6,13 +6,22 @@ import { getTeams } from "@/store/team/teamSlice";
 import { BonadocsEditorTeamsItem } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsItem";
 import { BonadocsEditorTeamsModalCreate } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsModal/BonadocsEditorTeamsModalCreate";
 import { AppDispatch, RootState } from "@/store";
+import { useSearchParams } from "react-router-dom";
+import { BonadocsEditorTeamsModalAcceptInvite } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsModal/BonadocsEditorTeamsModalAcceptInvite";
 
 export const BonadocsEditorTeams: React.FC = () => {
+  const [queryParameters] = useSearchParams();
   const [show, setShow] = useState(false);
+  const [showAcceptInvite, setShowAcceptInvite] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const teams = useSelector((state: RootState) => state.team.teamList);
+  const inviteToken = queryParameters.get("inviteToken");
+
   useEffect(() => {
     dispatch(getTeams());
+    if (inviteToken) {
+      setShowAcceptInvite(true);
+    }
   }, []);
 
   return (
@@ -48,11 +57,15 @@ export const BonadocsEditorTeams: React.FC = () => {
             ))}
           </div>
         </>
-        {/* <Outlet /> */}
       </div>
       <BonadocsEditorTeamsModalCreate
         show={show}
         closeCreateModal={() => setShow(!show)}
+      />
+      <BonadocsEditorTeamsModalAcceptInvite
+        inviteToken={inviteToken!}
+        show={showAcceptInvite}
+        closeInviteModal={() => setShowAcceptInvite(!showAcceptInvite)}
       />
     </div>
   );

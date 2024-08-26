@@ -85,10 +85,13 @@ export const BonadocsEditorActionsModalPackageEdit: React.FC<
         <div className="modal__container__text">Package Version</div>
         <SelectInput
           handleInputChange={(item) => {
-            setSelectedPackage(item.target.value);
+            if (item.target.value !== "none") {
+              setSelectedPackage(item.target.value);
+            }
           }}
           options={collectionPackages[0].versionList}
           selectedValue={selectedValue}
+          
         />
 
         <div className="modal__container__wrapper">

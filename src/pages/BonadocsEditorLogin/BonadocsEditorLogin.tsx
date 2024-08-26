@@ -5,6 +5,7 @@ import { loginGoogleUser, loginGithubUser } from "@/store/auth/authSlice";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
+import { useLocation } from "react-router-dom";
 
 interface BonadocsEditorLoginProps {
   className?: string;
@@ -17,8 +18,10 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const uri = queryParameters.get("uri");
-  const redirect = queryParameters.get("redirect");
   const [loading, setLoading] = useState<boolean>(false);
+
+  const location = useLocation();
+
 
   return (
     <div className="bonadocs__editor__login">
@@ -39,15 +42,22 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                   setLoading(false);
                   return;
                 }
-                if (!redirect) {
-                  navigate({
-                    pathname: "/teams",
+                // if (!redirect) {
+                //   navigate({
+                //     pathname: "/teams",
                     
-                  });
-                } else navigate({
-                  pathname: redirect,
-                  search: `?uri=${uri}`,
-                });
+                //   });
+                // } else navigate({
+                //   pathname: redirect,
+                //   search: `?uri=${uri}`,
+                // });
+                
+                const { from } = location.state || { from: { pathname: "/teams" } };
+                
+                
+                navigate(from, { replace: true });
+
+
               } catch (err) {
                 setLoading(false);
               }
@@ -105,15 +115,8 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                   setLoading(false);
                   return;
                 }
-                if (!redirect) {
-                  navigate({
-                    pathname: "/teams"
-                  });
-                } else
-                  navigate({
-                    pathname: redirect,
-                    search: `?uri=${uri}`,
-                  });
+                const { from } = location.state || { from: { pathname: "/teams" } };
+                navigate(from, { replace: true });
               } catch (err) {
                 console.log(err);
                 setLoading(false);

@@ -20,25 +20,28 @@ interface BonadocsEditorLayoutProps {
 export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
   children,
 }) => {
-  const { getCollection } = useCollectionContext();
+  const { initializeEditor, getCollection } = useCollectionContext();
   const collectionName = getCollection()?.data.name ?? "";
-   const [queryParameters] = useSearchParams();
-   const dispatch: AppDispatch = useDispatch();
-   const [display, setDisplay] = useState<boolean>(false);
-   const uri = queryParameters.get("uri");
-   const { initializeEditor } = useCollectionContext();
-   const contract = useSelector(
-     (state: RootState) => state.contract.currentContract
-   );
+  const [queryParameters] = useSearchParams();
+  const dispatch: AppDispatch = useDispatch();
+  const [display, setDisplay] = useState<boolean>(false);
+  const uri = queryParameters.get("uri");
 
-   const queryParams = new URLSearchParams(window.location.search);
+  const contract = useSelector(
+    (state: RootState) => state.contract.currentContract
+  );
 
-   useEffect(() => {
-     void initializeCollection();
-   }, []);
+  const queryParams = new URLSearchParams(window.location.search);
 
-   const initializeCollection = async () => {
-     if (!uri) return;
+  useEffect(() => {
+    void initializeCollection();
+  }, []);
+
+  console.log(getCollection(), 'get collection');
+  
+
+  const initializeCollection = async () => {
+    //  if (!uri) return;
 
      await initializeEditor(uri!);
      if (queryParams.get("uri") !== contract.uri) {
@@ -47,8 +50,8 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
        dispatch(setActiveContract({} as ContractItem));
        dispatch(setTransactionOverrides([]));
      }
-     setDisplay(true);
-   };
+    setDisplay(true);
+  };
   return (
     <>
       {display && (

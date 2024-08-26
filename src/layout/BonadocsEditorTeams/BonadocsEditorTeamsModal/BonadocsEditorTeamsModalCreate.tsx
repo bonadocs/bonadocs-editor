@@ -65,8 +65,8 @@ export const BonadocsEditorTeamsModalCreate: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Create Project</h3>
-        <h5 className="modal__container__text">Project Name</h5>
+        <h3 className="modal__container__title">Create Team</h3>
+        <h5 className="modal__container__text">Team Name</h5>
         <TextInput
           value={teamName}
           handleChange={(e) => {
@@ -77,6 +77,7 @@ export const BonadocsEditorTeamsModalCreate: React.FC<
         <div className="modal__container__wrapper">
           <Button
             type="action"
+            disabled={!teamName}
             onClick={async () => {
               setLoading(true);
               try {
@@ -103,7 +104,7 @@ export const BonadocsEditorTeamsModalCreate: React.FC<
                   data-testid="loader"
                 />
               ) : (
-                "Create Project"
+                "Create Team"
               )}
             </>
           </Button>

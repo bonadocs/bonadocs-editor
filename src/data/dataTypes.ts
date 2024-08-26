@@ -18,10 +18,17 @@ export type MethodItem = {
   docs?: string;
 };
 
-export type ProjectItem = {
+export type InviteTeamItem = {
   name: string;
-  description: string;
+  role: string;
 };
+
+export type ProjectItem = {
+  id?: string;
+  name: string;
+  description?: string;
+};
+
 
 export type ContractInfo = {
   contractInstances?: ContractInstance[];
@@ -49,8 +56,23 @@ export type CollectionDetailsParams = {
 export type TeamItem = {
   name: string;
   slug: string;
+  id: string;
   permission?: string;
 };
+
+export type TeamMembers = {
+  email: string;
+  role: Array<string>;
+};
+
+export type TeamInvite = {
+  projectId: string;
+  name: string;
+  email: string;
+  permission: Array<string>;
+};
+
+export type CurrentTeam = TeamItem & TeamMembers;
 
 export type Instance = {
   chainId: number;

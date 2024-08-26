@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RadioInput } from "@/components/input/RadioInput";
 import { TextInput } from "@/components/input/TextInput";
 import { ContractInstance, Option } from "@/data/dataTypes";
@@ -100,6 +100,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
     dispatch(updateContractInstances(instances!));
   };
 
+  // useEffect(() => { },[currentContract.abi])
+
   return (
     <>
       <div
@@ -130,11 +132,11 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       </div>{" "}
       {open && (
         <div className="bonadocs__editor__projects__creation__selection__item__deets">
-          {/* <RadioInput
+          <RadioInput
             checked={instance.verification ?? false}
             options={options}
             handleChange={handleChange}
-          /> */}
+          />
           <h2 className="bonadocs__editor__projects__creation__selection__item__deets__header">
             Contract address
           </h2>
@@ -170,6 +172,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
                   .loadContractABI(instance.chainId!, contractAddress)
                   .then((abi) => {
                     console.log(abi);
+                     handleABIChange(abi!);
                     typeof abi === "undefined"
                       ? toast.error("ABI error. Input it manually.")
                       : handleABIChange(abi);
@@ -198,7 +201,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
             Contract ABI (read only)
           </h2>
           <TextareaInput
-            value={currentContract.abi}
+            value={contractABI}
             disabled
             handleChange={(e) => {
               handleABIChange(e.target.value);

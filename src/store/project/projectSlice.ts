@@ -36,6 +36,7 @@ const initialState = {
   currentContract: contracts[0] as ContractsState,
   projectView: true as boolean,
   projectList: [] as Array<ProjectItem>,
+  currentTeamProjectId: "" as string,
 };
 
 interface updateContractListParams {
@@ -50,6 +51,12 @@ const projectSlice = createSlice({
     reset: () => initialState,
     setProjectItem: (state, action: PayloadAction<ProjectItem>) => {
       state.projectItem = action.payload;
+    },
+    setProjectList: (state, action: PayloadAction<ProjectItem[]>) => {
+      state.projectList = action.payload;
+    },
+    setCurrentTeamProjectId: (state, action: PayloadAction<string>) => {
+      state.currentTeamProjectId = action.payload;
     },
     setProjectView: (state, action: PayloadAction<boolean>) => {
       state.projectView = action.payload;
@@ -239,12 +246,58 @@ export const importCollection = createAsyncThunk(
   async (uri: string, { dispatch }) => {
     try {
       const collection = await Collection.createFromIPFS(uri);
-      dispatch(reset());
+      // dispatch(reset());
       // await collection.manager.saveToLocal()
+
       return collection.manager;
     } catch (err) {
       console.log(err);
       toast.error("Error importing collection");
+      return false;
+    }
+  }
+);
+
+export const fetchCollections = createAsyncThunk(
+  "project/fetchCollection",
+  async (_, { dispatch, getState }) => {
+    const { team } = getState() as RootState;
+    if (team.currentTeam) {
+      try {
+        const projects = await api.get(
+          `projects/${team.currentTeam.id}/collections`
+        );
+        dispatch(setProjectList(projects.data.data));
+        return projects.data.data;
+      } catch (err: any) {
+        toast.error(err.response.data.message);
+        return false;
+      }
+    }
+  }
+);
+
+export const addCollection = createAsyncThunk(
+  "project/addCollection",
+  async (collectionParam: CollectionDataManager, { dispatch, getState }) => {
+    const { team } = getState() as RootState;
+    const collectionName = collectionParam.data.name;
+    try {
+      const newProject = await api.post(
+        `projects/${team.currentTeam.id}/collections`,
+        {
+          name: collectionName,
+          isPublic: false,
+          collectionData: collectionParam,
+        }
+      );
+      console.log(newProject);
+      dispatch(fetchCollections());
+      toast.success("Project added successfully");
+      return true;
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+      return false;
     }
   }
 );
@@ -347,7 +400,10 @@ export const createCollection = createAsyncThunk(
     const { name, description } = state.project.projectItem;
     const chars = "0123456789abcdef";
     try {
-      const newCollection = Collection.createBlankCollection(name, description);
+      const newCollection = Collection.createBlankCollection(
+        name,
+        description!
+      );
       const contractManagerView = newCollection.manager.contractManagerView;
 
       for (let i = 0; i < state.project.contracts.length; i++) {
@@ -399,7 +455,9 @@ export const createCollection = createAsyncThunk(
 export const {
   setProjectItem,
   setProjectView,
+  setCurrentTeamProjectId,
   setContracts,
+  setProjectList,
   addContract,
   addEmptyContract,
   deleteContract,

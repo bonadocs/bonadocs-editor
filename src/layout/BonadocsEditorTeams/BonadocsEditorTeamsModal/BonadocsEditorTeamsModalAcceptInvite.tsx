@@ -1,41 +1,36 @@
-import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
 import { Button } from "@/components/button/Button";
-import { TextInput } from "@/components/input/TextInput";
 import { customStyles } from "@/data/toast/toastConfig";
-import MoonLoader from "react-spinners/ClipLoader";
-import { addCollection, importCollection } from "@/store/project/projectSlice";
+import React, { useEffect, useState } from "react";
+import Modal from "react-modal";
+import { MoonLoader } from "react-spinners";
+import { getTeams, acceptInvite } from "@/store/team/teamSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { CollectionDataManager } from "@bonadocs/core";
-import { useCollectionContext } from "@/context/CollectionContext";
 import { useNavigate } from "react-router-dom";
 
-interface BonadocsEditorProjectsCreationModalProps {
+interface BonadocsEditorTeamsModalAcceptInviteProps {
   className?: string;
   show?: boolean;
-  closeImportModal: () => void;
-  handleImportCollection: () => void;
+  closeInviteModal: () => void;
+  inviteToken: string;
 }
 
-export const BonadocsEditorProjectsCreationModal: React.FC<
-  BonadocsEditorProjectsCreationModalProps
-> = ({ show, closeImportModal, handleImportCollection }) => {
+export const BonadocsEditorTeamsModalAcceptInvite: React.FC<
+  BonadocsEditorTeamsModalAcceptInviteProps
+> = ({ show, closeInviteModal, inviteToken }) => {
   const [open, isOpen] = useState<boolean>(false);
-  const [collectionName, setCollectionName] = useState<string>("");
+  const [teamName, setTeamName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
-  const dispatch = useDispatch<AppDispatch>();
-  const { setCollection } = useCollectionContext();
-
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
 
   const closeModal = () => {
     isOpen(!open);
-    closeImportModal();
+    setTeamName("");
+    closeInviteModal();
   };
 
   return (
@@ -71,42 +66,29 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Import Project</h3>
-        <h5 className="modal__container__text">IPFS URI</h5>
-        <TextInput
-          value={collectionName}
-          handleChange={(e) => {
-            setCollectionName(e.target.value);
-          }}
-          placeholder="Enter the project's IPFS URI"
-        />
+        <h3 className="modal__container__title">Invitation</h3>
+        <h5 className="modal__container__text">Accept invitaion</h5>
         <div className="modal__container__wrapper">
           <Button
             type="action"
             onClick={async () => {
               setLoading(true);
-              const importedCollection = await dispatch(
-                importCollection(collectionName)
-              );
-              console.log(importedCollection);
-              if (!importedCollection.payload) {
+              try {
+                const accept = await dispatch(acceptInvite(inviteToken));
+                const newTeams = await dispatch(getTeams());
+                if (accept.payload === false || newTeams.payload === false) {
+                  setLoading(false);
+                  return;
+                }
                 setLoading(false);
-                return;
-              }
-              dispatch(
-                addCollection(
-                  importedCollection.payload as CollectionDataManager
-                )
-              );
-              // setCollection(
-              //   importedCollection.payload as CollectionDataManager
-              // );
-              setLoading(false);
 
-              closeModal();
-              // navigate({
-              //   pathname: "/contracts"
-              // });
+                closeInviteModal();
+                navigate({
+                  pathname: "/teams",
+                });
+              } catch (err) {
+                setLoading(false);
+              }
             }}
             className="modal__container__button"
           >
@@ -115,12 +97,12 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
                 <MoonLoader
                   color="#fff"
                   loading={true}
-                  size={15}
+                  size={10}
                   aria-label="Loading Spinner"
                   data-testid="loader"
                 />
               ) : (
-                "Import Project"
+                "Accept"
               )}
             </>
           </Button>

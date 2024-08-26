@@ -1,13 +1,36 @@
 import axios from "axios";
-
-const storedObject = localStorage.getItem("persist:root");
-const rootObject = JSON.parse(storedObject!);
-
+import history from "./history";
 export const api = axios.create({
-  baseURL: process.env.REACT_APP_BONADOCS_ENDPOINT, // Replace with your API base URL
+  baseURL: process.env.REACT_APP_BONADOCS_ENDPOINT,
   headers: {
-    Authorization: `Bearer ${JSON.parse(rootObject["auth"]).authToken ?? ""}`, // Replace with your token or any other header
-    "Content-Type": "application/json", // Set the content type if needed
-    // Add other headers as needed
+    "Content-Type": "application/json",
   },
 });
+
+let store: any;
+
+export const injectStore = (_store: any) => {
+  store = _store;
+};
+
+api.interceptors.request.use((config) => {
+  config.headers.authorization = `Bearer ${store.getState().auth.authToken}`;
+  return config;
+});
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      handleLogout();
+    }
+    return Promise.reject(error);
+  }
+);
+
+function handleLogout() {
+  console.log("401");
+  store.dispatch({ type: "auth/logoutUser" });
+
+  // window.location.href = "/login";
+}

@@ -10,7 +10,7 @@ export const BonadocsEditorProjectsCreationActionProject: React.FC = () => {
 
   const [projectName, setProjectName] = useState<string>(projectItem.name);
   const [projectDescription, setProjectDescription] = useState<string>(
-    projectItem.description
+    projectItem.description!
   );
 
   const dispatch: AppDispatch = useDispatch();
@@ -32,7 +32,7 @@ export const BonadocsEditorProjectsCreationActionProject: React.FC = () => {
               dispatch(
                 setProjectItem({
                   name: e.target.value,
-                  description: projectDescription,
+                  description: projectDescription!,
                 })
               );
             }}

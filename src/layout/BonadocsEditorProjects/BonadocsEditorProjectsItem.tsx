@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
 import { Popover } from "@headlessui/react";
-import { TeamItem } from "@/data/dataTypes";
-import { BonadocsEditorTeamsModalInvite } from "./BonadocsEditorTeamsModal/BonadocsEditorTeamsModalInvite";
+import { ProjectItem, TeamItem } from "@/data/dataTypes";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { setTeamId } from "@/store/team/teamSlice";
 
-interface BonadocsEditorTeamsItemProps {
-  teamItem: TeamItem;
+interface BonadocsEditorProjectsItemProps {
+  projectItem: ProjectItem;
 }
 
-export const BonadocsEditorTeamsItem: React.FC<
-  BonadocsEditorTeamsItemProps
-> = ({ teamItem }) => {
+export const BonadocsEditorProjectsItem: React.FC<
+  BonadocsEditorProjectsItemProps
+> = ({ projectItem }) => {
   let [referenceElement, setReferenceElement] = useState<any>();
   let [popperElement, setPopperElement] = useState<any>();
   let { styles, attributes } = usePopper(referenceElement, popperElement, {
@@ -25,30 +24,21 @@ export const BonadocsEditorTeamsItem: React.FC<
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-
-  
   return (
-    <div className="bonadocs__editor__projects__inner__list__item">
+    <div
+      onClick={() => {}}
+      className="bonadocs__editor__projects__inner__list__item"
+    >
       <img
         className="bonadocs__editor__projects__inner__list__item__icon"
         src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715442416/code-circle_zzekez.svg"
       />
-      <div
-        onClick={() => {
-          console.log("teamItem", teamItem);
-
-          dispatch(setTeamId(teamItem.id));
-          navigate({
-            pathname: `/teams/${teamItem.id}/projects`,
-          });
-        }}
-        className="bonadocs__editor__projects__inner__list__item__info"
-      >
+      <div className="bonadocs__editor__projects__inner__list__item__info">
         <h3 className="bonadocs__editor__projects__inner__list__item__info__title">
-          {teamItem.name}
+          {projectItem.name}
         </h3>
         <h5 className="bonadocs__editor__projects__inner__list__item__info__description">
-          {teamItem.slug}
+          {projectItem.description}
         </h5>
       </div>
       <Popover className="relative ma-auto">
@@ -69,20 +59,12 @@ export const BonadocsEditorTeamsItem: React.FC<
               <div className="bonadocs__editor__variables__table__item__popover__item">
                 <div
                   onClick={() => {
-                    setInviteModal(!inviteModal);
-                  }}
-                  className="bonadocs__editor__variables__table__item__popover__item__edit"
-                >
-                  Team members
-                </div>
-                <div
-                  onClick={() => {
                     // setDeleteWidget(!deleteWidget);
                     close();
                   }}
                   className="bonadocs__editor__variables__table__item__popover__item__delete"
                 >
-                  Delete Team
+                  Delete Project
                 </div>
               </div>
 
@@ -91,11 +73,6 @@ export const BonadocsEditorTeamsItem: React.FC<
           )}
         </Popover.Panel>
       </Popover>
-      <BonadocsEditorTeamsModalInvite
-        show={inviteModal}
-        closeInviteModal={() => setInviteModal(!inviteModal)}
-        teamInfo={teamItem}
-      />
     </div>
   );
 };

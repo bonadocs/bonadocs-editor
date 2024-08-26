@@ -146,6 +146,12 @@
               padding: 0.8rem 1.6rem 1.6rem 4rem;
               display: grid;
               margin-bottom: 0.8rem;
+              &__wrapper {
+                margin-top: 1.2rem;
+                margin-left: auto;
+                display: flex;
+                gap: 1rem;
+              }
               &__header {
                 color: var(--bonadocsTextWhite);
                 font-size: 1.3rem;
@@ -157,9 +163,9 @@
               }
               &__delete {
                 color: var(--bonadocsTextCritical);
-                margin-top: 1.2rem;
-                margin-left: auto;
+
                 cursor: pointer;
+                gap: 1rem;
               }
             }
             &__image {

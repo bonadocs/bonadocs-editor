@@ -18,21 +18,28 @@ import { toast } from "react-toastify";
 interface UserState {
   email: string;
   authToken: string;
+  inSession?: boolean;
 }
 
 const initialState: UserState = {
   email: "",
   authToken: "" as string,
+  inSession: false as boolean,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    reset: () => initialState,
     setUserState: (state, action: PayloadAction<UserState>) => {
       const { email, authToken } = action.payload;
       state.email = email;
       state.authToken = authToken;
+      state.inSession = true;
+    },
+    setUserSession: (state, action: PayloadAction<boolean>) => {
+      state.inSession = action.payload;
     },
   },
   extraReducers: (builder) => {},
@@ -75,6 +82,14 @@ export const loginGithubUser = createAsyncThunk(
       console.log("login github user err", err);
       return false;
     }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { dispatch }) => {
+    dispatch(reset());
+    dispatch(setUserSession(false));
   }
 );
 
@@ -136,5 +151,5 @@ const bonadocsLogin = async (userInfo: any) => {
   }
 };
 
-export const { setUserState } = authSlice.actions;
+export const { setUserState, setUserSession, reset } = authSlice.actions;
 export default authSlice.reducer;
