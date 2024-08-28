@@ -60,7 +60,7 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
 
   return (
     <>
-      {display && (
+      {true && (
         <>
           {" "}
           <MetaTags
