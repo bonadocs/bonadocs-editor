@@ -267,6 +267,8 @@ export const fetchCollections = createAsyncThunk(
         const projects = await api.get(
           `projects/${team.currentTeam.id}/collections`
         );
+        
+        
         dispatch(setProjectList(projects.data.data));
         return projects.data.data;
       } catch (err: any) {
@@ -444,11 +446,23 @@ export const createCollection = createAsyncThunk(
       const newCollectionManager: CollectionDataManager = newCollection.manager;
       // newCollectionManager.metadataView.updateDescription(description);
       // await newCollectionManager.saveToLocal();
+      const collectionName = newCollectionManager.data.name;
+      const newProject = await api.post(
+        `projects/${state.team.currentTeam.id}/collections`,
+        {
+          name: collectionName,
+          isPublic: false,
+          collectionData: newCollectionManager,
+        }
+      );
+      console.log(newProject);
+      
       dispatch(reset());
       return newCollectionManager;
     } catch (err) {
       console.log(err);
       toast.error("Error creating collection");
+      return false
     }
   }
 );

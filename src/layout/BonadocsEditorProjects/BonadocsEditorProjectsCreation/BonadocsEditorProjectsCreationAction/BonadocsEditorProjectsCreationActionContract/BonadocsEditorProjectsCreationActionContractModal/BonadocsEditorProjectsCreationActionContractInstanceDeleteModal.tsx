@@ -76,10 +76,10 @@ export const BonadocsEditorProjectsCreationActionContractInstanceDeleteModal: Re
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Delete Action</h3>
+        <h3 className="modal__container__title">Delete Network</h3>
         <div className="modal__container__text">
           Are you certain about your decision to delete this network:{" "}
-          {networkName} ? Please be aware that this cannot be undone.
+          {networkName}? Please be aware that this cannot be undone.
         </div>
         <div className="modal__container__wrapper">
           <Button
@@ -90,7 +90,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceDeleteModal: Re
             }}
             className="modal__container__button"
           >
-            Delete Action
+            Delete Network
           </Button>
         </div>
       </div>

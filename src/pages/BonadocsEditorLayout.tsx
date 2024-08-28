@@ -15,10 +15,14 @@ import { MethodItem, ContractItem } from "@/data/dataTypes";
 import { setActiveContract } from "@/store/contract/contractSlice";
 interface BonadocsEditorLayoutProps {
   children?: React.ReactNode;
+  projectId?: string | undefined;
+  teamId?: string | undefined;
 }
 
 export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
   children,
+  projectId,
+  teamId,
 }) => {
   const { initializeEditor, getCollection } = useCollectionContext();
   const collectionName = getCollection()?.data.name ?? "";
@@ -37,21 +41,23 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
     void initializeCollection();
   }, []);
 
-  console.log(getCollection(), 'get collection');
-  
-
   const initializeCollection = async () => {
-    //  if (!uri) return;
+    if (projectId && teamId) {
+      console.log(projectId, teamId);
+      
+    } else if (uri) {
+      await initializeEditor({ uri: uri! });
+      if (queryParams.get("uri") !== contract.uri) {
+        dispatch(setMethodItem({} as MethodItem));
+        dispatch(setMethodDisplayData([]));
+        dispatch(setActiveContract({} as ContractItem));
+        dispatch(setTransactionOverrides([]));
+      }
+    }
 
-     await initializeEditor(uri!);
-     if (queryParams.get("uri") !== contract.uri) {
-       dispatch(setMethodItem({} as MethodItem));
-       dispatch(setMethodDisplayData([]));
-       dispatch(setActiveContract({} as ContractItem));
-       dispatch(setTransactionOverrides([]));
-     }
     setDisplay(true);
   };
+
   return (
     <>
       {display && (

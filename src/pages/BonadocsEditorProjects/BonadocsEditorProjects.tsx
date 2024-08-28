@@ -1,25 +1,17 @@
 import { Button } from "@/components/button/Button";
 import { Logo } from "@/components/logo/Logo";
 import React, { useState, useEffect } from "react";
-import { usePopper } from "react-popper";
-import { Popover } from "@headlessui/react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fetchCollections } from "@/store/project/projectSlice";
+import { fetchCollections, setProjectList } from "@/store/project/projectSlice";
 import { BonadocsEditorProjectsCreationModal } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationModal";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { useParams } from "react-router-dom";
-import { setTeamId } from "@/store/team/teamSlice";
+import { getTeamById } from "@/store/team/teamSlice";
 import { ProjectItem } from "@/data/dataTypes";
 import { BonadocsEditorProjectsItem } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsItem";
 
 export const BonadocsEditorProjects: React.FC = () => {
-  let [referenceElement, setReferenceElement] = useState<any>();
-  let [popperElement, setPopperElement] = useState<any>();
-  let { styles, attributes } = usePopper(referenceElement, popperElement, {
-    placement: "bottom-end",
-    strategy: "absolute",
-  });
   const [showImportModal, setShowImportModal] = useState<boolean>(false);
 
   const location = useLocation();
@@ -30,20 +22,23 @@ export const BonadocsEditorProjects: React.FC = () => {
     (state: RootState) => state.project.projectList
   );
   useEffect(() => {
-    currentProjects();
+    currentProject();
   }, []);
 
-  const currentProjects = async () => {
+  const currentProject = async () => {
+    dispatch(setProjectList([]));
     if (id) {
-      dispatch(setTeamId(id));
+      await dispatch(getTeamById(id));
     }
 
     const projects = await dispatch(fetchCollections());
     if (!projects.payload) {
       return;
     }
-    
   };
+
+  console.log('project flicker');
+  
 
   return (
     <div className="bonadocs__editor__projects">

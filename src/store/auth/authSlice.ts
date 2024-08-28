@@ -12,8 +12,10 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import { reset as resetProject } from "../project/projectSlice"
 
 import { toast } from "react-toastify";
+import { RootState } from "..";
 
 interface UserState {
   email: string;
@@ -87,8 +89,10 @@ export const loginGithubUser = createAsyncThunk(
 
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
-  async (_, { dispatch }) => {
+  async (_, { dispatch, getState }) => {
+
     dispatch(reset());
+    dispatch(resetProject());
     dispatch(setUserSession(false));
   }
 );

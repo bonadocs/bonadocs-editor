@@ -43,6 +43,7 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
             <Route path=":projectId">
               <Route
                 index
+                path="contracts"
                 element={<BonadocsEditorContracts className={className} />}
               />
               <Route

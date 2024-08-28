@@ -16,7 +16,7 @@ export const BonadocsEditorViewHeader: React.FC<
 > = ({ className }) => {
   const { getCollection, connectWallet, walletId } = useCollectionContext();
   const { user, signOut } = useAuthContext();
-  const collectionName = getCollection()?.data.name ?? "";
+  const collectionName = getCollection()?.data.name!;
   let [referenceElement, setReferenceElement] = useState<any>();
   let [popperElement, setPopperElement] = useState<any>();
   let { styles, attributes } = usePopper(referenceElement, popperElement, {

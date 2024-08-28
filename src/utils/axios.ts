@@ -28,9 +28,10 @@ api.interceptors.response.use(
   }
 );
 
-function handleLogout() {
+async function handleLogout () {
   console.log("401");
-  store.dispatch({ type: "auth/logoutUser" });
+  // await store.dispatch({ type: "auth/logoutUser" });
 
+store.dispatch({ type: "auth/setUserSession" }, false);
   // window.location.href = "/login";
 }

@@ -53,7 +53,7 @@ export const BonadocsEditorProjectsCreationActionContractSelect: React.FC =
             {contracts[Number(currentContract.id)].contractInstances?.length ===
               0 && (
               <h4 className="bonadocs__editor__projects__action__select__inner__network__placeholder">
-                Click "+" icon to add instance
+                Click "+" icon to add address
               </h4>
             )}
             {contractInstances?.map((instance, index) => (

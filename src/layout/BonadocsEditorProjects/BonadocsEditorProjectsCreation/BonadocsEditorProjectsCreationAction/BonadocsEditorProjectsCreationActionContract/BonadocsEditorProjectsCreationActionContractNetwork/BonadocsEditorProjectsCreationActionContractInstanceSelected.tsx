@@ -36,7 +36,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelected: React
             setSearch(e.target.value);
           }}
           value={search}
-          placeholder="Search selected instances"
+          placeholder="Search selected networks"
         />
         
       </div>

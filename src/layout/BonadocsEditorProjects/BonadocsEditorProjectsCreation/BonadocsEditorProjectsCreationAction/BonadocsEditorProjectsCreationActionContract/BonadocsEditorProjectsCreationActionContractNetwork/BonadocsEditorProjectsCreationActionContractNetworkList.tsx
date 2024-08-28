@@ -18,8 +18,6 @@ export const BonadocsEditorProjectsCreationActionContractNetworkList: React.FC<
     };
   });
 
-  console.log("networkList", networkList);
-
   return (
     <div className="modal__side__container__search__open__inner">
       {networkList

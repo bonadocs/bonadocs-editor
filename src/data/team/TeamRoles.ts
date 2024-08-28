@@ -22,6 +22,13 @@ export const teamRoles = [
   {
     label: "Admin",
     value: "admin",
-    permission: ["admin"],
+    permission: [
+      "admin",
+      "readUsers",
+      "writeUsers",
+      "manageSubscriptions",
+      "readCollections",
+      "writeCollections",
+    ],
   },
 ];

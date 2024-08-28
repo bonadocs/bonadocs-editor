@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { RadioInput } from "@/components/input/RadioInput";
 import { TextInput } from "@/components/input/TextInput";
 import { ContractInstance, Option } from "@/data/dataTypes";
@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import {
   setCurrentContract,
+  updateContract,
   updateContractInstances,
 } from "@/store/project/projectSlice";
 import { getApi } from "@bonadocs/core";
@@ -16,6 +17,7 @@ import { toast } from "react-toastify";
 import { MoonLoader } from "react-spinners";
 import { set } from "lodash";
 import { BonadocsEditorProjectsCreationActionContractInstanceDeleteModal } from "../BonadocsEditorProjectsCreationActionContractModal/BonadocsEditorProjectsCreationActionContractInstanceDeleteModal";
+import _ from "lodash";
 
 interface BonadocsEditorProjectsCreationActionContractInstanceSelectedItemProps {
   instance: ContractInstance;
@@ -40,10 +42,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
     },
   ];
 
-  const [contractAddress, setContractAddress] = useState<string>(
-    instance.address! ?? ""
-  );
-  const [contractABI, setContractABI] = useState<string>(instance.abi! ?? "");
+  
+  const contractAddress = useRef(instance.address);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
@@ -51,6 +51,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   const currentContract = useSelector(
     (state: RootState) => state.project.currentContract
   );
+  const localVerification = useRef(instance.verification);
 
   const deleteInstance = () => {
     let instances = currentContract.contractInstances?.slice();
@@ -71,6 +72,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       ...instance,
       verification: e.target.value === "Verified" ? true : false,
     };
+    localVerification.current = e.target.value === "Verified" ? true : false;
     instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
     dispatch(
@@ -80,27 +82,54 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       })
     );
     dispatch(updateContractInstances(instances!));
+    if (e.target.value === "Verified") loadABI();
   };
 
   const handleABIChange = (abi: string) => {
-    setContractABI(abi);
     let instances = currentContract.contractInstances?.slice();
     const newInstance: ContractInstance = {
       ...instance,
+      address: contractAddress.current,
       abi: abi,
     };
     instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
-    dispatch(
-      setCurrentContract({
-        ...currentContract,
-        contractInstances: instances,
-      })
-    );
+    const updatedContract = {
+      ...currentContract,
+      abi,
+      contractInstances: instances,
+    };
+
+    dispatch(setCurrentContract(updatedContract));
     dispatch(updateContractInstances(instances!));
+    dispatch(updateContract(updatedContract));
   };
 
-  // useEffect(() => { },[currentContract.abi])
+  const loadABI = useCallback(
+    _.debounce(async (address?: string) => {
+      const EVMaddress = address ?? contractAddress.current;
+      if (EVMaddress?.length === 42 && localVerification.current) {
+
+        setLoading(true);
+        getApi()
+          .loadContractABI(instance.chainId!, EVMaddress)
+          .then((abi) => {
+            console.log(abi);
+            handleABIChange(abi!);
+            typeof abi === "undefined"
+              ? toast.error("ABI error. Input it manually.")
+              : handleABIChange(abi);
+            setLoading(false);
+          })
+          .catch((err) => {
+            setLoading(false);
+            console.log(err, "error");
+            toast.error("Error loading ABI");
+          });
+      }
+    }, 500),
+    []
+  );
 
   return (
     <>
@@ -142,13 +171,15 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
           </h2>
           <TextInput
             placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
-            value={contractAddress}
+            value={contractAddress.current}
             handleChange={(e) => {
-              setContractAddress(e.target.value);
+              console.log('updated', e.target.value);
+              
+              contractAddress.current = e.target.value;
               let instances = currentContract.contractInstances?.slice();
               const newInstance: ContractInstance = {
                 ...instance,
-                address: e.target.value,
+                address: contractAddress.current,
               };
               instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
@@ -159,45 +190,19 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
                 })
               );
               dispatch(updateContractInstances(instances!));
+              loadABI(e.target.value);
             }}
           />
-          {instance.verification && (
+          {instance.verification && loading && (
             <Button
               className="bonadocs__editor__projects__creation__selection__item__deets__button"
               type="action"
-              // disabled={loading}
-              onClick={() => {
-                setLoading(true);
-                getApi()
-                  .loadContractABI(instance.chainId!, contractAddress)
-                  .then((abi) => {
-                    console.log(abi);
-                     handleABIChange(abi!);
-                    typeof abi === "undefined"
-                      ? toast.error("ABI error. Input it manually.")
-                      : handleABIChange(abi);
-                    setLoading(false);
-                  })
-                  .catch((err) => {
-                    setLoading(false);
-                    console.log(err, "error");
-                  });
-              }}
+              disabled={loading}
             >
-              {loading ? (
-                <MoonLoader
-                  color="#fff"
-                  loading={true}
-                  size={10}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-              ) : (
-                "Load ABI"
-              )}
+              <h4>Loading ABI...</h4>
             </Button>
           )}
-          <h2 className="bonadocs__editor__projects__creation__selection__item__deets__header">
+          {/* <h2 className="bonadocs__editor__projects__creation__selection__item__deets__header">
             Contract ABI (read only)
           </h2>
           <TextareaInput
@@ -206,12 +211,12 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
             handleChange={(e) => {
               handleABIChange(e.target.value);
             }}
-          />
+          /> */}
           <h2
             className="bonadocs__editor__projects__creation__selection__item__deets__delete"
             onClick={() => setOpenDeleteModal(!openDeleteModal)}
           >
-            Delete Instance
+            Delete Network
           </h2>
         </div>
       )}

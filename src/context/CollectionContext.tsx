@@ -39,7 +39,11 @@ import { setLoader } from "@/store/action/actionSlice";
 
 // Create the context props
 interface CollectionContextProps {
-  initializeEditor: (uri: string) => Promise<CollectionDataManager>; // Update the type to include Promise
+  initializeEditor: (editorParam: {
+    uri?: string;
+    projectId?: string;
+    teamId?: string;
+  }) => Promise<CollectionDataManager>; // Update the type to include Promise
   collection: CollectionDataManager | null;
   getCollection: () => CollectionDataManager | null;
   setCollection: (collection: CollectionDataManager) => void;
@@ -113,13 +117,13 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
   // const provider = new ethers.BrowserProvider((window as any).ethereum);
 
-  const loadCollection = async (uri: string) => {
+  const loadCollectionFromUri = async (uri: string) => {
     try {
       if (localStorage.getItem(uri)) {
         let collection = await Collection.createFromLocalStore(
           localStorage.getItem(uri)!
         );
-        await Collection.createBlankCollection;
+
         collectionRef.current = collection.manager;
       } else {
         let collection = await Collection.createFromURI(uri);
@@ -144,28 +148,43 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     setResponse([]);
   };
 
-  const checkLocalCollection = async (uri: string) => {
-    try {
-      const db = await openDB("metadata", 1);
-      const store = db.transaction("index").objectStore("index");
+  // const checkLocalCollection = async (uri: string) => {
+  //   try {
+  //     const db = await openDB("metadata", 1);
+  //     const store = db.transaction("index").objectStore("index");
 
-      const metadataKey = uri.slice(0, 4) + "-data:" + uri.slice(7);
-      const value = await store.get(metadataKey);
-      const collectionIndex = (await openDB("collections", 1))
-        .objectStoreNames[0];
-      const isValuePresent = value && collectionIndex ? true : false;
-      return isValuePresent;
-    } catch (err) {
-      return false;
-    }
-  };
+  //     const metadataKey = uri.slice(0, 4) + "-data:" + uri.slice(7);
+  //     const value = await store.get(metadataKey);
+  //     const collectionIndex = (await openDB("collections", 1))
+  //       .objectStoreNames[0];
+  //     const isValuePresent = value && collectionIndex ? true : false;
+  //     return isValuePresent;
+  //   } catch (err) {
+  //     return false;
+  //   }
+  // };
 
   const getCollection = () => collectionRef.current;
   const setCollection = (collection: CollectionDataManager) => {
     collectionRef.current = collection;
   };
-  const initializeEditor = async (uri: string) => {
-    await loadCollection(uri);
+
+  const loadPrivateCollection = async (teamId: string, projectId: string) => {};
+
+  const initializeEditor = async (editorParam: {
+    uri?: string;
+    projectId?: string;
+    teamId?: string;
+  }) => {
+    const { uri, projectId, teamId } = editorParam;
+    if (uri) {
+      await loadCollectionFromUri(uri);
+    }
+    
+    else if (projectId && teamId) {
+      console.log(projectId, teamId);
+    }
+
     if (!collectionRef.current) {
       throw new Error("Collection not loaded");
     }

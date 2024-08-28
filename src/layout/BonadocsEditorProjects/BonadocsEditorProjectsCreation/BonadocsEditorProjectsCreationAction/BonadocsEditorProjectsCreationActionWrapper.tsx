@@ -20,7 +20,7 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
   const projectView = useSelector(
     (state: RootState) => state.project.projectView
   );
- 
+
   const dispatch: AppDispatch = useDispatch();
   const filled = useSelector(projectFilled);
   const validation = useSelector(projectValidation);
@@ -61,10 +61,13 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
           } else {
             console.log("create project");
             const newCollection = await dispatch(createCollection());
+            if (!newCollection) return;
             setCollection(newCollection.payload as CollectionDataManager);
-            navigate({
-              pathname: "/contracts",
-            });
+            console.log("newCollection", newCollection);
+
+            // navigate({
+            //   pathname: "/contracts",
+            // });
           }
 
           // dispatch(setProjectView(!projectView));

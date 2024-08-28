@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { api } from "@/utils/axios";
 import { TeamItem, TeamInvite } from "@/data/dataTypes";
+import { auth } from "@/utils/firebase.utils";
 
 const initialState = {
   teamList: [] as TeamItem[],
@@ -17,6 +18,9 @@ const teamSlice = createSlice({
       console.log(action.payload);
 
       state.currentTeam.id = action.payload.toString();
+    },
+    setCurrentTeam: (state, action: PayloadAction<TeamItem>) => {
+      state.currentTeam = action.payload;
     },
     setTeamItems: (state, action: PayloadAction<TeamItem[]>) => {
       state.teamList = action.payload;
@@ -54,7 +58,6 @@ export const getTeams = createAsyncThunk(
   async (_, { getState, dispatch, rejectWithValue }) => {
     try {
       const projects = await api.get("/projects");
-      console.log(projects.data.data);
       const teamList = projects.data.data.map((team: any) => {
         return {
           name: team.name,
@@ -65,7 +68,44 @@ export const getTeams = createAsyncThunk(
       });
       dispatch(setTeamItems(teamList));
     } catch (err) {
+      toast.error("Error listing projects");
+      return false;
+    }
+  }
+);
+
+export const getTeamById = createAsyncThunk(
+  "project/teamCreation",
+  async (projectId: string, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const projects = await api.get(`/projects/${projectId}`);
+
+      const result = projects.data.data;
+
+      if (projects.data.data) {
+        if (auth.currentUser !== null) {
+          const profileEmail = auth.currentUser?.email!;
+
+          if (profileEmail) {
+            const permissions = projects.data.data["users"].find(
+              (user: any) => user.emailAddress === profileEmail
+            ).permissions;
+
+            const currentTeam = {
+              name: result.name,
+              slug: result.slug,
+              id: result.id,
+              permissions,
+            };
+
+            dispatch(setCurrentTeam(currentTeam));
+          }
+        }
+      }
+    } catch (err) {
       toast.error("Error listing project");
+      console.log(err);
+
       return false;
     }
   }
@@ -122,6 +162,6 @@ export const fetchTeamMembers = createAsyncThunk(
   }
 );
 
-export const { setTeamItems, setTeamId } = teamSlice.actions;
+export const { setTeamItems, setTeamId, setCurrentTeam } = teamSlice.actions;
 
 export default teamSlice.reducer;

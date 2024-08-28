@@ -37,7 +37,7 @@ export const BonadocsEditorTeamsItem: React.FC<
         onClick={() => {
           console.log("teamItem", teamItem);
 
-          dispatch(setTeamId(teamItem.id));
+          // dispatch(setTeamId(teamItem.id));
           navigate({
             pathname: `/teams/${teamItem.id}/projects`,
           });

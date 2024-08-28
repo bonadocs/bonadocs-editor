@@ -74,7 +74,7 @@ export const BonadocsEditorProjectsCreationActionContractItem: React.FC<
       </div>
       <div className="bonadocs__editor__projects__action__contract__form__item">
         <h4 className="bonadocs__editor__projects__action__contract__form__item__name">
-          Add contract instances
+          Add contract addresses
         </h4>
         <BonadocsEditorProjectsCreationActionContractSelect />
       </div>

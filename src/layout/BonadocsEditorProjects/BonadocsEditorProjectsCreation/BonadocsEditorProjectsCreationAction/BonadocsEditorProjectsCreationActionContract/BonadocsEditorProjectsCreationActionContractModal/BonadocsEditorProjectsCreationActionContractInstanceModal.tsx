@@ -28,6 +28,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
   BonadocsEditorProjectsCreationActionContractInstanceModalProps
 > = ({ className, show, closeInstanceModal }) => {
   const [open, isOpen] = useState<boolean>(false);
+  const [openABI, setOpenABI] = useState<boolean>(false);
   const [openNetworkList, setOpenNetworkList] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
@@ -81,7 +82,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
   useEffect(() => {
     if (currentContract) {
       setContractInstances(currentContract.contractInstances!);
-      // setContractAbi(currentContract.abi!);
+      setContractAbi(currentContract.abi!);
+      
     }
   }, [currentContract]);
 
@@ -94,12 +96,11 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
       onRequestClose={closeModal}
     >
       <div className="modal__side__container">
-        
         <h2 className="modal__side__container__header__title">
-          Add Contract Instance ( {currentContract.name} )
+          Add Contract Address( {currentContract.name} )
         </h2>
         <h4 className="modal__side__container__header__description">
-          Make sure to add the contract instance on different networks
+          Make sure to add the contract address on different networks
         </h4>
 
         <h5 className="bonadocs__editor__projects__action__select__name">
@@ -250,17 +251,31 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
         {!openNetworkList && contractInstances?.length > 0 && (
           <>
             <h5 className="bonadocs__editor__projects__action__select__name">
-              Add contract ABI
-            </h5>
-            <TextareaInput
-              placeholder="Paste contract ABI"
-              value={contractAbi}
-              handleChange={(e) => updateContractAbi(e.target.value)}
-            />
-            <h5 className="bonadocs__editor__projects__action__select__name">
-              Add instances
+              Add network addresses
             </h5>
             <BonadocsEditorProjectsCreationActionContractInstanceSelected />
+            <h4
+              className="bonadocs__editor__projects__action__select__name"
+              onClick={() => setOpenABI(!openABI)}
+            >
+              Edit ABI
+              <img
+                alt="arrow down"
+                className={clsx(
+                  "bonadocs__editor__projects__creation__selection__item__icon",
+                  openABI &&
+                    "bonadocs__editor__projects__creation__selection__item__icon__active"
+                )}
+                src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1721372197/Arrow_Down_vml65f.svg"
+              />
+            </h4>
+            {openABI && (
+              <TextareaInput
+                placeholder="Paste contract ABI"
+                value={contractAbi}
+                handleChange={(e) => updateContractAbi(e.target.value)}
+              />
+            )}
           </>
         )}
         <Button

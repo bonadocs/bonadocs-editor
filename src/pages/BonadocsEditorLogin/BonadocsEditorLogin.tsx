@@ -54,6 +54,7 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                 
                 const { from } = location.state || { from: { pathname: "/teams" } };
                 
+                console.log(location.state);
                 
                 navigate(from, { replace: true });
 
