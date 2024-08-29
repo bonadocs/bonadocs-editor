@@ -42,16 +42,15 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
     },
   ];
 
-  
   const contractAddress = useRef(instance.address);
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
-
+ const [localVerification, setLocalVerification] = useState<boolean>(instance.verification ?? false);
   const currentContract = useSelector(
     (state: RootState) => state.project.currentContract
   );
-  const localVerification = useRef(instance.verification);
+  
 
   const deleteInstance = () => {
     let instances = currentContract.contractInstances?.slice();
@@ -72,7 +71,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       ...instance,
       verification: e.target.value === "Verified" ? true : false,
     };
-    localVerification.current = e.target.value === "Verified" ? true : false;
+    
+    e.target.value === "Verified" ? setLocalVerification(true) : setLocalVerification(false);
     instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
     dispatch(
@@ -108,8 +108,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   const loadABI = useCallback(
     _.debounce(async (address?: string) => {
       const EVMaddress = address ?? contractAddress.current;
-      if (EVMaddress?.length === 42 && localVerification.current) {
-
+      if (EVMaddress?.length === 42 && localVerification) {
         setLoading(true);
         getApi()
           .loadContractABI(instance.chainId!, EVMaddress)
@@ -130,6 +129,18 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
     }, 500),
     []
   );
+
+  useEffect(() => {
+    contractAddress.current = instance.address;
+  }, [instance.address]);
+
+  useEffect(() => {
+    setLocalVerification(instance.verification ?? false);
+    console.log("verification", instance, localVerification);
+    console.log("instance verification", instance.verification ?? false);
+    
+    
+  }, [instance.verification]);
 
   return (
     <>
@@ -162,7 +173,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       {open && (
         <div className="bonadocs__editor__projects__creation__selection__item__deets">
           <RadioInput
-            checked={instance.verification ?? false}
+            checked={localVerification}
             options={options}
             handleChange={handleChange}
           />
@@ -173,8 +184,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
             placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
             value={contractAddress.current}
             handleChange={(e) => {
-              console.log('updated', e.target.value);
-              
+              console.log("updated", e.target.value);
+
               contractAddress.current = e.target.value;
               let instances = currentContract.contractInstances?.slice();
               const newInstance: ContractInstance = {

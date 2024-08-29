@@ -1,11 +1,5 @@
 "use client";
-import React, {
-  createContext,
-  useContext,
-  useRef,
-  useState,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import {
   Collection,
   CollectionDataManager,
@@ -14,7 +8,6 @@ import {
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/index";
 import { fetchCollectionContracts } from "@/store/contract/contractSlice";
-import { openDB } from "idb";
 import { fetchCollectionVariables } from "@/store/variable/variableSlice";
 import {
   setConnected,
@@ -36,6 +29,8 @@ import {
   CodeWorkflowExecutor,
 } from "@bonadocs/core";
 import { setLoader } from "@/store/action/actionSlice";
+import { api } from "@/utils/axios";
+import { auth } from "@/utils/firebase.utils";
 
 // Create the context props
 interface CollectionContextProps {
@@ -43,7 +38,7 @@ interface CollectionContextProps {
     uri?: string;
     projectId?: string;
     teamId?: string;
-  }) => Promise<CollectionDataManager>; // Update the type to include Promise
+  }) => Promise<string>; // Update the type to include Promise
   collection: CollectionDataManager | null;
   getCollection: () => CollectionDataManager | null;
   setCollection: (collection: CollectionDataManager) => void;
@@ -138,6 +133,39 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     }
   };
 
+  const loadCollectionFromPrivateTeam = async (
+    teamId: string,
+    projectId: string
+  ) => {
+    try {
+      if (auth.currentUser !== null) {
+        const uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+        if (localStorage.getItem(uriId)) {
+          let collection = await Collection.createFromLocalStore(
+            localStorage.getItem(uriId)!
+          );
+
+          collectionRef.current = collection.manager;
+        } else {
+          const getUri = await api.get(
+            `/projects/${teamId}/collections/${projectId}`
+          );
+          // collectionRef.current = collection;
+
+          const collection = (await api.get(getUri.data.data.uri)).data.data;
+          console.log(uri, "collection response");
+
+          await collection.manager.saveToLocal();
+          collectionRef.current = collection.manager;
+
+          localStorage.setItem(uriId, collectionRef.current?.data.id!);
+        }
+      }
+    } catch (error) {
+      toast.error((error as Error).toString());
+    }
+  };
+
   const reloadFunction = () => {
     // Function logic here
     console.log("Function triggered!");
@@ -169,31 +197,32 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     collectionRef.current = collection;
   };
 
-  const loadPrivateCollection = async (teamId: string, projectId: string) => {};
-
   const initializeEditor = async (editorParam: {
     uri?: string;
     projectId?: string;
     teamId?: string;
   }) => {
     const { uri, projectId, teamId } = editorParam;
+    let uriId;
     if (uri) {
       await loadCollectionFromUri(uri);
-    }
-    
-    else if (projectId && teamId) {
-      console.log(projectId, teamId);
+    } else if (projectId && teamId) {
+      await loadCollectionFromPrivateTeam(teamId, projectId);
     }
 
     if (!collectionRef.current) {
       throw new Error("Collection not loaded");
     }
-
-    initialConnection();
-    dispatch(fetchCollectionContracts(collectionRef.current));
-    dispatch(fetchCollectionVariables(collectionRef.current));
-
-    return collectionRef.current;
+    
+    if (auth.currentUser !== null) {
+      uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+      initialConnection();
+      dispatch(
+        fetchCollectionContracts({ collection: collectionRef.current, uriId })
+      );
+      dispatch(fetchCollectionVariables(collectionRef.current));
+    }
+    return uriId!;
   };
 
   function handleAccountsChanged(accounts: string[]) {

@@ -1,5 +1,5 @@
 import { Option } from "@/data/dataTypes";
-import React from "react";
+import React, {useEffect} from "react";
 
 interface RadioInputProps {
   handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -12,7 +12,6 @@ export const RadioInput: React.FC<RadioInputProps> = ({
   options,
   checked,
 }) => {
-  // Implement your RadioInput component logic here
 
   return (
     <div onChange={handleChange}>
@@ -20,7 +19,7 @@ export const RadioInput: React.FC<RadioInputProps> = ({
         <label className="bonadocs__editor__input__radio" key={option.value}>
           <input
             type="radio"
-            defaultChecked={
+            checked={
               checked && option.truthyValue === true
                 ? true
                 : !checked && option.truthyValue === false

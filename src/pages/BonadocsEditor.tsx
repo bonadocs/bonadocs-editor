@@ -8,16 +8,28 @@ import { BonadocsEditorProjects } from "./BonadocsEditorProjects/BonadocsEditorP
 import { BonadocsEditorProjectsCreation } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreation";
 import { BonadocsEditorTeams } from "./BonadocsEditorTeams/BonadocsEditorTeams";
 import { ProtectedRoute } from "@/router/ProtectedRoute";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 interface BonadocsEditorProps {
   className?: string;
 }
 export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
   className,
 }) => {
+   const authSession = useSelector((state: RootState) => state.auth.inSession);
   return (
     <Routes>
       <Route path={"/"}>
-        <Route index element={<BonadocsEditorLogin className={className} />} />
+        <Route
+          index
+          element={
+            !authSession ? (
+              <BonadocsEditorLogin className={className} />
+            ) : (
+              <BonadocsEditorTeams />
+            )
+          }
+        />
         <Route path="login" element={<BonadocsEditorLogin />} />
         <Route
           path="contracts"

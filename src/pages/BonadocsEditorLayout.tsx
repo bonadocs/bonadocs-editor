@@ -44,7 +44,14 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
   const initializeCollection = async () => {
     if (projectId && teamId) {
       console.log(projectId, teamId);
+      const uriId = await initializeEditor({ projectId, teamId });
       
+      if (uriId !== contract.uri) {
+        dispatch(setMethodItem({} as MethodItem));
+        dispatch(setMethodDisplayData([]));
+        dispatch(setActiveContract({} as ContractItem));
+        dispatch(setTransactionOverrides([]));
+      }
     } else if (uri) {
       await initializeEditor({ uri: uri! });
       if (queryParams.get("uri") !== contract.uri) {

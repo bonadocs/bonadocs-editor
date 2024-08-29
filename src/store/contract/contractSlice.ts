@@ -21,7 +21,6 @@ const contractSlice = createSlice({
   initialState,
   reducers: {
     setActiveContract: (state, action: PayloadAction<ContractItem>) => {
-
       state.currentContract = action.payload;
     },
   },
@@ -46,7 +45,6 @@ const contractSlice = createSlice({
           const contractDocs = action.payload;
           // state.viewDocs = contractDocs
           state.currentContract.docs = contractDocs;
-          
         }
       );
   },
@@ -54,8 +52,11 @@ const contractSlice = createSlice({
 
 export const fetchCollectionContracts = createAsyncThunk(
   "contract/fetchCollectionContracts",
-  async (setWorkflowParams: CollectionDataManager, { dispatch }) => {
-    const collection = setWorkflowParams;
+  async (
+    setWorkflowParams: { collection: CollectionDataManager, uriId?: string },
+    { dispatch }
+  ) => {
+    const { collection, uriId } = setWorkflowParams;
     const collectionContracts: Array<ContractItem> = [];
     const contractList = [...collection?.data.contracts].map(
       ({ name, id, instances }) => ({
@@ -94,7 +95,7 @@ export const fetchCollectionContracts = createAsyncThunk(
         methodItem,
         docs: contractDocs ?? "",
         instances: contract.instances,
-        uri: queryParams.get("uri")!,
+        uri: queryParams.get("uri") ?? uriId,
       });
     }
     return collectionContracts;
@@ -121,7 +122,6 @@ export const updateActiveContractDocs = createAsyncThunk(
     setContractDocsParams: ContractsDocsParams,
     { dispatch, getState }
   ) => {
-
     const { collection, docs } = setContractDocsParams;
     const state = getState() as RootState;
     let contractDocs = await collection

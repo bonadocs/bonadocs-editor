@@ -42,6 +42,7 @@ const initialState = {
 interface updateContractListParams {
   contracts: ContractsState[];
   collection: CollectionDataManager;
+  uriId?: string;
 }
 
 const projectSlice = createSlice({
@@ -284,6 +285,7 @@ export const addCollection = createAsyncThunk(
   async (collectionParam: CollectionDataManager, { dispatch, getState }) => {
     const { team } = getState() as RootState;
     const collectionName = collectionParam.data.name;
+    
     try {
       const newProject = await api.post(
         `projects/${team.currentTeam.id}/collections`,
@@ -334,7 +336,7 @@ export const updateContractList = createAsyncThunk(
   ) => {
     const state = getState() as RootState;
     const collectionContracts = state.contract.collectionContracts;
-    const { contracts, collection } = updateContractListParams;
+    const { contracts, collection, uriId } = updateContractListParams;
     const contractManagerView = collection.contractManagerView;
     try {
       for (let i = 0; i < collectionContracts.length; i++) {
@@ -364,7 +366,7 @@ export const updateContractList = createAsyncThunk(
           interfaceHash: interfaceHash,
           instances: instances!,
         };
-        console.log("get here");
+       
         console.log(
           contractDefinitionParam,
           "param",
@@ -384,7 +386,7 @@ export const updateContractList = createAsyncThunk(
           .getContractDetailsView(contract.id)
           .setDocText(contract.description!);
       }
-      dispatch(fetchCollectionContracts(collection));
+      dispatch(fetchCollectionContracts({ collection, uriId }));
       return true;
     } catch (err) {
       console.log(err);

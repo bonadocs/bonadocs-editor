@@ -23,6 +23,8 @@ import { Button } from "@/components/button/Button";
 import { updateContractList } from "@/store/project/projectSlice";
 import MoonLoader from "react-spinners/ClipLoader";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
+import { auth } from "@/utils/firebase.utils";
 
 interface BonadocsEditorViewPlaygroundContractModalProps {
   className?: string;
@@ -47,6 +49,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
   const tempContracts = useSelector(
     (state: RootState) => state.project.contracts
   );
+  const { projectId, id } = useParams();
 
   useEffect(() => {
     isOpen(show ?? false);
@@ -100,16 +103,20 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
     }
 
     setLoading(true);
-    const updated = await dispatch(
-      updateContractList({
-        contracts: tempContracts,
-        collection: getCollection()!,
-      })
-    );
-    if (updated) {
-      setLoading(false);
-      closeModal();
+    if (auth.currentUser !== null) {
+      const updated = await dispatch(
+        updateContractList({
+          contracts: tempContracts,
+          collection: getCollection()!,
+          uriId: `/projects/${id}/collections/${projectId}${auth.currentUser.email}`,
+        })
+      );
+      if (updated) {
+        setLoading(false);
+        closeModal();
+      }
     }
+
     setLoading(false);
   };
 
