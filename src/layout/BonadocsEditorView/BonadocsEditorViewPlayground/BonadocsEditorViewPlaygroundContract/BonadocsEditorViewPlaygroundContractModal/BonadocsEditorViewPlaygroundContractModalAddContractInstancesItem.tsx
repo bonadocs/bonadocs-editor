@@ -24,8 +24,9 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstancesItem: 
   const network = (chainId: number) =>
     Array.from(supportedChains).find((chain) => chain[1].chainId === chainId);
 
-  useEffect(() => { console.log(instance);
-   setNetworkAddress(instance.address)}, [instance.address, instance.chainId]);
+  useEffect(() => {
+    setNetworkAddress(instance.address);
+  }, [instance.address, instance.chainId]);
   return (
     <>
       <div

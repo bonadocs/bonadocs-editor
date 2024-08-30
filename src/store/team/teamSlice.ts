@@ -15,8 +15,6 @@ const teamSlice = createSlice({
   reducers: {
     // reset: () => initialState,
     setTeamId: (state, action: PayloadAction<string>) => {
-      console.log(action.payload);
-
       state.currentTeam.id = action.payload.toString();
     },
     setCurrentTeam: (state, action: PayloadAction<TeamItem>) => {
@@ -102,6 +100,7 @@ export const getTeamById = createAsyncThunk(
           }
         }
       }
+      return result;
     } catch (err) {
       toast.error("Error listing project");
       console.log(err);
@@ -111,9 +110,23 @@ export const getTeamById = createAsyncThunk(
   }
 );
 
+export const deleteTeam = createAsyncThunk(
+  "project/deleteTeam",
+  async (projectId: string, { dispatch}) => {
+    try {
+      await api.delete(`/projects/${projectId}`);
+      dispatch(getTeams());
+      return true;
+    } catch (err) {
+      toast.error("Error deleting project");
+      return false;
+    }
+  }
+);
+
 export const acceptInvite = createAsyncThunk(
   "project/acceptInvite",
-  async (inviteToken: string, { getState, dispatch, rejectWithValue }) => {
+  async (inviteToken: string, {  }) => {
     try {
       await api.get(`/projects/accept-invitation?token=${inviteToken}`);
       toast.success("Invitation accepted");

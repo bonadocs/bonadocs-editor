@@ -64,7 +64,6 @@ export const BonadocsEditorProjectsCreationActionContractNetworkItem: React.FC<
             );
 
             dispatch(updateContractInstances(instances!));
-            console.log(currentContract.contractInstances);
           } else {
             let instances = currentContract.contractInstances?.slice();
 

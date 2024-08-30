@@ -22,7 +22,6 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
 
   const location = useLocation();
 
-
   return (
     <div className="bonadocs__editor__login">
       <div className="bonadocs__editor__login__inner">
@@ -45,20 +44,18 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                 // if (!redirect) {
                 //   navigate({
                 //     pathname: "/teams",
-                    
+
                 //   });
                 // } else navigate({
                 //   pathname: redirect,
                 //   search: `?uri=${uri}`,
                 // });
-                
-                const { from } = location.state || { from: { pathname: "/teams" } };
-                
-                console.log(location.state);
-                
+
+                const { from } = location.state || {
+                  from: { pathname: "/teams" },
+                };
+
                 navigate(from, { replace: true });
-
-
               } catch (err) {
                 setLoading(false);
               }
@@ -116,7 +113,9 @@ export const BonadocsEditorLogin: React.FC<BonadocsEditorLoginProps> = ({
                   setLoading(false);
                   return;
                 }
-                const { from } = location.state || { from: { pathname: "/teams" } };
+                const { from } = location.state || {
+                  from: { pathname: "/teams" },
+                };
                 navigate(from, { replace: true });
               } catch (err) {
                 console.log(err);

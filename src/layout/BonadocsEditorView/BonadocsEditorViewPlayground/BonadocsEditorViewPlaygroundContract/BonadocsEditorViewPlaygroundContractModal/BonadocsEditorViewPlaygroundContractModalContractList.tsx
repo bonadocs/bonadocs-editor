@@ -43,8 +43,6 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   const [contractList, setContractList] = React.useState<ContractsState[]>([]);
 
   useEffect(() => {
-    console.log(tempContracts.length, 'length');
-
     if (tempContracts[0].name !== "" && tempContracts.length > 0) {
       setContractList(tempContracts);
     } else {
@@ -52,8 +50,6 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
       setContractList(UIContracts);
     }
   }, []);
-
-  console.log("rerendered");
 
   return (
     <div className="bonadocs__editor__projects__action__contract__list">

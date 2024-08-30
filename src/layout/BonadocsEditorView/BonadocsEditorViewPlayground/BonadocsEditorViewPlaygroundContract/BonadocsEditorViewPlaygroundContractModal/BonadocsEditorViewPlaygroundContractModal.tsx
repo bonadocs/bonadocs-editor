@@ -64,8 +64,6 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
 
   const updateProjectDetails = useCallback(
     _.debounce(async (projectParams: CollectionDetailsParams) => {
-      console.log(projectParams, "projectParams");
-
       await dispatch(editCollectionDetails(projectParams));
       reloadFunction();
     }, 500),
@@ -76,14 +74,15 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
     useRef<BonadocsEditorViewPlaygroundContractModalAddContractRef>(null);
 
   const submitFunction = async () => {
+    setLoading(true);
     if (submitRef.current) {
       const addContractValid: boolean | void =
         await submitRef.current.submitContract();
-      console.log(addContractValid, "addContractValid");
 
       if (typeof addContractValid === "boolean") {
         addContractValid && setAddContract(!addContract);
       }
+      setLoading(false);
     }
   };
 
@@ -288,7 +287,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
             >
               Cancel
             </Button>
-            <Button type="action" onClick={submitFunction}>
+            <Button disabled={loading} type="action" onClick={submitFunction}>
               Add Contract
             </Button>
           </div>

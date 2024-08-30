@@ -59,11 +59,10 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
           if (projectView) {
             dispatch(setProjectView(false));
           } else {
-            console.log("create project");
+            
             const newCollection = await dispatch(createCollection());
             if (!newCollection) return;
             setCollection(newCollection.payload as CollectionDataManager);
-            console.log("newCollection", newCollection);
 
             // navigate({
             //   pathname: "/contracts",

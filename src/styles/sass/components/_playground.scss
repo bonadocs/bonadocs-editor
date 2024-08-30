@@ -319,6 +319,11 @@
             &__icon {
               margin-left: auto;
             }
+            &__text {
+               margin-left: auto;
+               color: var(--bonadocsProtocolBlue); 
+               cursor: pointer; 
+            }
           }
           &__view {
             flex: 1;

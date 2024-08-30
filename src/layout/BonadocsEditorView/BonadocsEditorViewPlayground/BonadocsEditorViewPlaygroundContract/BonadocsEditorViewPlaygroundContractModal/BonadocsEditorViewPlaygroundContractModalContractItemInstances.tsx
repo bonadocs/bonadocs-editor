@@ -43,7 +43,8 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstances: Rea
 
   useEffect(() => {
     setInstanceList(contractItem.contractInstances!);
-  }, [contractItem.name]);
+    
+  }, [contractItem]);
 
   return (
     <div className="bonadocs__editor__projects__creation__selection__instances">
@@ -70,7 +71,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstances: Rea
             setSearchNetwork(e.target.value);
           }}
           value={searchNetwork}
-          placeholder="Search contract instances"
+          placeholder="Search networks"
         />
       </div>
       <div className="bonadocs__editor__projects__creation__selection__instances__list">

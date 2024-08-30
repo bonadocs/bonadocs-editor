@@ -18,7 +18,7 @@ export const BonadocsEditorSidebarSimulatorItem: React.FC<
     (state: RootState) => state.controlBoard.simulation
   );
 
-  useEffect(() => { }, [simulation]);
+  useEffect(() => {}, [simulation]);
   return (
     <div className={className}>
       <Tab
@@ -29,12 +29,8 @@ export const BonadocsEditorSidebarSimulatorItem: React.FC<
         <>
           <CheckboxInput
             handleChange={(simulationState) => {
-               console.log(simulationState)
-              
-              dispatch(setSimulation(simulationState))
-            }
-             
-            }
+              dispatch(setSimulation(simulationState));
+            }}
             checked={simulation}
           />
           <div className="bonadocs__editor__sidebar__simulation__title">

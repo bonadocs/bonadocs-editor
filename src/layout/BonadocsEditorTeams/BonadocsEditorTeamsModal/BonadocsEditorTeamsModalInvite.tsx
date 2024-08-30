@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { customStyles } from "@/data/toast/toastConfig";
 import Modal from "react-modal";
-import { fetchTeamMembers } from "@/store/team/teamSlice";
+import { fetchTeamMembers, getTeamById } from "@/store/team/teamSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { BonadocsEditorTeamsModalInviteMember } from "./BonadocsEditorTeamsModalInviteMember";
@@ -25,11 +25,7 @@ export const BonadocsEditorTeamsModalInvite: React.FC<
   const [addMember, setAddMember] = useState<boolean>(false);
   const [userRole, setUserRole] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [teamMembers, setTeamMembers] = useState<any[]>([
-    { name: "Ahmad", role: "admin" },
-    { name: "Ali", role: "admin" },
-    { name: "Ahmed", role: "admin" },
-  ]);
+  const [teamMembers, setTeamMembers] = useState<any[]>([]);
 
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -43,9 +39,9 @@ export const BonadocsEditorTeamsModalInvite: React.FC<
   };
 
   const fetchMembers = async () => {
-    const members = await dispatch(fetchTeamMembers(teamInfo.id!));
-    if (members) {
-      // setTeamMembers(members.payload);
+    const members = await dispatch(getTeamById(teamInfo.id!));
+    if (members.payload) {
+      setTeamMembers(members.payload["users"]);
     }
   };
 
@@ -102,13 +98,13 @@ export const BonadocsEditorTeamsModalInvite: React.FC<
                   className="bonadocs__editor__projects__action__select__inner__network__item"
                 >
                   <div className="bonadocs__editor__projects__action__select__inner__network__item__name">
-                    {member.name}
+                    {member.firstName} {member.lastName}
                   </div>
                   <img
                     onClick={() => {
-                      const members = teamMembers.slice();
-                      members.splice(index, 1);
-                      setTeamMembers(members);
+                      // const members = teamMembers.slice();
+                      // members.splice(index, 1);
+                      // setTeamMembers(members);
                     }}
                     alt="delete instance"
                     src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1701455363/close_isqdse.svg"

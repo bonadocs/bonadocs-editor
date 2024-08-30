@@ -29,6 +29,12 @@ export type ProjectItem = {
   description?: string;
 };
 
+export type WidgetConfig = {
+  widgetConfigUri: string;
+  contract: string;
+  functionKey: string;
+};
+
 
 export type ContractInfo = {
   contractInstances?: ContractInstance[];
@@ -57,7 +63,7 @@ export type TeamItem = {
   name: string;
   slug: string;
   id: string;
-  permission?: string;
+  permissions?: string | Array<string>;
 };
 
 export type TeamMembers = {

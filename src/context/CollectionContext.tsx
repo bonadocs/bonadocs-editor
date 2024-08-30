@@ -153,7 +153,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
           // collectionRef.current = collection;
 
           const collection = (await api.get(getUri.data.data.uri)).data.data;
-          console.log(uri, "collection response");
 
           await collection.manager.saveToLocal();
           collectionRef.current = collection.manager;
@@ -168,7 +167,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
   const reloadFunction = () => {
     // Function logic here
-    console.log("Function triggered!");
     setValue((prev) => prev + 1);
   };
 
@@ -213,7 +211,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     if (!collectionRef.current) {
       throw new Error("Collection not loaded");
     }
-    
+
     if (auth.currentUser !== null) {
       uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
       initialConnection();
@@ -222,6 +220,10 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       );
       dispatch(fetchCollectionVariables(collectionRef.current));
     }
+    initialConnection();
+    dispatch(fetchCollectionContracts({ collection: collectionRef.current }));
+    dispatch(fetchCollectionVariables(collectionRef.current));
+
     return uriId!;
   };
 
@@ -415,7 +417,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     setWorkflowResponse("");
     const activeNetwork = id?.length !== 0 && id !== null ? Number(id) : 1;
     try {
-      console.log("id", activeNetwork);
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
 

@@ -151,6 +151,22 @@ export const updateMethodViewValue = createAsyncThunk(
   }
 );
 
+export const getMethodWidget = createAsyncThunk(
+  "method/getMethodWidget",
+  async (methodWidgetParams: CollectionDataManager, { dispatch, getState }) => {
+    try {
+      const collection = methodWidgetParams;
+      const state = getState() as RootState;
+      const widgetConfig = await collection
+        ?.getContractDetailsView(state.method.methodItem.contractId!)
+        .getWidgetConfiguration(state.method.methodItem.fragmentKey);
+      return widgetConfig;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
 export const getMethodViewValue = createAsyncThunk(
   "method/getMethodViewValue",
   async (setFragmentParams: FragmentParams, { getState }) => {

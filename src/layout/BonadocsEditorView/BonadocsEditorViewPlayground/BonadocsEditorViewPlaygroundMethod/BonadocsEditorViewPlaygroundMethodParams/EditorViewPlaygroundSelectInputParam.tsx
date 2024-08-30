@@ -40,8 +40,6 @@ export const EditorViewPlaygroundSelectInputParam: React.FC<
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(event.target.value);
-
     dispatch(
       setMethodViewValue({
         collection,

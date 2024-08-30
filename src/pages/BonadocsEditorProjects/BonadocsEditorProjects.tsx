@@ -21,6 +21,13 @@ export const BonadocsEditorProjects: React.FC = () => {
   const teamProjects = useSelector(
     (state: RootState) => state.project.projectList
   );
+  const currentTeamPermissions = useSelector(
+    (state: RootState) => state.team.currentTeam
+  );
+
+  const addProject =
+    currentTeamPermissions.permissions?.includes("writeCollections");
+
   useEffect(() => {
     currentProject();
   }, []);
@@ -36,9 +43,6 @@ export const BonadocsEditorProjects: React.FC = () => {
       return;
     }
   };
-
-  console.log('project flicker');
-  
 
   return (
     <div className="bonadocs__editor__projects">
@@ -56,6 +60,7 @@ export const BonadocsEditorProjects: React.FC = () => {
             </div>
             <div className="bonadocs__editor__projects__inner__header__right">
               <Button
+                disabled={!addProject}
                 className="bonadocs__editor__projects__inner__header__right__button"
                 onClick={() => setShowImportModal(!showImportModal)}
               >
@@ -66,6 +71,7 @@ export const BonadocsEditorProjects: React.FC = () => {
               </Button>
 
               <Button
+                disabled={!addProject}
                 type="action"
                 className="bonadocs__editor__projects__inner__header__right__button"
                 onClick={() => {

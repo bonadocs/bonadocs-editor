@@ -84,14 +84,12 @@ const projectSlice = createSlice({
     deleteContract: (state, action: PayloadAction<number>) => {
       let contracts = state.contracts.slice();
       contracts.splice(action.payload, 1);
-      console.log("contracts", contracts);
 
       let newList = contracts.map(
         (contractItem: ContractsState, index: number) => {
           return (contractItem.id = index.toString()), contractItem;
         }
       );
-      console.log(newList);
 
       state.contracts = newList;
     },
@@ -100,7 +98,6 @@ const projectSlice = createSlice({
     },
     setContracts: (state, action: PayloadAction<ContractsState[]>) => {
       state.contracts = action.payload;
-      console.log(state.contracts);
     },
     updateContract: (state, action: PayloadAction<ContractsState>) => {
       let contracts = state.contracts.slice();
@@ -109,7 +106,6 @@ const projectSlice = createSlice({
       );
       contracts[index] = action.payload;
       state.contracts = contracts;
-      console.log(state.contracts);
     },
     updateContractInstances: (
       state,
@@ -121,10 +117,8 @@ const projectSlice = createSlice({
           contractItem.id === state.currentContract.id
       );
 
-      console.log(action.payload, "contracts", index);
       contracts[index].contractInstances = action.payload;
       state.contracts = contracts;
-      console.log(contracts);
     },
   },
   extraReducers: (builder) => {},
@@ -188,8 +182,6 @@ export const deletePlaygroundContract = createAsyncThunk(
     const state = getState() as RootState;
     let contracts = state.project.contracts.slice();
     contracts.splice(contractIndex, 1);
-    console.log("contracts", contracts);
-
     dispatch(setContracts(contracts));
 
     return contracts;
@@ -268,8 +260,7 @@ export const fetchCollections = createAsyncThunk(
         const projects = await api.get(
           `projects/${team.currentTeam.id}/collections`
         );
-        
-        
+
         dispatch(setProjectList(projects.data.data));
         return projects.data.data;
       } catch (err: any) {
@@ -285,7 +276,7 @@ export const addCollection = createAsyncThunk(
   async (collectionParam: CollectionDataManager, { dispatch, getState }) => {
     const { team } = getState() as RootState;
     const collectionName = collectionParam.data.name;
-    
+
     try {
       const newProject = await api.post(
         `projects/${team.currentTeam.id}/collections`,
@@ -295,7 +286,6 @@ export const addCollection = createAsyncThunk(
           collectionData: collectionParam,
         }
       );
-      console.log(newProject);
       dispatch(fetchCollections());
       toast.success("Project added successfully");
       return true;
@@ -310,12 +300,10 @@ export const editCollectionDetails = createAsyncThunk(
   "project/setCollectionDetails",
   async (collectionDetails: CollectionDetailsParams, { dispatch }) => {
     try {
-      console.log(collectionDetails);
 
       const { collection, projectItem, value } = collectionDetails;
       if (projectItem === "name") {
         await collection.metadataView.rename(value);
-        console.log("renamed");
       } else {
         await collection.metadataView.updateDescription(value);
       }
@@ -366,13 +354,6 @@ export const updateContractList = createAsyncThunk(
           interfaceHash: interfaceHash,
           instances: instances!,
         };
-       
-        console.log(
-          contractDefinitionParam,
-          "param",
-          instances![0].chainId,
-          instances![0].address
-        );
 
         if (contractManagerView && instances![0]) {
           await contractManagerView.addContract(
@@ -457,14 +438,13 @@ export const createCollection = createAsyncThunk(
           collectionData: newCollectionManager,
         }
       );
-      console.log(newProject);
-      
+
       dispatch(reset());
       return newCollectionManager;
     } catch (err) {
       console.log(err);
       toast.error("Error creating collection");
-      return false
+      return false;
     }
   }
 );

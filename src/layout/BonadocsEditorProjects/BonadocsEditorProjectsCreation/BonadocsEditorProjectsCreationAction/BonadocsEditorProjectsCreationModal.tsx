@@ -88,7 +88,7 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
               const importedCollection = await dispatch(
                 importCollection(collectionName)
               );
-              console.log(importedCollection);
+              
               if (!importedCollection.payload) {
                 setLoading(false);
                 return;

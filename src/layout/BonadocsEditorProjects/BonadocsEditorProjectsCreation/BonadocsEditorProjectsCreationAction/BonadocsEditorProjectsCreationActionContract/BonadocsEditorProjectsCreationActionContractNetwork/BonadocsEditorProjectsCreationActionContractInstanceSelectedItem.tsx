@@ -46,11 +46,12 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
- const [localVerification, setLocalVerification] = useState<boolean>(instance.verification ?? false);
+  const [localVerification, setLocalVerification] = useState<boolean>(
+    instance.verification ?? false
+  );
   const currentContract = useSelector(
     (state: RootState) => state.project.currentContract
   );
-  
 
   const deleteInstance = () => {
     let instances = currentContract.contractInstances?.slice();
@@ -71,8 +72,10 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       ...instance,
       verification: e.target.value === "Verified" ? true : false,
     };
-    
-    e.target.value === "Verified" ? setLocalVerification(true) : setLocalVerification(false);
+
+    e.target.value === "Verified"
+      ? setLocalVerification(true)
+      : setLocalVerification(false);
     instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
     dispatch(
@@ -113,7 +116,6 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
         getApi()
           .loadContractABI(instance.chainId!, EVMaddress)
           .then((abi) => {
-            console.log(abi);
             handleABIChange(abi!);
             typeof abi === "undefined"
               ? toast.error("ABI error. Input it manually.")
@@ -136,10 +138,6 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
 
   useEffect(() => {
     setLocalVerification(instance.verification ?? false);
-    console.log("verification", instance, localVerification);
-    console.log("instance verification", instance.verification ?? false);
-    
-    
   }, [instance.verification]);
 
   return (
@@ -184,8 +182,6 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
             placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
             value={contractAddress.current}
             handleChange={(e) => {
-              console.log("updated", e.target.value);
-
               contractAddress.current = e.target.value;
               let instances = currentContract.contractInstances?.slice();
               const newInstance: ContractInstance = {

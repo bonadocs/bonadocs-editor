@@ -36,7 +36,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesAdd: 
 
   useEffect(() => {
     setSelectedChainId(options[0].value as number);
-  },[options])
+  }, [options]);
 
   return (
     <Modal
@@ -77,7 +77,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesAdd: 
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Add Instance</h3>
+        <h3 className="modal__container__title">Add Network</h3>
         <Dropdown
           options={options}
           updateId={(e) => setSelectedChainId(Number(e.target.value))}
@@ -88,13 +88,12 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesAdd: 
             type="action"
             onClick={async () => {
               handleAddContractInstance(selectedChainId);
-              console.log(selectedChainId);
 
               closeModal();
             }}
             className="modal__container__button"
           >
-            Add Instance
+            Add Network
           </Button>
         </div>
       </div>

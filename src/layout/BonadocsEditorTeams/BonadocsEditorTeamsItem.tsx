@@ -6,7 +6,7 @@ import { BonadocsEditorTeamsModalInvite } from "./BonadocsEditorTeamsModal/Bonad
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { setTeamId } from "@/store/team/teamSlice";
+import { deleteTeam, setTeamId } from "@/store/team/teamSlice";
 
 interface BonadocsEditorTeamsItemProps {
   teamItem: TeamItem;
@@ -25,8 +25,6 @@ export const BonadocsEditorTeamsItem: React.FC<
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-
-  
   return (
     <div className="bonadocs__editor__projects__inner__list__item">
       <img
@@ -35,8 +33,6 @@ export const BonadocsEditorTeamsItem: React.FC<
       />
       <div
         onClick={() => {
-          console.log("teamItem", teamItem);
-
           // dispatch(setTeamId(teamItem.id));
           navigate({
             pathname: `/teams/${teamItem.id}/projects`,
@@ -78,6 +74,7 @@ export const BonadocsEditorTeamsItem: React.FC<
                 <div
                   onClick={() => {
                     // setDeleteWidget(!deleteWidget);
+                    dispatch(deleteTeam(teamItem.id));
                     close();
                   }}
                   className="bonadocs__editor__variables__table__item__popover__item__delete"

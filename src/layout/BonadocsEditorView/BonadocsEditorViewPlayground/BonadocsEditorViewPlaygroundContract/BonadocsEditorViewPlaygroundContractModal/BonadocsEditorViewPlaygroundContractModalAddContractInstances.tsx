@@ -25,8 +25,6 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstances: Reac
     instance: ContractInstance,
     address?: string
   ) => {
-    console.log(version, instance, address, "version, instance, address");
-
     switch (version) {
       case "edit":
         updateInstance((prev) => {
@@ -36,11 +34,8 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstances: Reac
           };
           const tempInstances = instances.slice();
 
-          console.log(
-            tempInstances.splice(instances.indexOf(instance), 1, newInstance),
-            "new"
-          );
-          console.log(tempInstances, "p");
+          tempInstances.splice(instances.indexOf(instance), 1, newInstance);
+
           return {
             ...prev,
             contractInstances: tempInstances,
@@ -49,11 +44,8 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstances: Reac
         break;
       case "delete":
         updateInstance((prev) => {
-          console.log(instances, "instances");
-
           const networks = instances.slice();
           networks.splice(instances.indexOf(instance!), 1);
-          console.log(networks, "networks");
 
           return {
             ...prev,
@@ -138,7 +130,7 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstances: Reac
           className="bonadocs__editor__projects__creation__add__title"
           onClick={() => setOpen(!open)}
         >
-          Add instance
+          Add network
         </h3>
       </div>
       {/* <BonadocsEditorViewPlaygroundContractModalContractItemInstancesAdd

@@ -29,7 +29,6 @@ api.interceptors.response.use(
 );
 
 async function handleLogout () {
-  console.log("401");
   // await store.dispatch({ type: "auth/logoutUser" });
 
 store.dispatch({ type: "auth/setUserSession" }, false);

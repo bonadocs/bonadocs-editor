@@ -19,8 +19,6 @@ export const BonadocsEditorProjectsCreationActionContractPagination: React.FC<
   return (
     <Pagination
       onPageChange={(currentPage) => {
-        console.log(currentPage, 'currentPage');
-        
         dispatch(setCurrentContract(contracts[currentPage - 1]));
       }}
       totalPages={contracts.length}

@@ -38,8 +38,6 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
   );
 
   useEffect(() => {
-    // console.log(currentAction.id, "currentAction id");
-    // console.log(Array.from(getCollection()!.workflowManagerView.workflows));
     setCodeState(currentAction.code[0]?.code);
   }, [currentAction.id]);
 

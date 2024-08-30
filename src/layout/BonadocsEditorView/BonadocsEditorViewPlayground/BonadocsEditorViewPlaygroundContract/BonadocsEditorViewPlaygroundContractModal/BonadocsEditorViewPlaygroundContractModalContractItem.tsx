@@ -5,7 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { TextInput } from "@/components/input/TextInput";
 import { TextareaInput } from "@/components/input/TextareaInput";
 import { BonadocsEditorViewPlaygroundContractModalContractItemInstances } from "./BonadocsEditorViewPlaygroundContractModalContractItemInstances";
-import { deleteContract, deletePlaygroundContract, updateContract } from "@/store/project/projectSlice";
+import {
+  deleteContract,
+  deletePlaygroundContract,
+  updateContract,
+} from "@/store/project/projectSlice";
 import { AppDispatch, RootState } from "@/store";
 import { set } from "lodash";
 import { BonadocsEditorProjectsCreationActionContractDeleteModal } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationActionContract/BonadocsEditorProjectsCreationActionContractModal/BonadocsEditorProjectsCreationActionContractDeleteModal";
@@ -31,17 +35,14 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
   const handleDeleteContract = async () => {
     const currentContractId = contracts.indexOf(contractItem);
     let list = await dispatch(deletePlaygroundContract(currentContractId));
-    console.log(list);
-    
     handleUpdate(list.payload as ContractsState[]);
   };
 
-    useEffect((() => {
-        setContractName(contractItem.name);
-        setContractDescription(contractItem.description!);
-        setContractABI(contractItem.abi!);
-    }),[contractItem.name])
-  
+  useEffect(() => {
+    setContractName(contractItem.name);
+    setContractDescription(contractItem.description!);
+    setContractABI(contractItem.abi!);
+  }, [contractItem.name]);
 
   return (
     <>
@@ -117,7 +118,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
             }}
           />
           <h2 className="bonadocs__editor__projects__creation__selection__item__deets__header">
-            Contract instances
+            Networks
           </h2>
 
           <BonadocsEditorViewPlaygroundContractModalContractItemInstances

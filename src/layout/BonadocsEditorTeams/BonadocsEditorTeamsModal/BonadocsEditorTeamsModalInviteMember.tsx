@@ -31,7 +31,7 @@ export const BonadocsEditorTeamsModalInviteMember: React.FC<
       setLoading(true);
 
       const permission = teamRoles.find((role) => role.value === userRole);
-      console.log(inviteEmail, userRole, permission, userName);
+
       const invite = await dispatch(
         inviteMember({
           projectId,
@@ -40,7 +40,6 @@ export const BonadocsEditorTeamsModalInviteMember: React.FC<
           permission: permission?.permission!,
         })
       );
-      console.log(invite);
 
       if (invite.payload) {
         setLoading(false);
@@ -76,8 +75,6 @@ export const BonadocsEditorTeamsModalInviteMember: React.FC<
         <h5 className="modal__container__text">Role</h5>
         <SelectInput
           handleInputChange={(item) => {
-            console.log(item.target.value);
-
             setUserRole(item.target.value);
           }}
           className="pa-1"

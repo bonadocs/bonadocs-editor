@@ -113,7 +113,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesItem:
               className="bonadocs__editor__projects__creation__selection__item__deets__delete"
               onClick={() => setOpenDeleteModal(!openDeleteModal)}
             >
-              Delete Instance
+              Delete network
             </h2>
           </div>
         )}

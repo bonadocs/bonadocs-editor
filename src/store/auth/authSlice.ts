@@ -12,7 +12,7 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { reset as resetProject } from "../project/projectSlice"
+import { reset as resetProject } from "../project/projectSlice";
 
 import { toast } from "react-toastify";
 import { RootState } from "..";
@@ -61,7 +61,6 @@ export const loginGoogleUser = createAsyncThunk(
       dispatch(setUserState(login));
       return true;
     } catch (err) {
-      console.log("login google user err", err);
       console.log(err);
       return false;
     }
@@ -90,7 +89,6 @@ export const loginGithubUser = createAsyncThunk(
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { dispatch, getState }) => {
-
     dispatch(reset());
     dispatch(resetProject());
     dispatch(setUserSession(false));

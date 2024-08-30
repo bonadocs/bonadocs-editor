@@ -16,7 +16,7 @@ interface BonadocsEditorProps {
 export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
   className,
 }) => {
-   const authSession = useSelector((state: RootState) => state.auth.inSession);
+  const authSession = useSelector((state: RootState) => state.auth.inSession);
   return (
     <Routes>
       <Route path={"/"}>
@@ -30,6 +30,7 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
             )
           }
         />
+
         <Route path="login" element={<BonadocsEditorLogin />} />
         <Route
           path="contracts"
