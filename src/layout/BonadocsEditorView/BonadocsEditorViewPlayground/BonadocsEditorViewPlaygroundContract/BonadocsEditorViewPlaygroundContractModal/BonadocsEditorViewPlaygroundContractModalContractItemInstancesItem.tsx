@@ -5,11 +5,15 @@ import { TextInput } from "@/components/input/TextInput";
 import { supportedChains } from "@bonadocs/core";
 import {
   setCurrentContract,
+  updateContract,
   updateContractInstances,
 } from "@/store/project/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { BonadocsEditorProjectsCreationActionContractInstanceDeleteModal } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationActionContract/BonadocsEditorProjectsCreationActionContractModal/BonadocsEditorProjectsCreationActionContractInstanceDeleteModal";
+import { getApi } from "@bonadocs/core";
+import { toast } from "react-toastify";
+
 interface BonadocsEditorViewPlaygroundContractModalContractItemInstancesItemProps {
   instance: Instance;
   instanceList: Instance[];
@@ -21,6 +25,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesItem:
   BonadocsEditorViewPlaygroundContractModalContractItemInstancesItemProps
 > = ({ instance, contractItem, handleUpdate, instanceList }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [contractAddress, setContractAddress] = useState<string>(
     instance.address! ?? ""
@@ -88,7 +93,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesItem:
             <TextInput
               placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
               value={contractAddress}
-              handleChange={(e) => {
+              handleChange={async (e) => {
                 setContractAddress(e.target.value);
 
                 let instances = instanceList.slice();
@@ -99,15 +104,48 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesItem:
                 };
                 instances?.splice(instances.indexOf(instance), 1, newInstance);
                 handleUpdate(instances);
-                dispatch(
-                  setCurrentContract({
-                    ...contractItem,
-                    contractInstances: instances,
-                  })
-                );
-                dispatch(updateContractInstances(instances!));
+
+                const newAddress = e.target.value;
+                if (newAddress.toString().length === 42) {
+                  setLoading(true);
+                  await getApi()
+                    .loadContractABI(instance.chainId!, newAddress)
+                    .then((abi) => {
+                      if (typeof abi === "undefined") {
+                        toast.error("ABI error. Input it manually.");
+                      } else {
+                        console.log(abi, "inside abi");
+
+                        const updatedContract = {
+                          ...contractItem,
+                          abi,
+                          contractInstances: instances,
+                        };
+                        dispatch(setCurrentContract(updatedContract));
+                        dispatch(updateContract(updatedContract));
+                      }
+                      setLoading(false);
+                    })
+                    .catch((err) => {
+                      console.log(err, "error");
+                      toast.error(
+                        "Error loading latest ABI. Input it manually."
+                      );
+                      setLoading(false);
+                      return false;
+                    });
+                } else {
+                  dispatch(
+                    setCurrentContract({
+                      ...contractItem,
+                      contractInstances: instances,
+                    })
+                  );
+                  dispatch(updateContractInstances(instances!));
+                }
               }}
             />
+            {loading && <h2>Loading ABI...</h2>}
 
             <h2
               className="bonadocs__editor__projects__creation__selection__item__deets__delete"

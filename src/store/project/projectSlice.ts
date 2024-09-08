@@ -161,13 +161,18 @@ export const projectValidation = (state: RootState) => {
     }
 
     for (let j = 0; j < contracts[i].contractInstances!.length; j++) {
-      if (!contracts[i].contractInstances![j].address) {
+      if (
+        !contracts[i].contractInstances![j].address ||
+        contracts[i].contractInstances![j].address.length !== 42
+      ) {
         return {
           message:
-            "Please fill in the contract address for all contract instance",
+            "Please fill in the correct contract address for all contract instance",
           status: false,
         };
       }
+     
+
     }
   }
   return {
@@ -194,12 +199,12 @@ export const addPlaygroundContractValidation = createAsyncThunk(
     contract: ContractsState,
     { getState }
   ): { message: string; status: boolean } | undefined => {
-    if (!contract.name || !contract.description) {
-      return {
-        message: "Please fill in the contract name and description",
-        status: false,
-      };
-    }
+    // if (!contract.name || !contract.description) {
+    //   return {
+    //     message: "Please fill in the contract name and description",
+    //     status: false,
+    //   };
+    // }
 
     if (!contract.abi || contract.abi === "") {
       return {
@@ -213,7 +218,7 @@ export const addPlaygroundContractValidation = createAsyncThunk(
       !contract.contractInstances
     ) {
       return {
-        message: "Please add at least one contract instance",
+        message: "Please add at least one network",
         status: false,
       };
     }
@@ -222,15 +227,23 @@ export const addPlaygroundContractValidation = createAsyncThunk(
       if (!contract.contractInstances![i].address) {
         return {
           message:
-            "Please fill in the contract address for all contract instance",
+            "Please fill in the correct contract address for all networks",
           status: false,
         };
       }
+
+      if (contract.contractInstances![i].address.length !== 42) {
+        return {
+          message:
+            "Please fill in the correct 42 character contract address for all contract networks",
+          status: false,
+        };
+      }
+      return {
+        message: "Good to goo",
+        status: true,
+      };
     }
-    return {
-      message: "Good to go",
-      status: true,
-    };
   }
 );
 
@@ -276,6 +289,7 @@ export const addCollection = createAsyncThunk(
   async (collectionParam: CollectionDataManager, { dispatch, getState }) => {
     const { team } = getState() as RootState;
     const collectionName = collectionParam.data.name;
+    collectionParam.getSnapshot()
 
     try {
       const newProject = await api.post(
@@ -283,7 +297,7 @@ export const addCollection = createAsyncThunk(
         {
           name: collectionName,
           isPublic: false,
-          collectionData: collectionParam,
+          collectionData: collectionParam.data,
         }
       );
       dispatch(fetchCollections());
@@ -300,7 +314,6 @@ export const editCollectionDetails = createAsyncThunk(
   "project/setCollectionDetails",
   async (collectionDetails: CollectionDetailsParams, { dispatch }) => {
     try {
-
       const { collection, projectItem, value } = collectionDetails;
       if (projectItem === "name") {
         await collection.metadataView.rename(value);

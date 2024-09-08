@@ -5,10 +5,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "./store";
 import { injectStore } from "./utils/axios";
-import history from "@/utils/history";
-import { Router } from "react-router";
-import { BrowserRouter } from "react-router-dom";
-import { BrowserHistory } from "history";
 
 injectStore(store);
 

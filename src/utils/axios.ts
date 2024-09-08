@@ -1,5 +1,4 @@
 import axios from "axios";
-import history from "./history";
 export const api = axios.create({
   baseURL: process.env.REACT_APP_BONADOCS_ENDPOINT,
   headers: {
@@ -31,6 +30,7 @@ api.interceptors.response.use(
 async function handleLogout () {
   // await store.dispatch({ type: "auth/logoutUser" });
 
-store.dispatch({ type: "auth/setUserSession" }, false);
+  store.dispatch({ type: "auth/setUserSession" }, false);
+  store.dispatch({ type: "project/reset" });
   // window.location.href = "/login";
 }

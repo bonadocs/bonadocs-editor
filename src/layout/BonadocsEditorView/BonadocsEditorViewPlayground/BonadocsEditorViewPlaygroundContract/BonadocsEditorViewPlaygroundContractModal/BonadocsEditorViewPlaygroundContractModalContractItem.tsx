@@ -8,6 +8,7 @@ import { BonadocsEditorViewPlaygroundContractModalContractItemInstances } from "
 import {
   deleteContract,
   deletePlaygroundContract,
+  setCurrentContract,
   updateContract,
 } from "@/store/project/projectSlice";
 import { AppDispatch, RootState } from "@/store";
@@ -30,6 +31,9 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
   );
   const [contractABI, setContractABI] = useState<string>(contractItem.abi!);
   const contracts = useSelector((state: RootState) => state.project.contracts);
+  const currentContract = useSelector(
+    (state: RootState) => state.project.currentContract
+  );
   const dispatch = useDispatch<AppDispatch>();
 
   const handleDeleteContract = async () => {
@@ -41,8 +45,18 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
   useEffect(() => {
     setContractName(contractItem.name);
     setContractDescription(contractItem.description!);
+  }, [contractItem.name, contractItem.description, contractItem.abi]);
+
+  useEffect(() => {
+    if (currentContract) {
+      console.log("updated abi");
+      setContractABI(currentContract.abi!);
+    }
+  }, [currentContract]);
+
+  useEffect(() => {
     setContractABI(contractItem.abi!);
-  }, [contractItem.name]);
+  }, []);
 
   return (
     <>
@@ -114,6 +128,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
                 ...contractItem,
                 abi: e.target.value,
               };
+              dispatch(setCurrentContract(updatedContract));
               dispatch(updateContract(updatedContract));
             }}
           />

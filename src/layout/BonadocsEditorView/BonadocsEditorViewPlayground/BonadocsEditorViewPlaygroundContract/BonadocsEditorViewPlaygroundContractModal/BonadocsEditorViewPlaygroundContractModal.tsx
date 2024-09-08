@@ -91,11 +91,14 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
       const validation = await dispatch(
         addPlaygroundContractValidation(tempContracts[i])
       );
+      console.log(validation.payload);
       if (
         !(
           validation.payload as { message: string; status: boolean } | undefined
         )?.status
       ) {
+        
+        
         toast.error((validation.payload as any)?.message);
         return;
       }

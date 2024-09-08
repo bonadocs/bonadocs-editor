@@ -122,14 +122,15 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         collectionRef.current = collection.manager;
       } else {
         let collection = await Collection.createFromURI(uri);
+        
 
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
 
         localStorage.setItem(uri, collectionRef.current?.data.id);
       }
-    } catch (error) {
-      toast.error((error as Error).toString());
+    } catch (error: any) {
+      toast.error(error);
     }
   };
 
@@ -138,29 +139,40 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     projectId: string
   ) => {
     try {
-      if (auth.currentUser !== null) {
-        const uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+     
+      
+      // if (auth.currentUser !== null) {
+         console.log('start 2');
+        const uriId = `/projects/${teamId}/collections/${projectId}${90}`;
         if (localStorage.getItem(uriId)) {
+          console.log("start previous");
           let collection = await Collection.createFromLocalStore(
             localStorage.getItem(uriId)!
           );
 
           collectionRef.current = collection.manager;
         } else {
+          console.log("start 3");
+
           const getUri = await api.get(
             `/projects/${teamId}/collections/${projectId}`
           );
           // collectionRef.current = collection;
+          console.log(getUri, "get uri");
 
-          const collection = (await api.get(getUri.data.data.uri)).data.data;
+          const collection = await api.get(getUri.data.data.uri);
+          console.log(collection.data, "collection");
 
-          await collection.manager.saveToLocal();
-          collectionRef.current = collection.manager;
+          // await collection.manager.saveToLocal();
+          collectionRef.current = collection.data.data.manager;
 
-          localStorage.setItem(uriId, collectionRef.current?.data.id!);
+          // localStorage.setItem(uriId, collectionRef.current?.data.id!);
         }
-      }
+      // }
+      return true;
     } catch (error) {
+      console.log(error);
+
       toast.error((error as Error).toString());
     }
   };
@@ -205,7 +217,29 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     if (uri) {
       await loadCollectionFromUri(uri);
     } else if (projectId && teamId) {
+      console.log("start");
+console.log(teamId, projectId);
+
       await loadCollectionFromPrivateTeam(teamId, projectId);
+
+      
+
+      // if (privateRes) {
+      //   if (!collectionRef.current) {
+      //     throw new Error("Collection not loaded");
+      //   }
+      //   if (auth.currentUser !== null) {
+      //     uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+      //     initialConnection();
+      //     dispatch(
+      //       fetchCollectionContracts({ collection: collectionRef.current!, uriId })
+      //     );
+      //     dispatch(fetchCollectionVariables(collectionRef.current!));
+      //   }
+      //   initialConnection();
+      //   dispatch(fetchCollectionContracts({ collection: collectionRef.current! }));
+      //   dispatch(fetchCollectionVariables(collectionRef.current!));
+      // }
     }
 
     if (!collectionRef.current) {
@@ -216,13 +250,13 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
       initialConnection();
       dispatch(
-        fetchCollectionContracts({ collection: collectionRef.current, uriId })
+        fetchCollectionContracts({ collection: collectionRef.current!, uriId })
       );
-      dispatch(fetchCollectionVariables(collectionRef.current));
+      dispatch(fetchCollectionVariables(collectionRef.current!));
     }
     initialConnection();
-    dispatch(fetchCollectionContracts({ collection: collectionRef.current }));
-    dispatch(fetchCollectionVariables(collectionRef.current));
+    dispatch(fetchCollectionContracts({ collection: collectionRef.current! }));
+    dispatch(fetchCollectionVariables(collectionRef.current!));
 
     return uriId!;
   };
