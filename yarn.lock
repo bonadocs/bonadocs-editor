@@ -1207,10 +1207,10 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@bonadocs/core@^1.0.3-alpha.71":
-  version "1.0.3-alpha.71"
-  resolved "https://registry.yarnpkg.com/@bonadocs/core/-/core-1.0.3-alpha.71.tgz#64c933ffa83f324b57a7465e211b2a7a3845aeec"
-  integrity sha512-tAShrHHagRCmZctPSOulUE9SLCSHjP3zDLkP0tlmg9X/A8bMHeEMH7wCwoklCA0pkxoEca0Ahtg8ksgt1590SQ==
+"@bonadocs/core@^1.0.3-alpha.72":
+  version "1.0.3-alpha.72"
+  resolved "https://registry.yarnpkg.com/@bonadocs/core/-/core-1.0.3-alpha.72.tgz#229076e8de318051d3ef01df73d2e6e71620e958"
+  integrity sha512-hiMwkiwY+BYCoBLY1uWFtT7HrklZykurpI5s5n9azTrkqIHp7WtRpebmgW/1nYf2GCccw77cVUEfS/040T1UJg==
   dependencies:
     "@automerge/automerge" "^2.2.8"
     "@automerge/automerge-repo" "^1.2.1"
