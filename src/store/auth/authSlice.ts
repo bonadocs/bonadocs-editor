@@ -140,13 +140,14 @@ const bonadocsLogin = async (userInfo: any) => {
         email: arrayUnion(email),
       });
     }
-
+    console.log(email, response);
+    
     return {
       email: email,
       authToken: response.data.data.token,
     };
   } catch (err: any) {
-    toast.error(err.response.data.message);
+    toast.error(err.response);
     console.log("bonadocs login err", err);
 
     return false;

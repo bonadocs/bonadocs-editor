@@ -38,7 +38,7 @@ interface CollectionContextProps {
     uri?: string;
     projectId?: string;
     teamId?: string;
-  }) => Promise<string>; // Update the type to include Promise
+  }) => Promise<string | undefined>; // Update the type to include Promise
   collection: CollectionDataManager | null;
   getCollection: () => CollectionDataManager | null;
   setCollection: (collection: CollectionDataManager) => void;
@@ -120,15 +120,18 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         );
 
         collectionRef.current = collection.manager;
+         console.log(collectionRef.current);
       } else {
         let collection = await Collection.createFromURI(uri);
-        
 
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
+        console.log(collectionRef.current);
+        
 
         localStorage.setItem(uri, collectionRef.current?.data.id);
       }
+      return true;
     } catch (error: any) {
       toast.error(error);
     }
@@ -139,35 +142,33 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     projectId: string
   ) => {
     try {
-     
-      
       // if (auth.currentUser !== null) {
-         console.log('start 2');
-        const uriId = `/projects/${teamId}/collections/${projectId}${90}`;
-        if (localStorage.getItem(uriId)) {
-          console.log("start previous");
-          let collection = await Collection.createFromLocalStore(
-            localStorage.getItem(uriId)!
-          );
+      console.log("start 2");
+      const uriId = `/projects/${teamId}/collections/${projectId}${90}`;
+      if (localStorage.getItem(uriId)) {
+        console.log("start previous");
+        let collection = await Collection.createFromLocalStore(
+          localStorage.getItem(uriId)!
+        );
 
-          collectionRef.current = collection.manager;
-        } else {
-          console.log("start 3");
+        collectionRef.current = collection.manager;
+      } else {
+        console.log("start 3");
 
-          const getUri = await api.get(
-            `/projects/${teamId}/collections/${projectId}`
-          );
-          // collectionRef.current = collection;
-          console.log(getUri, "get uri");
+        const getUri = await api.get(
+          `/projects/${teamId}/collections/${projectId}`
+        );
+        // collectionRef.current = collection;
+        console.log(getUri, "get uri");
 
-          const collection = await api.get(getUri.data.data.uri);
-          console.log(collection.data, "collection");
+        const collection = await api.get(getUri.data.data.uri);
+        console.log(collection.data, "collection");
 
-          // await collection.manager.saveToLocal();
-          collectionRef.current = collection.data.data.manager;
+        // await collection.manager.saveToLocal();
+        collectionRef.current = collection.data.data.manager;
 
-          // localStorage.setItem(uriId, collectionRef.current?.data.id!);
-        }
+        // localStorage.setItem(uriId, collectionRef.current?.data.id!);
+      }
       // }
       return true;
     } catch (error) {
@@ -215,14 +216,32 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     const { uri, projectId, teamId } = editorParam;
     let uriId;
     if (uri) {
-      await loadCollectionFromUri(uri);
+      const loadFromUri = await loadCollectionFromUri(uri);
+console.log(loadFromUri);
+
+      if (loadFromUri !== true) {
+        throw new Error("Collection not loaded");
+      }
+
+      // if (auth.currentUser !== null) {
+      //  uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+      // // initialConnection();
+      // // dispatch(
+      // //   fetchCollectionContracts({ collection: collectionRef.current!, uriId })
+      // // );
+      // //   dispatch(fetchCollectionVariables(collectionRef.current!));
+      // // }
+
+      initialConnection();
+      dispatch(
+        fetchCollectionContracts({ collection: collectionRef.current! })
+      );
+      dispatch(fetchCollectionVariables(collectionRef.current!));
     } else if (projectId && teamId) {
       console.log("start");
-console.log(teamId, projectId);
+      console.log(teamId, projectId);
 
       await loadCollectionFromPrivateTeam(teamId, projectId);
-
-      
 
       // if (privateRes) {
       //   if (!collectionRef.current) {
@@ -242,23 +261,24 @@ console.log(teamId, projectId);
       // }
     }
 
-    if (!collectionRef.current) {
-      throw new Error("Collection not loaded");
-    }
+    // if (!collectionRef.current) {
+    //   throw new Error("Collection not loaded");
+    // }
 
-    if (auth.currentUser !== null) {
-      uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
-      initialConnection();
-      dispatch(
-        fetchCollectionContracts({ collection: collectionRef.current!, uriId })
-      );
-      dispatch(fetchCollectionVariables(collectionRef.current!));
-    }
+    // if (auth.currentUser !== null) {
+    //  uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+    // // initialConnection();
+    // // dispatch(
+    // //   fetchCollectionContracts({ collection: collectionRef.current!, uriId })
+    // // );
+    // //   dispatch(fetchCollectionVariables(collectionRef.current!));
+    // // }
+
     initialConnection();
     dispatch(fetchCollectionContracts({ collection: collectionRef.current! }));
     dispatch(fetchCollectionVariables(collectionRef.current!));
-
     return uriId!;
+    // }
   };
 
   function handleAccountsChanged(accounts: string[]) {

@@ -48,8 +48,16 @@ export const BonadocsEditorViewHeader: React.FC<
       </h2>
       <div className="bonadocs__editor__dashboard__header__share">
         <Button
+          type="action"
+          onClick={async () => {
+            console.log(JSON.stringify(await getCollection()?.data));
+          }}
+        >Log data</Button>
+        <Button
           className="bonadocs__editor__dashboard__header__share"
           onClick={async () => {
+            console.log("start");
+
             console.log(await getCollection()?.publishToIPFS());
           }}
           type="action"
