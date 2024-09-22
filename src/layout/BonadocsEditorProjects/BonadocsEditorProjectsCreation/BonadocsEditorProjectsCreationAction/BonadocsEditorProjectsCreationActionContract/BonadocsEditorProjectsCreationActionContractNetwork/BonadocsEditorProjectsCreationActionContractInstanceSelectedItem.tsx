@@ -47,7 +47,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [localVerification, setLocalVerification] = useState<boolean>(
-    instance.verification ?? false
+    instance.verification ?? true
   );
   const currentContract = useSelector(
     (state: RootState) => state.project.currentContract
@@ -67,6 +67,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value, "e.target.value");
+    
     let instances = currentContract.contractInstances?.slice();
     const newInstance: ContractInstance = {
       ...instance,
@@ -110,7 +112,10 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
 
   const loadABI = useCallback(
     _.debounce(async (address?: string) => {
+      
       const EVMaddress = address ?? contractAddress.current;
+      console.log(EVMaddress, "EVMaddress", localVerification);
+      
       if (EVMaddress?.length === 42 && localVerification) {
         setLoading(true);
         getApi()
@@ -137,7 +142,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   }, [instance.address]);
 
   useEffect(() => {
-    setLocalVerification(instance.verification ?? false);
+    setLocalVerification(instance.verification ?? true);
   }, [instance.verification]);
 
   return (
@@ -197,6 +202,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
                 })
               );
               dispatch(updateContractInstances(instances!));
+              
               loadABI(e.target.value);
             }}
           />

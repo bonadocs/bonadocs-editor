@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { setTeamId } from "@/store/team/teamSlice";
+import { deleteProject, getProjectData, getProjectLink, updateProject } from "@/store/project/projectSlice";
 
 interface BonadocsEditorProjectsItemProps {
   projectItem: ProjectItem;
@@ -58,13 +59,44 @@ export const BonadocsEditorProjectsItem: React.FC<
             <>
               <div className="bonadocs__editor__variables__table__item__popover__item">
                 <div
-                  onClick={() => {
+                  onClick={async () => {
                     // setDeleteWidget(!deleteWidget);
+                    await dispatch(deleteProject(projectItem));
                     close();
                   }}
                   className="bonadocs__editor__variables__table__item__popover__item__delete"
                 >
                   Delete Project
+                </div>
+                <div
+                  onClick={async () => {
+                    // setDeleteWidget(!deleteWidget);
+                    await dispatch(getProjectData(projectItem));
+                    close();
+                  }}
+                  className="bonadocs__editor__variables__table__item__popover__item__delete"
+                >
+                  Get project data
+                </div>
+                <div
+                  onClick={() => {
+                    console.log(projectItem);
+
+                    dispatch(updateProject(projectItem));
+                  }}
+                  className="bonadocs__editor__variables__table__item__popover__item__"
+                >
+                  Update project to public
+                </div>
+                <div
+                  onClick={() => {
+                    console.log(projectItem);
+
+                    dispatch(getProjectLink(projectItem));
+                  }}
+                  className="bonadocs__editor__variables__table__item__popover__item__"
+                >
+                  Get project Link
                 </div>
               </div>
 

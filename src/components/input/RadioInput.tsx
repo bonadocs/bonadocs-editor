@@ -14,7 +14,7 @@ export const RadioInput: React.FC<RadioInputProps> = ({
 }) => {
 
   return (
-    <div onChange={handleChange}>
+    <div>
       {options.map((option) => (
         <label className="bonadocs__editor__input__radio" key={option.value}>
           <input
@@ -26,6 +26,7 @@ export const RadioInput: React.FC<RadioInputProps> = ({
                 ? true
                 : undefined
             }
+            onChange={handleChange}
             value={option.value}
             name={option.label}
           />

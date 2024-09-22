@@ -171,8 +171,6 @@ export const projectValidation = (state: RootState) => {
           status: false,
         };
       }
-     
-
     }
   }
   return {
@@ -190,6 +188,90 @@ export const deletePlaygroundContract = createAsyncThunk(
     dispatch(setContracts(contracts));
 
     return contracts;
+  }
+);
+
+export const updateProject = createAsyncThunk(
+  "project/updateProject",
+  async (projectItem: ProjectItem, { getState, dispatch }) => {
+    const { team } = getState() as RootState;
+    try {
+      const projectUpdate = await api.put(
+        `projects/${team.currentTeam.id}/collections/${projectItem.id}`,
+        {
+          name: projectItem.name,
+          isPublic: true,
+        }
+      );
+
+      const projectData = await api.get(
+        `projects/${team.currentTeam.id}/collections/${projectItem.id}/data`
+      );
+
+      console.log(projectUpdate, "project update");
+      console.log(projectData, "project data");
+
+      // return projects.data.data;
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
+export const getProjectData = createAsyncThunk(
+  "project/getProjectData",
+  async (projectItem: ProjectItem, { getState, dispatch }) => {
+    const { team } = getState() as RootState;
+    try {
+      const projectData = await api.get(
+        `projects/${team.currentTeam.id}/collections/${projectItem.id}/data`
+      );
+      console.log(projectData, "project data");
+
+      // return projects.data.data;
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
+export const getProjectLink = createAsyncThunk(
+  "project/getProjectLink",
+  async (projectItem: ProjectItem, { getState, dispatch }) => {
+    const { team } = getState() as RootState;
+    try {
+      const projectData = await api.get(
+        `projects/${team.currentTeam.id}/collections/${projectItem.id}`
+      );
+      console.log(projectData, "project data");
+
+      // return projects.data.data;
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
+
+export const deleteProject = createAsyncThunk(
+  "project/deleteProject",
+  async (projectItem: ProjectItem, { getState, dispatch }) => {
+    const { team } = getState() as RootState;
+    try {
+      const projectDeleted = await api.delete(
+        `projects/${team.currentTeam.id}/collections/${projectItem.id}`
+      );
+
+      console.log(projectDeleted, "project Deleted");
+      dispatch(fetchCollections());
+      // return projects.data.data;
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+      return false;
+    }
   }
 );
 
@@ -289,17 +371,18 @@ export const addCollection = createAsyncThunk(
   async (collectionParam: CollectionDataManager, { dispatch, getState }) => {
     const { team } = getState() as RootState;
     const collectionName = collectionParam.data.name;
-    collectionParam.getSnapshot()
-
+    collectionParam.getSnapshot();
+    console.log(collectionParam.data);
     try {
       const newProject = await api.post(
         `projects/${team.currentTeam.id}/collections`,
         {
           name: collectionName,
-          isPublic: false,
+          isPublic: true,
           collectionData: collectionParam.data,
         }
       );
+
       dispatch(fetchCollections());
       toast.success("Project added successfully");
       return true;
@@ -447,10 +530,12 @@ export const createCollection = createAsyncThunk(
         `projects/${state.team.currentTeam.id}/collections`,
         {
           name: collectionName,
-          isPublic: false,
-          collectionData: newCollectionManager,
+          isPublic: true,
+          collectionData: newCollectionManager.data,
         }
       );
+      console.log("collection data", newCollectionManager.data);
+      console.log(newProject);
 
       dispatch(reset());
       return newCollectionManager;

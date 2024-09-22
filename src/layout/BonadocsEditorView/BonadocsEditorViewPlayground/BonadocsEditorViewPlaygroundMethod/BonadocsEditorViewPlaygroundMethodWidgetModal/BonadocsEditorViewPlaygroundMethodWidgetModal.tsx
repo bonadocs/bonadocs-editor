@@ -52,7 +52,8 @@ export const BonadocsEditorViewPlaygroundMethodWidgetModal: React.FC<
     console.log("fetch widget config");
 
     const config = await dispatch(getMethodWidget(getCollection()!));
-
+    console.log(config.payload);
+    
     setWidgetConfig({
       widgetConfigUri: (config.payload as WidgetConfig).widgetConfigUri,
       contract: (config.payload as WidgetConfig).contract,

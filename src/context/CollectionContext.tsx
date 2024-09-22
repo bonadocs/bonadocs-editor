@@ -120,14 +120,13 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         );
 
         collectionRef.current = collection.manager;
-         console.log(collectionRef.current);
+        console.log(collectionRef.current);
       } else {
         let collection = await Collection.createFromURI(uri);
 
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
         console.log(collectionRef.current);
-        
 
         localStorage.setItem(uri, collectionRef.current?.data.id);
       }
@@ -143,22 +142,22 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   ) => {
     try {
       // if (auth.currentUser !== null) {
-      console.log("start 2");
-      const uriId = `/projects/${teamId}/collections/${projectId}${90}`;
+      
+      const uriId = `/projects/${teamId}/collections/${projectId}`;
       if (localStorage.getItem(uriId)) {
-        console.log("start previous");
+       
         let collection = await Collection.createFromLocalStore(
           localStorage.getItem(uriId)!
         );
 
         collectionRef.current = collection.manager;
       } else {
-        console.log("start 3");
+        
 
         const getUri = await api.get(
           `/projects/${teamId}/collections/${projectId}`
         );
-        // collectionRef.current = collection;
+        //collectionRef.current = collection;
         console.log(getUri, "get uri");
 
         const collection = await api.get(getUri.data.data.uri);
@@ -217,7 +216,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     let uriId;
     if (uri) {
       const loadFromUri = await loadCollectionFromUri(uri);
-console.log(loadFromUri);
+      console.log(loadFromUri);
 
       if (loadFromUri !== true) {
         throw new Error("Collection not loaded");
@@ -242,6 +241,13 @@ console.log(loadFromUri);
       console.log(teamId, projectId);
 
       await loadCollectionFromPrivateTeam(teamId, projectId);
+
+      // console.log(
+      //   await api.put(`/projects/${teamId}/collections/${projectId}`, {
+      //     name: "Aave v3 - Optimism Market",
+      //     isPublic: true,
+      //   })
+      // );
 
       // if (privateRes) {
       //   if (!collectionRef.current) {
