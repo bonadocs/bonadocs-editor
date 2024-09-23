@@ -213,8 +213,7 @@ export const updateProject = createAsyncThunk(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}/data`
       );
 
-      console.log(projectUpdate, "project update");
-      console.log(projectData, "project data");
+      
 
       // return projects.data.data;
     } catch (err: any) {
@@ -232,7 +231,7 @@ export const getProjectData = createAsyncThunk(
       const projectData = await api.get(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}/data`
       );
-      console.log(projectData, "project data");
+     
 
       // return projects.data.data;
     } catch (err: any) {
@@ -258,11 +257,11 @@ export const saveProject = createAsyncThunk(
           collectionData: collection.data,
         }
       );
-      console.log(saveToServer, "project data");
+     
 
       // return projects.data.data;
     } catch (err: any) {
-      toast.error(err.response.data.message);
+      toast.error(`Cannot save project ${err.response.data.message}`);
       return false;
     }
   }
@@ -276,7 +275,7 @@ export const getProjectLink = createAsyncThunk(
       const projectData = await api.get(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}`
       );
-      console.log(projectData, "project data");
+   
 
       // return projects.data.data;
     } catch (err: any) {
@@ -295,7 +294,7 @@ export const deleteProject = createAsyncThunk(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}`
       );
 
-      console.log(projectDeleted, "project Deleted");
+      
       dispatch(fetchCollections());
       // return projects.data.data;
     } catch (err: any) {
@@ -563,8 +562,7 @@ export const createCollection = createAsyncThunk(
           collectionData: newCollectionManager.data,
         }
       );
-      console.log("collection data", newCollectionManager.data);
-      console.log(newProject, "new project");
+      
 
       dispatch(reset());
       return newCollectionManager;

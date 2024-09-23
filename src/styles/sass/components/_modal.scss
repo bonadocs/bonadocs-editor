@@ -8,7 +8,7 @@
       flex-direction: column;
       min-height: 100vh;
       height: max-content;
-      
+     
       &__header {
         display: flex;
         width: 100%;
@@ -207,6 +207,12 @@
         }
       }
     }
+     &__loader {
+        
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     &__dropdown {
       width: 100% !important;
       border-radius: 0.4rem !important;

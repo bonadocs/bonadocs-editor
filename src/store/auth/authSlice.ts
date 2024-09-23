@@ -141,7 +141,7 @@ const bonadocsLogin = async (userInfo: any) => {
         email: arrayUnion(email),
       });
     }
-    console.log(email, response);
+
     
     return {
       email: email,

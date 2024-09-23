@@ -164,8 +164,8 @@ export const getTeamMembers = createAsyncThunk(
   "project/getTeamMembers",
   async (projectId: string, { getState, dispatch, rejectWithValue }) => {
     try {
-      const members = await api.get(`/projects/${projectId}/users`)
-      console.log(members.data.data);
+      const members = await api.get(`/projects/${projectId}/users`);
+
       return members.data.data;
     } catch (err) {
       const error = err as Error;
@@ -180,7 +180,7 @@ export const fetchTeamMembers = createAsyncThunk(
   async (projectId: string, { getState, dispatch, rejectWithValue }) => {
     try {
       const members = await api.get(`/projects/${projectId}/invitations`);
-      console.log(members.data.data);
+
       return members.data.data;
     } catch (err) {
       const error = err as Error;

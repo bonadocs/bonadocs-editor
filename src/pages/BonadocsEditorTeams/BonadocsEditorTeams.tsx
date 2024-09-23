@@ -8,6 +8,8 @@ import { BonadocsEditorTeamsModalCreate } from "@/layout/BonadocsEditorTeams/Bon
 import { AppDispatch, RootState } from "@/store";
 import { useSearchParams } from "react-router-dom";
 import { BonadocsEditorTeamsModalAcceptInvite } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsModal/BonadocsEditorTeamsModalAcceptInvite";
+import { LoadingModal } from "@/layout/Modal/LoadingModal";
+import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 
 export const BonadocsEditorTeams: React.FC = () => {
   const [queryParameters] = useSearchParams();
@@ -15,10 +17,15 @@ export const BonadocsEditorTeams: React.FC = () => {
   const [showAcceptInvite, setShowAcceptInvite] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const teams = useSelector((state: RootState) => state.team.teamList);
+  const loadingScreen = useSelector(
+    (state: RootState) => state.controlBoard.loadingScreen
+  );
   const inviteToken = queryParameters.get("inviteToken");
 
   useEffect(() => {
+    dispatch(setLoadingScreen(true));
     dispatch(getTeams());
+    dispatch(setLoadingScreen(false));
     if (inviteToken) {
       setShowAcceptInvite(true);
     }
@@ -67,6 +74,7 @@ export const BonadocsEditorTeams: React.FC = () => {
         show={showAcceptInvite}
         closeInviteModal={() => setShowAcceptInvite(!showAcceptInvite)}
       />
+      <LoadingModal show={loadingScreen} />
     </div>
   );
 };

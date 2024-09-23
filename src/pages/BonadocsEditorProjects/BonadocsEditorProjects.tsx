@@ -10,6 +10,9 @@ import { useParams } from "react-router-dom";
 import { getTeamById } from "@/store/team/teamSlice";
 import { ProjectItem } from "@/data/dataTypes";
 import { BonadocsEditorProjectsItem } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsItem";
+import { useAuthContext } from "@/context/AuthContext";
+import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
+import { LoadingModal } from "@/layout/Modal/LoadingModal";
 
 export const BonadocsEditorProjects: React.FC = () => {
   const [showImportModal, setShowImportModal] = useState<boolean>(false);
@@ -25,6 +28,12 @@ export const BonadocsEditorProjects: React.FC = () => {
     (state: RootState) => state.team.currentTeam
   );
 
+  const loadingScreen = useSelector(
+    (state: RootState) => state.controlBoard.loadingScreen
+  );
+
+  const { signOut } = useAuthContext();
+
   const addProject =
     currentTeamPermissions.permissions?.includes("writeCollections");
 
@@ -33,12 +42,14 @@ export const BonadocsEditorProjects: React.FC = () => {
   }, []);
 
   const currentProject = async () => {
+     dispatch(setLoadingScreen(true));
     dispatch(setProjectList([]));
     if (id) {
       await dispatch(getTeamById(id));
     }
-
+   
     const projects = await dispatch(fetchCollections());
+    dispatch(setLoadingScreen(false));
     if (!projects.payload) {
       return;
     }
@@ -90,6 +101,16 @@ export const BonadocsEditorProjects: React.FC = () => {
                   Create Project
                 </>
               </Button>
+              <Button
+                disabled={!addProject}
+                className="bonadocs__editor__projects__inner__header__right__button"
+                onClick={() => signOut()}
+              >
+                <>
+                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1727131299/icons8-sign-out-50_xj89ke.png" />
+                  Sign out
+                </>
+              </Button>
             </div>
           </div>
           <div className="bonadocs__editor__projects__inner__header__left">
@@ -116,6 +137,7 @@ export const BonadocsEditorProjects: React.FC = () => {
         closeImportModal={() => setShowImportModal(!showImportModal)}
         handleImportCollection={() => {}}
       />
+      <LoadingModal show={loadingScreen} />
     </div>
   );
 };

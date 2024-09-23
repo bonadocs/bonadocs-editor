@@ -81,6 +81,7 @@ export const BonadocsEditorViewHeader: React.FC<
           </>
         </Button> */}
         <Button
+          disabled={loader}
           className="bonadocs__editor__dashboard__header__share"
           onClick={async () => {
             setLoader(true);

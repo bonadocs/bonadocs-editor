@@ -13,6 +13,8 @@ import {
 } from "@/store/method/methodSlice";
 import { MethodItem, ContractItem } from "@/data/dataTypes";
 import { setActiveContract } from "@/store/contract/contractSlice";
+import { LoadingModal } from "@/layout/Modal/LoadingModal";
+import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 interface BonadocsEditorLayoutProps {
   children?: React.ReactNode;
   projectId?: string | undefined;
@@ -36,12 +38,16 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
   );
 
   const queryParams = new URLSearchParams(window.location.search);
+  const loadingScreen = useSelector(
+    (state: RootState) => state.controlBoard.loadingScreen
+  );
 
   useEffect(() => {
     void initializeCollection();
   }, []);
 
   const initializeCollection = async () => {
+    dispatch(setLoadingScreen(true));
     if (projectId && teamId) {
       const uriId = await initializeEditor({ projectId, teamId });
 
@@ -62,6 +68,7 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
     }
 
     setDisplay(true);
+     dispatch(setLoadingScreen(false));
   };
 
   return (
@@ -77,6 +84,7 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
           {children}
         </>
       )}
+      <LoadingModal show={loadingScreen} />
     </>
   );
 };
