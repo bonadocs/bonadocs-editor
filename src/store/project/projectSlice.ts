@@ -39,6 +39,11 @@ const initialState = {
   currentTeamProjectId: "" as string,
 };
 
+interface SaveProjectParams {
+  collection: CollectionDataManager;
+  projectId: string;
+}
+
 interface updateContractListParams {
   contracts: ContractsState[];
   collection: CollectionDataManager;
@@ -237,6 +242,32 @@ export const getProjectData = createAsyncThunk(
   }
 );
 
+export const saveProject = createAsyncThunk(
+  "project/saveProject",
+  async (saveProjectParams: SaveProjectParams, { getState, dispatch }) => {
+    const { team } = getState() as RootState;
+    const { collection, projectId } = saveProjectParams;
+    const collectionName = collection.data.name;
+
+    try {
+      const saveToServer = await api.put(
+        `projects/${team.currentTeam.id}/collections/${projectId}/sync`,
+        {
+          name: collectionName,
+          isPublic: false,
+          collectionData: collection.data,
+        }
+      );
+      console.log(saveToServer, "project data");
+
+      // return projects.data.data;
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
 export const getProjectLink = createAsyncThunk(
   "project/getProjectLink",
   async (projectItem: ProjectItem, { getState, dispatch }) => {
@@ -254,7 +285,6 @@ export const getProjectLink = createAsyncThunk(
     }
   }
 );
-
 
 export const deleteProject = createAsyncThunk(
   "project/deleteProject",
@@ -371,14 +401,13 @@ export const addCollection = createAsyncThunk(
   async (collectionParam: CollectionDataManager, { dispatch, getState }) => {
     const { team } = getState() as RootState;
     const collectionName = collectionParam.data.name;
-    collectionParam.getSnapshot();
     console.log(collectionParam.data);
     try {
       const newProject = await api.post(
         `projects/${team.currentTeam.id}/collections`,
         {
           name: collectionName,
-          isPublic: true,
+          isPublic: false,
           collectionData: collectionParam.data,
         }
       );
@@ -530,12 +559,12 @@ export const createCollection = createAsyncThunk(
         `projects/${state.team.currentTeam.id}/collections`,
         {
           name: collectionName,
-          isPublic: true,
+          isPublic: false,
           collectionData: newCollectionManager.data,
         }
       );
       console.log("collection data", newCollectionManager.data);
-      console.log(newProject);
+      console.log(newProject, "new project");
 
       dispatch(reset());
       return newCollectionManager;

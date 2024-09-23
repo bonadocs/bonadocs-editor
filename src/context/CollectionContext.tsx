@@ -22,6 +22,7 @@ import {
 } from "@/store/controlBoard/controlBoardSlice";
 import { toast } from "react-toastify";
 import { RootState } from "../store/index";
+import { teamRoles } from "@/data/team/TeamRoles";
 import {
   FunctionExecutor,
   DisplayResult,
@@ -31,6 +32,7 @@ import {
 import { setLoader } from "@/store/action/actionSlice";
 import { api } from "@/utils/axios";
 import { auth } from "@/utils/firebase.utils";
+import { getTeamById } from "@/store/team/teamSlice";
 
 // Create the context props
 interface CollectionContextProps {
@@ -86,6 +88,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const [walletId, setWalletId] = useState<number>();
   const [value, setValue] = useState(0);
   const [queryParameters] = useSearchParams();
+  const currentUserEmail = useSelector((state: RootState) => state.auth.email);
 
   const uri = queryParameters.get("uri");
   const id = queryParameters.get("id");
@@ -120,13 +123,13 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         );
 
         collectionRef.current = collection.manager;
-        console.log(collectionRef.current);
+        
       } else {
         let collection = await Collection.createFromURI(uri);
 
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
-        console.log(collectionRef.current);
+        
 
         localStorage.setItem(uri, collectionRef.current?.data.id);
       }
@@ -136,39 +139,72 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     }
   };
 
+  function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
+    // First, check if they have the same length
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    // Create sets from both arrays
+    const set1 = new Set(arr1);
+    const set2 = new Set(arr2);
+
+    // Check if both sets have the same size
+    if (set1.size !== set2.size) {
+      return false;
+    }
+
+    // Check if every element in set1 is also in set2
+    for (let element of set1) {
+      if (!set2.has(element)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   const loadCollectionFromPrivateTeam = async (
     teamId: string,
     projectId: string
   ) => {
     try {
-      // if (auth.currentUser !== null) {
-      
       const uriId = `/projects/${teamId}/collections/${projectId}`;
-      if (localStorage.getItem(uriId)) {
-       
+
+      const teamUsers = await dispatch(getTeamById(teamId));
+
+      const userPermission = teamUsers.payload.users.find(
+        (user: any) => user.emailAddress === currentUserEmail
+      )?.permissions;
+
+      const userRole = teamRoles.filter((role) => {
+        if (arraysEqual(role.permission, userPermission)) {
+          return role;
+        }
+      });
+      // console.log(userRole, "userRole");
+
+      if (localStorage.getItem(uriId) && userRole[0].value !== "viewer") {
         let collection = await Collection.createFromLocalStore(
           localStorage.getItem(uriId)!
         );
 
         collectionRef.current = collection.manager;
       } else {
-        
-
-        const getUri = await api.get(
-          `/projects/${teamId}/collections/${projectId}`
+        const getData = await api.get(
+          `/projects/${teamId}/collections/${projectId}/data`
         );
-        //collectionRef.current = collection;
-        console.log(getUri, "get uri");
 
-        const collection = await api.get(getUri.data.data.uri);
-        console.log(collection.data, "collection");
+        const collection = new CollectionDataManager(getData.data.data);
+        await collection.saveToLocal();
+        collectionRef.current = collection;
 
-        // await collection.manager.saveToLocal();
-        collectionRef.current = collection.data.data.manager;
-
-        // localStorage.setItem(uriId, collectionRef.current?.data.id!);
+        if (localStorage.getItem(uriId)!) {
+          localStorage.removeItem(uriId);
+        }
+        localStorage.setItem(uriId, collectionRef.current?.data.id!);
       }
-      // }
+
       return true;
     } catch (error) {
       console.log(error);
@@ -216,7 +252,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     let uriId;
     if (uri) {
       const loadFromUri = await loadCollectionFromUri(uri);
-      console.log(loadFromUri);
+     
 
       if (loadFromUri !== true) {
         throw new Error("Collection not loaded");
@@ -231,14 +267,13 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       // //   dispatch(fetchCollectionVariables(collectionRef.current!));
       // // }
 
-      initialConnection();
-      dispatch(
-        fetchCollectionContracts({ collection: collectionRef.current! })
-      );
-      dispatch(fetchCollectionVariables(collectionRef.current!));
+      // initialConnection();
+      // dispatch(
+      //   fetchCollectionContracts({ collection: collectionRef.current! })
+      // );
+      // dispatch(fetchCollectionVariables(collectionRef.current!));
     } else if (projectId && teamId) {
-      console.log("start");
-      console.log(teamId, projectId);
+      
 
       await loadCollectionFromPrivateTeam(teamId, projectId);
 
@@ -267,9 +302,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       // }
     }
 
-    // if (!collectionRef.current) {
-    //   throw new Error("Collection not loaded");
-    // }
+    if (!collectionRef.current) {
+      throw new Error("Collection not loaded");
+    }
 
     // if (auth.currentUser !== null) {
     //  uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;

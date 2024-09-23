@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/button/Button";
 import { BonadocsEditorProjectsCreationActionProject } from "./BonadocsEditorProjectsCreationActionProject";
 import { BonadocsEditorProjectsCreationActionContract } from "./BonadocsEditorProjectsCreationActionContract/BonadocsEditorProjectsCreationActionContract";
@@ -14,12 +14,15 @@ import { Tooltip } from "react-tooltip";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { CollectionDataManager } from "@bonadocs/core";
 import { useNavigate } from "react-router-dom";
+import { MoonLoader } from "react-spinners";
 
 export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const { setCollection } = useCollectionContext();
   const projectView = useSelector(
     (state: RootState) => state.project.projectView
   );
+  const teamId = useSelector((state: RootState) => state.team.currentTeam?.id);
 
   const dispatch: AppDispatch = useDispatch();
   const filled = useSelector(projectFilled);
@@ -59,20 +62,36 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
           if (projectView) {
             dispatch(setProjectView(false));
           } else {
-            
+            setLoading(true);
             const newCollection = await dispatch(createCollection());
             if (!newCollection) return;
             setCollection(newCollection.payload as CollectionDataManager);
-
-            // navigate({
-            //   pathname: "/contracts",
-            // });
+            setLoading(false);
+            navigate({
+              pathname: `/teams/${teamId}/projects`,
+            });
           }
 
           // dispatch(setProjectView(!projectView));
         }}
       >
-        {projectView ? "Next" : "Create playground"}
+        {projectView ? (
+          "Next"
+        ) : (
+          <>
+            {loading ? (
+              <MoonLoader
+                color="#0f141b"
+                loading={true}
+                size={15}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            ) : (
+              `Create Project`
+            )}
+          </>
+        )}
       </Button>
       {!validation.status && !projectView && (
         <Tooltip

@@ -50,14 +50,19 @@ export const BonadocsEditorProjects: React.FC = () => {
         <Logo />
         <>
           <div className="bonadocs__editor__projects__inner__header">
-            <div className="bonadocs__editor__projects__inner__header__left">
-              <h1 className="bonadocs__editor__projects__inner__header__left__title">
-                Your Projects
-              </h1>
-              <h5 className="bonadocs__editor__projects__inner__header__left__description">
-                Select these projects to see where you stopped.
-              </h5>
-            </div>
+            <Button
+              onClick={() => navigate(-1)}
+              type="default"
+              className="bonadocs__editor__projects__inner__header__button"
+            >
+              <>
+                <img
+                  alt="go back"
+                  src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1720339940/Arrow-Back_tn27nc.svg"
+                />
+                Back to Teams
+              </>
+            </Button>
             <div className="bonadocs__editor__projects__inner__header__right">
               <Button
                 disabled={!addProject}
@@ -86,6 +91,14 @@ export const BonadocsEditorProjects: React.FC = () => {
                 </>
               </Button>
             </div>
+          </div>
+          <div className="bonadocs__editor__projects__inner__header__left">
+            <h1 className="bonadocs__editor__projects__inner__header__left__title">
+              Your Projects
+            </h1>
+            <h5 className="bonadocs__editor__projects__inner__header__left__description">
+              Select these projects to see where you stopped.
+            </h5>
           </div>
           <div className="bonadocs__editor__projects__inner__list">
             {teamProjects.map((projectItem: ProjectItem, index: number) => (

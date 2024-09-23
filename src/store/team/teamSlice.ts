@@ -52,7 +52,7 @@ export const teamCreation = createAsyncThunk(
 );
 
 export const getTeams = createAsyncThunk(
-  "project/teamCreation",
+  "project/getTeams",
   async (_, { getState, dispatch, rejectWithValue }) => {
     try {
       const projects = await api.get("/projects");
@@ -112,7 +112,7 @@ export const getTeamById = createAsyncThunk(
 
 export const deleteTeam = createAsyncThunk(
   "project/deleteTeam",
-  async (projectId: string, { dispatch}) => {
+  async (projectId: string, { dispatch }) => {
     try {
       await api.delete(`/projects/${projectId}`);
       dispatch(getTeams());
@@ -126,7 +126,7 @@ export const deleteTeam = createAsyncThunk(
 
 export const acceptInvite = createAsyncThunk(
   "project/acceptInvite",
-  async (inviteToken: string, {  }) => {
+  async (inviteToken: string, {}) => {
     try {
       await api.get(`/projects/accept-invitation?token=${inviteToken}`);
       toast.success("Invitation accepted");
@@ -155,6 +155,21 @@ export const inviteMember = createAsyncThunk(
       console.log(err.response.data.message);
 
       toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
+export const getTeamMembers = createAsyncThunk(
+  "project/getTeamMembers",
+  async (projectId: string, { getState, dispatch, rejectWithValue }) => {
+    try {
+      const members = await api.get(`/projects/${projectId}/users`)
+      console.log(members.data.data);
+      return members.data.data;
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message);
       return false;
     }
   }

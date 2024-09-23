@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
 import { Popover } from "@headlessui/react";
-import { ProjectItem, TeamItem } from "@/data/dataTypes";
+import { ProjectItem } from "@/data/dataTypes";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { setTeamId } from "@/store/team/teamSlice";
-import { deleteProject, getProjectData, getProjectLink, updateProject } from "@/store/project/projectSlice";
+import {
+  deleteProject,
+  getProjectData,
+  getProjectLink,
+  updateProject,
+} from "@/store/project/projectSlice";
 
 interface BonadocsEditorProjectsItemProps {
   projectItem: ProjectItem;
@@ -27,7 +31,9 @@ export const BonadocsEditorProjectsItem: React.FC<
 
   return (
     <div
-      onClick={() => {}}
+      onClick={() => {
+        navigate(`${projectItem.id}/contracts`);
+      }}
       className="bonadocs__editor__projects__inner__list__item"
     >
       <img
@@ -68,7 +74,7 @@ export const BonadocsEditorProjectsItem: React.FC<
                 >
                   Delete Project
                 </div>
-                <div
+                {/* <div
                   onClick={async () => {
                     // setDeleteWidget(!deleteWidget);
                     await dispatch(getProjectData(projectItem));
@@ -87,8 +93,8 @@ export const BonadocsEditorProjectsItem: React.FC<
                   className="bonadocs__editor__variables__table__item__popover__item__"
                 >
                   Update project to public
-                </div>
-                <div
+                </div> */}
+                {/* <div
                   onClick={() => {
                     console.log(projectItem);
 
@@ -97,7 +103,7 @@ export const BonadocsEditorProjectsItem: React.FC<
                   className="bonadocs__editor__variables__table__item__popover__item__"
                 >
                   Get project Link
-                </div>
+                </div> */}
               </div>
 
               <img src="/solutions.jpg" alt="" />

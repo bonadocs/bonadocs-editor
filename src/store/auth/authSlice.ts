@@ -21,6 +21,7 @@ interface UserState {
   email: string;
   authToken: string;
   inSession?: boolean;
+  
 }
 
 const initialState: UserState = {
