@@ -3,6 +3,7 @@ import { BonadocsEditorViewHeader } from "../../layout/BonadocsEditorView/Bonado
 import { BonadocsEditorViewPlaygroundWrapper } from "../../layout/BonadocsEditorView/BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundWrapper";
 import { BonadocsEditorViewActionsWrapper } from "@/layout/BonadocsEditorView/BonadocsEditorViewActions/BonadocsEditorViewActionsWrapper";
 import { BonadocsEditorLayout } from "../BonadocsEditorLayout";
+import { BonadocsEditorSidebarItems } from "@/layout/BonadocsEditorSidebar/BonadocsEditorSidebarItems";
 
 interface BonadocsEditorActionsProps {
   className?: string;

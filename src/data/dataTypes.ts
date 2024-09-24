@@ -2,6 +2,7 @@ import {
   CollectionDataManager,
   TransactionOverrides,
   CodeSnippet,
+  ContractDefinition,
 } from "@bonadocs/core";
 export type VariableItem = {
   name: string;
@@ -16,6 +17,68 @@ export type MethodItem = {
   instances?: Array<Instance>;
   docs?: string;
 };
+
+export type InviteTeamItem = {
+  name: string;
+  role: string;
+};
+
+export type ProjectItem = {
+  id?: string;
+  name: string;
+  description?: string;
+};
+
+export type WidgetConfig = {
+  widgetConfigUri: string;
+  contract: string;
+  functionKey: string;
+};
+
+
+export type ContractInfo = {
+  contractInstances?: ContractInstance[];
+  description?: string;
+  abi?: string;
+};
+
+export type ContractsState = ContractDefinition & ContractInfo;
+
+export type ContractInstance = {
+  chainId: number;
+  address: string;
+  abi?: string;
+  name?: string;
+  logo?: string;
+  verification?: boolean;
+};
+
+export type CollectionDetailsParams = {
+  collection: CollectionDataManager;
+  projectItem: "name" | "description";
+  value: string;
+};
+
+export type TeamItem = {
+  name: string;
+  slug: string;
+  id: string;
+  permissions?: string | Array<string>;
+};
+
+export type TeamMembers = {
+  email: string;
+  role: Array<string>;
+};
+
+export type TeamInvite = {
+  projectId: string;
+  name: string;
+  email: string;
+  permission: Array<string>;
+};
+
+export type CurrentTeam = TeamItem & TeamMembers;
 
 export type Instance = {
   chainId: number;
@@ -41,14 +104,14 @@ export type ActionItem = {
   id: string;
   name: string;
   documentation?: string | undefined;
-  code: CodeSnippet[] ;
+  code: CodeSnippet[];
 };
 
 export type WorkflowItem = {
   collection: CollectionDataManager;
   workflowName?: string;
   workflowId?: string;
-  workflowDocs?: string
+  workflowDocs?: string;
 };
 
 export type WorkflowCodeItem = {
@@ -62,6 +125,8 @@ export type playgroundState = "interaction" | "documentation";
 export interface Option {
   label: string;
   value: string | number;
+  description?: string;
+  truthyValue?: boolean;
 }
 
 export interface BonadocsWidgetParamProps {

@@ -8,7 +8,6 @@ import {
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../store/index";
 import { fetchCollectionContracts } from "@/store/contract/contractSlice";
-import { openDB } from "idb";
 import { fetchCollectionVariables } from "@/store/variable/variableSlice";
 import {
   setConnected,
@@ -23,6 +22,7 @@ import {
 } from "@/store/controlBoard/controlBoardSlice";
 import { toast } from "react-toastify";
 import { RootState } from "../store/index";
+import { teamRoles } from "@/data/team/TeamRoles";
 import {
   FunctionExecutor,
   DisplayResult,
@@ -30,12 +30,20 @@ import {
   CodeWorkflowExecutor,
 } from "@bonadocs/core";
 import { setLoader } from "@/store/action/actionSlice";
+import { api } from "@/utils/axios";
+import { auth } from "@/utils/firebase.utils";
+import { getTeamById } from "@/store/team/teamSlice";
 
 // Create the context props
 interface CollectionContextProps {
-  initializeEditor: (uri: string) => Promise<CollectionDataManager>; // Update the type to include Promise
+  initializeEditor: (editorParam: {
+    uri?: string;
+    projectId?: string;
+    teamId?: string;
+  }) => Promise<string | undefined>; // Update the type to include Promise
   collection: CollectionDataManager | null;
   getCollection: () => CollectionDataManager | null;
+  setCollection: (collection: CollectionDataManager) => void;
   showResult: boolean;
   executionButton: (overlayRef: HTMLDivElement) => void;
   executionWorkflowButton: () => void;
@@ -45,6 +53,7 @@ interface CollectionContextProps {
   setWorkflowResponse: (resp: string) => void;
   emptyResponse: () => void;
   connectWallet: () => void;
+  reloadFunction: () => void;
 }
 
 // Create the context
@@ -77,7 +86,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const workflowButton = useSelector(workflowButtonText);
   const methodItem = useSelector((state: RootState) => state.method.methodItem);
   const [walletId, setWalletId] = useState<number>();
+  const [value, setValue] = useState(0);
   const [queryParameters] = useSearchParams();
+  const currentUserEmail = useSelector((state: RootState) => state.auth.email);
 
   const uri = queryParameters.get("uri");
   const id = queryParameters.get("id");
@@ -104,58 +115,211 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
   // const provider = new ethers.BrowserProvider((window as any).ethereum);
 
-  const loadCollection = async (uri: string) => {
+  const loadCollectionFromUri = async (uri: string) => {
     try {
       if (localStorage.getItem(uri)) {
         let collection = await Collection.createFromLocalStore(
           localStorage.getItem(uri)!
         );
+
         collectionRef.current = collection.manager;
+        
       } else {
         let collection = await Collection.createFromURI(uri);
 
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
+        
 
         localStorage.setItem(uri, collectionRef.current?.data.id);
       }
+      return true;
+    } catch (error: any) {
+      toast.error(error);
+    }
+  };
+
+  function arraysEqual<T>(arr1: T[], arr2: T[]): boolean {
+    // First, check if they have the same length
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+
+    // Create sets from both arrays
+    const set1 = new Set(arr1);
+    const set2 = new Set(arr2);
+
+    // Check if both sets have the same size
+    if (set1.size !== set2.size) {
+      return false;
+    }
+
+    // Check if every element in set1 is also in set2
+    for (let element of set1) {
+      if (!set2.has(element)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  const loadCollectionFromPrivateTeam = async (
+    teamId: string,
+    projectId: string
+  ) => {
+    try {
+      const uriId = `/projects/${teamId}/collections/${projectId}`;
+
+      const teamUsers = await dispatch(getTeamById(teamId));
+
+      const userPermission = teamUsers.payload.users.find(
+        (user: any) => user.emailAddress === currentUserEmail
+      )?.permissions;
+
+      const userRole = teamRoles.filter((role) => {
+        if (arraysEqual(role.permission, userPermission)) {
+          return role;
+        }
+      });
+      // console.log(userRole, "userRole");
+
+      if (localStorage.getItem(uriId) && userRole[0].value !== "viewer") {
+        let collection = await Collection.createFromLocalStore(
+          localStorage.getItem(uriId)!
+        );
+
+        collectionRef.current = collection.manager;
+      } else {
+        const getData = await api.get(
+          `/projects/${teamId}/collections/${projectId}/data`
+        );
+
+        const collection = new CollectionDataManager(getData.data.data);
+        await collection.saveToLocal();
+        collectionRef.current = collection;
+
+        if (localStorage.getItem(uriId)!) {
+          localStorage.removeItem(uriId);
+        }
+        localStorage.setItem(uriId, collectionRef.current?.data.id!);
+      }
+
+      return true;
     } catch (error) {
+      console.log(error);
+
       toast.error((error as Error).toString());
     }
+  };
+
+  const reloadFunction = () => {
+    // Function logic here
+    setValue((prev) => prev + 1);
   };
 
   const emptyResponse = () => {
     setResponse([]);
   };
 
-  const checkLocalCollection = async (uri: string) => {
-    try {
-      const db = await openDB("metadata", 1);
-      const store = db.transaction("index").objectStore("index");
+  // const checkLocalCollection = async (uri: string) => {
+  //   try {
+  //     const db = await openDB("metadata", 1);
+  //     const store = db.transaction("index").objectStore("index");
 
-      const metadataKey = uri.slice(0, 4) + "-data:" + uri.slice(7);
-      const value = await store.get(metadataKey);
-      const collectionIndex = (await openDB("collections", 1))
-        .objectStoreNames[0];
-      const isValuePresent = value && collectionIndex ? true : false;
-      return isValuePresent;
-    } catch (err) {
-      return false;
-    }
-  };
+  //     const metadataKey = uri.slice(0, 4) + "-data:" + uri.slice(7);
+  //     const value = await store.get(metadataKey);
+  //     const collectionIndex = (await openDB("collections", 1))
+  //       .objectStoreNames[0];
+  //     const isValuePresent = value && collectionIndex ? true : false;
+  //     return isValuePresent;
+  //   } catch (err) {
+  //     return false;
+  //   }
+  // };
 
   const getCollection = () => collectionRef.current;
-  const initializeEditor = async (uri: string) => {
-    await loadCollection(uri);
+  const setCollection = (collection: CollectionDataManager) => {
+    collectionRef.current = collection;
+  };
+
+  const initializeEditor = async (editorParam: {
+    uri?: string;
+    projectId?: string;
+    teamId?: string;
+  }) => {
+    const { uri, projectId, teamId } = editorParam;
+    let uriId;
+    if (uri) {
+      const loadFromUri = await loadCollectionFromUri(uri);
+     
+
+      if (loadFromUri !== true) {
+        throw new Error("Collection not loaded");
+      }
+
+      // if (auth.currentUser !== null) {
+      //  uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+      // // initialConnection();
+      // // dispatch(
+      // //   fetchCollectionContracts({ collection: collectionRef.current!, uriId })
+      // // );
+      // //   dispatch(fetchCollectionVariables(collectionRef.current!));
+      // // }
+
+      // initialConnection();
+      // dispatch(
+      //   fetchCollectionContracts({ collection: collectionRef.current! })
+      // );
+      // dispatch(fetchCollectionVariables(collectionRef.current!));
+    } else if (projectId && teamId) {
+      
+
+      await loadCollectionFromPrivateTeam(teamId, projectId);
+
+      // console.log(
+      //   await api.put(`/projects/${teamId}/collections/${projectId}`, {
+      //     name: "Aave v3 - Optimism Market",
+      //     isPublic: true,
+      //   })
+      // );
+
+      // if (privateRes) {
+      //   if (!collectionRef.current) {
+      //     throw new Error("Collection not loaded");
+      //   }
+      //   if (auth.currentUser !== null) {
+      //     uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+      //     initialConnection();
+      //     dispatch(
+      //       fetchCollectionContracts({ collection: collectionRef.current!, uriId })
+      //     );
+      //     dispatch(fetchCollectionVariables(collectionRef.current!));
+      //   }
+      //   initialConnection();
+      //   dispatch(fetchCollectionContracts({ collection: collectionRef.current! }));
+      //   dispatch(fetchCollectionVariables(collectionRef.current!));
+      // }
+    }
+
     if (!collectionRef.current) {
       throw new Error("Collection not loaded");
     }
 
-    initialConnection();
-    dispatch(fetchCollectionContracts(collectionRef.current));
-    dispatch(fetchCollectionVariables(collectionRef.current));
+    // if (auth.currentUser !== null) {
+    //  uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
+    // // initialConnection();
+    // // dispatch(
+    // //   fetchCollectionContracts({ collection: collectionRef.current!, uriId })
+    // // );
+    // //   dispatch(fetchCollectionVariables(collectionRef.current!));
+    // // }
 
-    return collectionRef.current;
+    initialConnection();
+    dispatch(fetchCollectionContracts({ collection: collectionRef.current! }));
+    dispatch(fetchCollectionVariables(collectionRef.current!));
+    return uriId!;
+    // }
   };
 
   function handleAccountsChanged(accounts: string[]) {
@@ -348,7 +512,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     setWorkflowResponse("");
     const activeNetwork = id?.length !== 0 && id !== null ? Number(id) : 1;
     try {
-      console.log("id", activeNetwork);
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
 
@@ -379,6 +542,8 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         initializeEditor: initializeEditor,
         collection: collectionRef.current,
         getCollection: getCollection,
+        setCollection: setCollection,
+        reloadFunction: reloadFunction,
         showResult,
         executionButton,
         executionWorkflowButton,

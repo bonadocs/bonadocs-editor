@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { BonadocsEditorViewPlaygroundContractAccordionList } from "./BonadocsEditorViewPlaygroundContractAccordion/BonadocsEditorViewPlaygroundContractAccordionList";
 import { RootState } from "@/store";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { setWriteMethod } from "@/store/controlBoard/controlBoardSlice";
-import { Tooltip } from "react-tooltip";
+import { BonadocsEditorViewPlaygroundContractModal } from "./BonadocsEditorViewPlaygroundContractModal/BonadocsEditorViewPlaygroundContractModal";
+
 interface BonadocsEditorViewPlaygroundContractProps {
   className?: string;
 }
@@ -20,7 +21,7 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
   );
   const dispatch: AppDispatch = useDispatch();
 
-  // const [isOverflown, setIsOverflown] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // const ref = useRef<HTMLDivElement>(null);
 
@@ -46,27 +47,13 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
         >
           {currentContract.name}
         </h3>
-        <svg
+        
+        <img
+          onClick={() => setIsOpen(!isOpen)}
+          src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1720750528/Icon_Edit_kvkncx.svg"
+          alt="Edit project"
           className="bonadocs__editor__dashboard__playground__contract__header__addIcon"
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M4 8L12 8"
-            stroke="#95A8C0"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M8 12L8 4"
-            stroke="#95A8C0"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        />
       </div>
       <div className="bonadocs__editor__dashboard__playground__contract__type">
         <div className="bonadocs__editor__dashboard__playground__contract__type__container">
@@ -91,6 +78,10 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
       <div className="bonadocs__editor__dashboard__playground__contract__list">
         <BonadocsEditorViewPlaygroundContractAccordionList />
       </div>
+      <BonadocsEditorViewPlaygroundContractModal
+        closeProjectModal={() => setIsOpen(!isOpen)}
+        show={isOpen}
+      />
     </div>
   );
 };

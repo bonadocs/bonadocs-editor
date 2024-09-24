@@ -22,7 +22,9 @@ export const EditorViewPlaygroundSelectInputParam: React.FC<
   const [value, setValue] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const method = useSelector((state: RootState) => state.method.methodItem);
-  const updateDisplayData = useSelector((state: RootState) => state.method.updateChange);
+  const updateDisplayData = useSelector(
+    (state: RootState) => state.method.updateChange
+  );
   const str2bool = (value: string) => {
     if (value && typeof value === "string") {
       if (value.toLowerCase() === "true") return true;
@@ -33,7 +35,7 @@ export const EditorViewPlaygroundSelectInputParam: React.FC<
 
   const selectedValue = async () => {
     const viewValue = await dispatch(getMethodViewValue({ collection, path }));
-    
+
     return viewValue.payload as string;
   };
 
@@ -51,7 +53,6 @@ export const EditorViewPlaygroundSelectInputParam: React.FC<
   useEffect(() => {
     selectedValue().then(setValue);
   }, [method.fragmentKey, updateDisplayData]);
-
 
   return (
     <SelectInput

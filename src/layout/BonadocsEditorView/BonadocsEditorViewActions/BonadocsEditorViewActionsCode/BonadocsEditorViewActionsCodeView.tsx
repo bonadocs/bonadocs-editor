@@ -8,7 +8,6 @@ import { AppDispatch } from "@/store";
 import { ActionItem } from "@/data/dataTypes";
 import { updateWorkflowActionCode } from "@/store/action/actionSlice";
 import _ from "lodash";
-import { get } from "https";
 
 interface BonadocsEditorViewActionsCodeViewProps {
   // Add any props you need for your component here
@@ -39,8 +38,6 @@ export const BonadocsEditorViewActionsCodeView: React.FC<
   );
 
   useEffect(() => {
-    // console.log(currentAction.id, "currentAction id");
-    // console.log(Array.from(getCollection()!.workflowManagerView.workflows));
     setCodeState(currentAction.code[0]?.code);
   }, [currentAction.id]);
 

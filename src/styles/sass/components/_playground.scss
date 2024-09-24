@@ -271,6 +271,7 @@
             &__addIcon {
               margin-left: auto;
               cursor: pointer;
+              align-self: center;
             }
           }
           &__type {
@@ -317,6 +318,11 @@
             }
             &__icon {
               margin-left: auto;
+            }
+            &__text {
+               margin-left: auto;
+               color: var(--bonadocsProtocolBlue); 
+               cursor: pointer; 
             }
           }
           &__view {

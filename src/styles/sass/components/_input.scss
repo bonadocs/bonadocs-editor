@@ -92,9 +92,22 @@
       color: var(--bonadocsTextWhite);
       margin-top: 0.4rem;
       border-radius: 0.4rem;
+      &__textarea {
+        height: 10rem;
+        resize: none;
+      }
+      &__radio {
+        align-items: center;
+        font-size: 1.3rem;
+        margin-right: .8rem;
+        &__text {
+          font-size: 1.3rem;
+
+        }
+      }
     }
     &__input::placeholder {
-      color: var(--bonadocsText);
+      color: var(--bonaodocsPlaceholder);
       opacity: 1; /* Firefox */
     }
 
@@ -165,9 +178,49 @@
         background-image: url("https://res.cloudinary.com/dfkuxnesz/image/upload/v1704123676/Stepper_uz65vf.svg");
         background-repeat: no-repeat;
         background-size: 20% 65%;
-        background-position-x: 110%;
+        background-position-x: 108%;
         background-position-y: 50%;
+        &__placeholder {
+         color: var(--bonaodocsPlaceholder); 
+        }
       }
     }
   }
+}
+
+input[type="radio"] {
+  appearance: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-clip: content-box;
+  border: 1px solid var(--bonadocsText);
+  background-color: transparent;
+  padding: 2px;
+  margin: 0.4rem 0.4rem -0.4rem 0.2rem;
+}
+
+input[type="radio"]:checked {
+  background-color: var(--bonadocsBlue);
+  padding: 2px;
+  border: 2px solid var(--bonadocsBlue);
+}
+
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-clip: content-box;
+  border: 1px solid var(--bonadocsText);
+  background-color: transparent;
+  padding: 2px;
+  margin: 0.4rem 0.4rem -0.4rem 0.2rem;
+}
+
+input[type="checkbox"]:checked {
+  background-color: var(--bonadocsBlue);
+  padding: 2px;
+  border: 2px solid var(--bonadocsBlue);
 }

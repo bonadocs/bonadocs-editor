@@ -32,11 +32,6 @@ interface UpdateMethodParams {
   methodItem: MethodItem;
 }
 
-interface UpdateChainIdParams {
-  collection: CollectionDataManager;
-  chainId: number;
-}
-
 const methodSlice = createSlice({
   name: "method",
   initialState,
@@ -152,6 +147,22 @@ export const updateMethodViewValue = createAsyncThunk(
       } catch (err) {
         console.log(err);
       }
+    }
+  }
+);
+
+export const getMethodWidget = createAsyncThunk(
+  "method/getMethodWidget",
+  async (methodWidgetParams: CollectionDataManager, { dispatch, getState }) => {
+    try {
+      const collection = methodWidgetParams;
+      const state = getState() as RootState;
+      const widgetConfig = await collection
+        ?.getContractDetailsView(state.method.methodItem.contractId!)
+        .getWidgetConfiguration(state.method.methodItem.fragmentKey);
+      return widgetConfig;
+    } catch (err) {
+      console.log(err);
     }
   }
 );

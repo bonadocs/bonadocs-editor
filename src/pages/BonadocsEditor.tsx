@@ -5,55 +5,76 @@ import { Route, Routes } from "react-router-dom";
 import { BonadocsEditorActions } from "./BonadocsEditorActions/BonadocsEditorActions";
 import { BonadocsEditorLogin } from "./BonadocsEditorLogin/BonadocsEditorLogin";
 import { BonadocsEditorProjects } from "./BonadocsEditorProjects/BonadocsEditorProjects";
-import { BonadocsEditorProjectsCreation } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation";
-
+import { BonadocsEditorProjectsCreation } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreation";
+import { BonadocsEditorTeams } from "./BonadocsEditorTeams/BonadocsEditorTeams";
+import { ProtectedRoute } from "@/router/ProtectedRoute";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 interface BonadocsEditorProps {
   className?: string;
 }
 export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
   className,
 }) => {
+  const authSession = useSelector((state: RootState) => state.auth.inSession);
   return (
-    <>
-      <Routes>
+    <Routes>
+      <Route path={"/"}>
         <Route
-          path="/"
+          index
           element={
-            <>
-              <BonadocsEditorContracts className={className} />
-            </>
+            !authSession ? (
+              <BonadocsEditorLogin className={className} />
+            ) : (
+              <BonadocsEditorTeams />
+            )
           }
         />
+
+        <Route path="login" element={<BonadocsEditorLogin />} />
         <Route
-          path="/contracts"
-          element={
-            <>
-              <BonadocsEditorContracts className={className} />
-            </>
-          }
+          path="contracts"
+          element={<BonadocsEditorContracts className={className} />}
         />
         <Route
-          path="/variables"
-          element={
-            <>
-              <BonadocsEditorVariables className={className} />
-            </>
-          }
+          path="variables"
+          element={<BonadocsEditorVariables className={className} />}
         />
         <Route
-          path="/actions"
-          element={
-            <>
-              <BonadocsEditorActions className={className} />
-            </>
-          }
+          path="actions"
+          element={<BonadocsEditorActions className={className} />}
         />
-        <Route path="/login" element={<BonadocsEditorLogin />} />
-        <Route path="/projects" element={<BonadocsEditorProjects />} >
-          <Route path="create" element={<BonadocsEditorProjectsCreation/>} /> 
-          
+      </Route>
+
+      <Route path={"teams"} element={<ProtectedRoute />}>
+        <Route index element={<BonadocsEditorTeams />} />
+        <Route path=":id">
+          <Route index element={<BonadocsEditorProjects />} />
+          <Route path={"projects"}>
+            <Route index element={<BonadocsEditorProjects />} />
+            <Route path="create" element={<BonadocsEditorProjectsCreation />} />
+            <Route path=":projectId">
+              <Route
+                index
+                path="contracts"
+                element={<BonadocsEditorContracts className={className} />}
+              />
+              <Route
+                path="contracts"
+                element={<BonadocsEditorContracts className={className} />}
+              />
+              <Route
+                path="variables"
+                element={<BonadocsEditorVariables className={className} />}
+              />
+              <Route
+                path="actions"
+                element={<BonadocsEditorActions className={className} />}
+              />
+            </Route>
+          </Route>
         </Route>
-      </Routes>
-    </>
+      </Route>
+    </Routes>
   );
 };

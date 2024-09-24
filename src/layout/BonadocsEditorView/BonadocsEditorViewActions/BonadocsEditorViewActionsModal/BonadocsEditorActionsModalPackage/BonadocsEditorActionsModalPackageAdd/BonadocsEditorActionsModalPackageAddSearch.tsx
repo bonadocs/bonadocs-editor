@@ -127,7 +127,7 @@ export const BonadocsEditorActionsModalPackageAddSearch: React.FC<
           className="modal__side__container__search__icon"
           color="#fff"
           loading={true}
-          size={15}
+          size={10}
           aria-label="Loading Spinner"
           data-testid="loader"
         />

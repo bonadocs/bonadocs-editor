@@ -169,7 +169,7 @@ body {
   //text-align: center;
   background-color: white;
   height: 100vh;
-
+accent-color: var(--bonadocsBlue);
   @media screen and (max-width: 320px) {
     margin: 0.2rem;
   }
@@ -190,9 +190,9 @@ select {
   background-color: transparent
 }
 
-input[type="radio"] {
-  display: none;
-}
+// input[type="radio"] {
+//   display: none;
+// }
 
 hr {
   width: 100%;
@@ -206,9 +206,9 @@ hr {
   border-radius: 100%;
 }
 
-input[type="radio"]:checked + .graphical-radio {
-  background-color: #475569;
-}
+// input[type="radio"]:checked + .graphical-radio {
+//   background-color: #475569;
+// }
 
 blockquote,
 q {

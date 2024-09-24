@@ -138,7 +138,7 @@ export const BonadocsVariableAddModal: React.FC<
                 <MoonLoader
                   color="#fff"
                   loading={true}
-                  size={15}
+                  size={10}
                   aria-label="Loading Spinner"
                   data-testid="loader"
                 />

@@ -13,6 +13,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store";
 import { AuthProvider } from "./context/AuthContext";
 import { HelmetProvider } from "react-helmet-async";
+
 Modal.setAppElement("#root");
 function App() {
   return (
@@ -46,4 +47,7 @@ function App() {
   );
 }
 
+
+
 export default App;
+

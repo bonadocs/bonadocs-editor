@@ -1,12 +1,10 @@
 import React, {
   createContext,
   useContext,
-  useRef,
   useState,
   useEffect,
 } from "react";
 import { auth } from "@/utils/firebase.utils";
-import { toast } from "react-toastify";
 import { useNavigate, useSearchParams } from "react-router-dom";
 // Create the context props
 interface AuthContextProps {

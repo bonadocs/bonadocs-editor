@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/button/Button";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { useAuthContext } from "@/context/AuthContext";
 import { Popover } from "@headlessui/react";
 import { usePopper } from "react-popper";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
 import { supportedChains } from "@bonadocs/core";
 import { BonadocsEditorViewPlaygroundMethodStatus } from "@/layout/BonadocsEditorView/BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundMethod/BonadocsEditorViewPlaygroundMethodParams/BonadocsEditorViewPlaygroundMethodStatus";
+import { useParams } from "react-router-dom";
+import { saveProject } from "@/store/project/projectSlice";
+import { toast } from "react-toastify";
+import { BonadocsEditorViewPublishModal } from "./BonadocsEditorViewPublishModal";
+
 interface BonadocsEditorViewHeaderProps {
   className?: string;
 }
@@ -15,9 +20,13 @@ export const BonadocsEditorViewHeader: React.FC<
   BonadocsEditorViewHeaderProps
 > = ({ className }) => {
   const { getCollection, connectWallet, walletId } = useCollectionContext();
+  const [loader, setLoader] = useState<boolean>(false);
   const { user, signOut } = useAuthContext();
-  const collectionName = getCollection()?.data.name ?? "";
+  const collectionName = getCollection()?.data.name!;
   let [referenceElement, setReferenceElement] = useState<any>();
+  const [openPublishModal, setOpenPublishModal] = useState<boolean>(false);
+  const [uri, setUri] = useState<string>("");
+
   let [popperElement, setPopperElement] = useState<any>();
   let { styles, attributes } = usePopper(referenceElement, popperElement, {
     placement: "bottom-end",
@@ -41,17 +50,27 @@ export const BonadocsEditorViewHeader: React.FC<
       : `Not Connected`;
   }
 
+  const { projectId } = useParams();
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <div className={className}>
       <h2 className="bonadocs__editor__dashboard__header__title">
         {collectionName}
       </h2>
       <div className="bonadocs__editor__dashboard__header__share">
+        {/* <Button
+          type="action"
+          onClick={async () => {
+            console.log(JSON.stringify(await getCollection()?.data));
+          }}
+        >Log data</Button>
         <Button
           className="bonadocs__editor__dashboard__header__share"
-          onClick={async() => {
-            // console.log(await getCollection()?.publishToIPFS());
-             
+          onClick={async () => {
+            console.log("start");
+
+            console.log(await getCollection()?.publishToIPFS());
           }}
           type="action"
         >
@@ -63,6 +82,50 @@ export const BonadocsEditorViewHeader: React.FC<
             />
             Share
           </>
+        </Button> */}
+        <Button
+          disabled={loader}
+          className="bonadocs__editor__dashboard__header__share bonadocs__editor__dashboard__header__share__publish"
+          type="inertia"
+          onClick={async () => {
+            setLoader(true);
+            try {
+              const uri = await getCollection()?.publishToIPFS();
+              console.log(uri);
+
+              setUri(uri!);
+              setLoader(false);
+
+              toast.success("Project published to IPFS");
+              setOpenPublishModal(!openPublishModal);
+            } catch (err) {
+              setLoader(false);
+            }
+          }}
+        >
+          {loader ? "Publishing..." : "Publish to IPFS"}
+        </Button>
+        <Button
+          disabled={loader}
+          className="bonadocs__editor__dashboard__header__share"
+          onClick={async () => {
+            setLoader(true);
+            try {
+              await dispatch(
+                saveProject({
+                  collection: getCollection()!,
+                  projectId: projectId!,
+                })
+              );
+              setLoader(false);
+              toast.success("Project saved");
+            } catch (err) {
+              setLoader(false);
+            }
+          }}
+          type="action"
+        >
+          {loader ? "Saving..." : "Save Project"}
         </Button>
         {!connected ? (
           <div className="bonadocs__editor__dashboard__header__connect">
@@ -138,6 +201,11 @@ export const BonadocsEditorViewHeader: React.FC<
           </>
         )}
       </div>
+      <BonadocsEditorViewPublishModal
+        show={openPublishModal}
+        uri={uri}
+        closePublishModal={() => setOpenPublishModal(!openPublishModal)}
+      />
     </div>
   );
 };

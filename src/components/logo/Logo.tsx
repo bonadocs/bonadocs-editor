@@ -1,14 +1,25 @@
+import { RootState } from "@/store";
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface LogoProps {
   className?: string;
 }
 
 export const Logo: React.FC<LogoProps> = ({ className }) => {
+  const navigate = useNavigate();
+  const authSession = useSelector((state: RootState) => state.auth.inSession);
   return (
     <svg
       className={className}
       onClick={() => {
+        if (authSession) {
+          navigate({
+            pathname: "/teams",
+          });
+        
+        } else
         window.open("https://bonadocs.com/", "_blank");
       }}
       width="118"

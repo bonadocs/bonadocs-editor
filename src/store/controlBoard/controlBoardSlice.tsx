@@ -12,6 +12,7 @@ const initialState = {
   connected: false as boolean,
   packagesView: false as boolean,
   cloudIcon: false as boolean,
+  loadingScreen: false as boolean,
 };
 
 const controlBoardSlice = createSlice({
@@ -21,13 +22,19 @@ const controlBoardSlice = createSlice({
     setWriteMethod: (state, action: PayloadAction<boolean>) => {
       state.writeMethod = action.payload;
     },
+    setLoadingScreen: (state, action: PayloadAction<boolean>) => {
+      state.loadingScreen = action.payload;
+    },
     setPlaygroundState: (state, action: PayloadAction<playgroundState>) => {
       state.playgroundState = action.payload;
     },
     setSimulation: (state, action: PayloadAction<boolean>) => {
       state.simulation = action.payload;
     },
-    setProvider: (state, action: PayloadAction<BrowserProvider | undefined>) => {
+    setProvider: (
+      state,
+      action: PayloadAction<BrowserProvider | undefined>
+    ) => {
       state.provider = action.payload;
     },
     setPackagesView: (state, action: PayloadAction<boolean>) => {
@@ -84,7 +91,8 @@ export const {
   setConnected,
   setChainId,
   toggleOverlay,
-  setCloudIcon
+  setCloudIcon,
+  setLoadingScreen
 } = controlBoardSlice.actions;
 
 export default controlBoardSlice.reducer;
