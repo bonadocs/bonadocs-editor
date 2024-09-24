@@ -42,12 +42,12 @@ export const BonadocsEditorProjects: React.FC = () => {
   }, []);
 
   const currentProject = async () => {
-     dispatch(setLoadingScreen(true));
+    dispatch(setLoadingScreen(true));
     dispatch(setProjectList([]));
     if (id) {
       await dispatch(getTeamById(id));
     }
-   
+
     const projects = await dispatch(fetchCollections());
     dispatch(setLoadingScreen(false));
     if (!projects.payload) {
@@ -102,7 +102,6 @@ export const BonadocsEditorProjects: React.FC = () => {
                 </>
               </Button>
               <Button
-                disabled={!addProject}
                 className="bonadocs__editor__projects__inner__header__right__button"
                 onClick={() => signOut()}
               >

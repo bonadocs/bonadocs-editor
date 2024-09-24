@@ -35,12 +35,12 @@ const teamSlice = createSlice({
 });
 
 export const teamCreation = createAsyncThunk(
-  "project/teamCreation",
+  "team/teamCreation",
   async (teamName: string, { getState, dispatch, rejectWithValue }) => {
     try {
       await api.post("/projects", {
-        name: teamName.trim(),
-        slug: teamName.trim().replace(/\s+/g, "-"),
+        name: teamName.toLowerCase().trim(),
+        slug: teamName.toLowerCase().trim().replace(/\s+/g, "-"),
       });
       dispatch(getTeams());
       return teamName;
@@ -52,7 +52,7 @@ export const teamCreation = createAsyncThunk(
 );
 
 export const getTeams = createAsyncThunk(
-  "project/getTeams",
+  "team/getTeams",
   async (_, { getState, dispatch, rejectWithValue }) => {
     try {
       const projects = await api.get("/projects");
@@ -73,7 +73,7 @@ export const getTeams = createAsyncThunk(
 );
 
 export const getTeamById = createAsyncThunk(
-  "project/teamCreation",
+  "team/teamCreation",
   async (projectId: string, { getState, dispatch, rejectWithValue }) => {
     try {
       const projects = await api.get(`/projects/${projectId}`);
@@ -111,7 +111,7 @@ export const getTeamById = createAsyncThunk(
 );
 
 export const deleteTeam = createAsyncThunk(
-  "project/deleteTeam",
+  "team/deleteTeam",
   async (projectId: string, { dispatch }) => {
     try {
       await api.delete(`/projects/${projectId}`);
@@ -125,7 +125,7 @@ export const deleteTeam = createAsyncThunk(
 );
 
 export const acceptInvite = createAsyncThunk(
-  "project/acceptInvite",
+  "team/acceptInvite",
   async (inviteToken: string, {}) => {
     try {
       await api.get(`/projects/accept-invitation?token=${inviteToken}`);
@@ -141,7 +141,7 @@ export const acceptInvite = createAsyncThunk(
 );
 
 export const inviteMember = createAsyncThunk(
-  "project/inviteMember",
+  "team/inviteMember",
   async (inviteParam: TeamInvite, { getState, dispatch, rejectWithValue }) => {
     try {
       await api.post(`/projects/${inviteParam.projectId}/invitations`, {
@@ -160,8 +160,21 @@ export const inviteMember = createAsyncThunk(
   }
 );
 
+export const deleteMember = createAsyncThunk("team/deleteMember", async (memberId: string, { getState, dispatch, rejectWithValue }) => {
+  try {
+    await api.delete(`/projects/users/${memberId}`);
+    toast.success("Member removed");
+    return true;
+  } catch (err: any) {
+    console.log(err.response.data.message);
+
+    toast.error(err.response.data.message);
+    return false;
+  }
+ })
+
 export const getTeamMembers = createAsyncThunk(
-  "project/getTeamMembers",
+  "team/getTeamMembers",
   async (projectId: string, { getState, dispatch, rejectWithValue }) => {
     try {
       const members = await api.get(`/projects/${projectId}/users`);
@@ -176,7 +189,7 @@ export const getTeamMembers = createAsyncThunk(
 );
 
 export const fetchTeamMembers = createAsyncThunk(
-  "project/fetchTeamMembers",
+  "team/fetchTeamMembers",
   async (projectId: string, { getState, dispatch, rejectWithValue }) => {
     try {
       const members = await api.get(`/projects/${projectId}/invitations`);

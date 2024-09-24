@@ -68,7 +68,7 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
     }
 
     setDisplay(true);
-     dispatch(setLoadingScreen(false));
+    dispatch(setLoadingScreen(false));
   };
 
   return (

@@ -30,17 +30,21 @@ export const BonadocsEditorProjectsItem: React.FC<
   const dispatch = useDispatch<AppDispatch>();
 
   return (
-    <div
-      onClick={() => {
-        navigate(`${projectItem.id}/contracts`);
-      }}
-      className="bonadocs__editor__projects__inner__list__item"
-    >
+    <div className="bonadocs__editor__projects__inner__list__item">
+      {/* <div
+        
+        className="bonadocs__editor__projects__inner__list__item"
+      > */}
       <img
         className="bonadocs__editor__projects__inner__list__item__icon"
         src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715442416/code-circle_zzekez.svg"
       />
-      <div className="bonadocs__editor__projects__inner__list__item__info">
+      <div
+        onClick={() => {
+          navigate(`${projectItem.id}/contracts`);
+        }}
+        className="bonadocs__editor__projects__inner__list__item__info"
+      >
         <h3 className="bonadocs__editor__projects__inner__list__item__info__title">
           {projectItem.name}
         </h3>
@@ -48,6 +52,8 @@ export const BonadocsEditorProjectsItem: React.FC<
           {projectItem.description}
         </h5>
       </div>
+      {/* </div> */}
+
       <Popover className="relative ma-auto">
         <Popover.Button
           className="bonadocs__editor__projects__inner__list__item__icon"

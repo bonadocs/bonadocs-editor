@@ -10,6 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import { BonadocsEditorTeamsModalAcceptInvite } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsModal/BonadocsEditorTeamsModalAcceptInvite";
 import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
+import { useAuthContext } from "@/context/AuthContext";
 
 export const BonadocsEditorTeams: React.FC = () => {
   const [queryParameters] = useSearchParams();
@@ -21,7 +22,7 @@ export const BonadocsEditorTeams: React.FC = () => {
     (state: RootState) => state.controlBoard.loadingScreen
   );
   const inviteToken = queryParameters.get("inviteToken");
-
+  const { signOut } = useAuthContext();
   useEffect(() => {
     dispatch(setLoadingScreen(true));
     dispatch(getTeams());
@@ -54,6 +55,15 @@ export const BonadocsEditorTeams: React.FC = () => {
                 <>
                   <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715430556/Add_Icon_wmenad.svg" />
                   Create Team
+                </>
+              </Button>
+              <Button
+                className="bonadocs__editor__projects__inner__header__right__button"
+                onClick={() => signOut()}
+              >
+                <>
+                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1727131299/icons8-sign-out-50_xj89ke.png" />
+                  Sign out
                 </>
               </Button>
             </div>

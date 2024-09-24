@@ -290,7 +290,7 @@ export const deleteProject = createAsyncThunk(
   async (projectItem: ProjectItem, { getState, dispatch }) => {
     const { team } = getState() as RootState;
     try {
-      const projectDeleted = await api.delete(
+       await api.delete(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}`
       );
 
