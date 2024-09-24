@@ -24,7 +24,7 @@ export const BonadocsEditorViewHeader: React.FC<
   const { user, signOut } = useAuthContext();
   const collectionName = getCollection()?.data.name!;
   let [referenceElement, setReferenceElement] = useState<any>();
-  const [openPublishModal, setOpenPublishModal] = useState<boolean>(true);
+  const [openPublishModal, setOpenPublishModal] = useState<boolean>(false);
   const [uri, setUri] = useState<string>("");
 
   let [popperElement, setPopperElement] = useState<any>();
