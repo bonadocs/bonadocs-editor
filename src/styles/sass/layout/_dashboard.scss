@@ -70,6 +70,10 @@
           margin-left: auto;
           display: flex;
           align-items: center;
+          padding-left: 1.6rem;
+          &__publish {
+            margin-right: 1.6rem;
+          }
         }
         &__networkDropdown {
           align-self: end;

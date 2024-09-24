@@ -11,6 +11,7 @@ import { BonadocsEditorViewPlaygroundMethodStatus } from "@/layout/BonadocsEdito
 import { useParams } from "react-router-dom";
 import { saveProject } from "@/store/project/projectSlice";
 import { toast } from "react-toastify";
+import { BonadocsEditorViewPublishModal } from "./BonadocsEditorViewPublishModal";
 
 interface BonadocsEditorViewHeaderProps {
   className?: string;
@@ -23,6 +24,8 @@ export const BonadocsEditorViewHeader: React.FC<
   const { user, signOut } = useAuthContext();
   const collectionName = getCollection()?.data.name!;
   let [referenceElement, setReferenceElement] = useState<any>();
+  const [openPublishModal, setOpenPublishModal] = useState<boolean>(true);
+  const [uri, setUri] = useState<string>("");
 
   let [popperElement, setPopperElement] = useState<any>();
   let { styles, attributes } = usePopper(referenceElement, popperElement, {
@@ -82,18 +85,43 @@ export const BonadocsEditorViewHeader: React.FC<
         </Button> */}
         <Button
           disabled={loader}
+          className="bonadocs__editor__dashboard__header__share bonadocs__editor__dashboard__header__share__publish"
+          type="inertia"
+          onClick={async () => {
+            setLoader(true);
+            try {
+              const uri = await getCollection()?.publishToIPFS();
+              console.log(uri);
+
+              setUri(uri!);
+              setLoader(false);
+
+              toast.success("Project published to IPFS");
+              setOpenPublishModal(!openPublishModal);
+            } catch (err) {
+              setLoader(false);
+            }
+          }}
+        >
+          {loader ? "Publishing..." : "Publish to IPFS"}
+        </Button>
+        <Button
+          disabled={loader}
           className="bonadocs__editor__dashboard__header__share"
           onClick={async () => {
             setLoader(true);
-
-            await dispatch(
-              saveProject({
-                collection: getCollection()!,
-                projectId: projectId!,
-              })
-            );
-            setLoader(false);
-            toast.success("Project saved");
+            try {
+              await dispatch(
+                saveProject({
+                  collection: getCollection()!,
+                  projectId: projectId!,
+                })
+              );
+              setLoader(false);
+              toast.success("Project saved");
+            } catch (err) {
+              setLoader(false);
+            }
           }}
           type="action"
         >
@@ -173,6 +201,11 @@ export const BonadocsEditorViewHeader: React.FC<
           </>
         )}
       </div>
+      <BonadocsEditorViewPublishModal
+        show={openPublishModal}
+        uri={uri}
+        closePublishModal={() => setOpenPublishModal(!openPublishModal)}
+      />
     </div>
   );
 };
