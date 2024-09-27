@@ -10,13 +10,11 @@ export const BonadocsEditorVariables: React.FC<
   BonadocsEditorVariablesProps
 > = ({ className }) => {
   return (
-    <BonadocsEditorLayout>
-      <div className={className}>
-        <BonadocsEditorViewHeader className="bonadocs__editor__dashboard__header" />
-        <BonadocsEditorViewPlaygroundWrapper className="bonadocs__editor__dashboard__playground bona__btl">
-          <BonadocsEditorViewVariables />
-        </BonadocsEditorViewPlaygroundWrapper>
-      </div>
-    </BonadocsEditorLayout>
+    <div className={className}>
+      <BonadocsEditorViewHeader className="bonadocs__editor__dashboard__header" />
+      <BonadocsEditorViewPlaygroundWrapper className="bonadocs__editor__dashboard__playground bona__btl">
+        <BonadocsEditorViewVariables />
+      </BonadocsEditorViewPlaygroundWrapper>
+    </div>
   );
 };
