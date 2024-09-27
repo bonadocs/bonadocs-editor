@@ -10,6 +10,7 @@ import { BonadocsEditorTeams } from "./BonadocsEditorTeams/BonadocsEditorTeams";
 import { ProtectedRoute } from "@/router/ProtectedRoute";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { BonadocsEditorLayout } from "./BonadocsEditorLayout";
 interface BonadocsEditorProps {
   className?: string;
 }
@@ -53,10 +54,9 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
           <Route path={"projects"}>
             <Route index element={<BonadocsEditorProjects />} />
             <Route path="create" element={<BonadocsEditorProjectsCreation />} />
-            <Route path=":projectId">
+            <Route path=":projectId" element={<BonadocsEditorLayout />}>
               <Route
                 index
-                path="contracts"
                 element={<BonadocsEditorContracts className={className} />}
               />
               <Route

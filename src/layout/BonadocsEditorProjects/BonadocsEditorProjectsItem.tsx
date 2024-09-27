@@ -41,7 +41,7 @@ export const BonadocsEditorProjectsItem: React.FC<
       />
       <div
         onClick={() => {
-          navigate(`${projectItem.id}/contracts`);
+          navigate(`${projectItem.id}`);
         }}
         className="bonadocs__editor__projects__inner__list__item__info"
       >

@@ -4,7 +4,6 @@ import { BonadocsEditorViewControlBar } from "../../layout/BonadocsEditorView/Bo
 import { BonadocsEditorViewPlayground } from "../../layout/BonadocsEditorView/BonadocsEditorViewPlayground/BonadocsEditorViewPlayground";
 import { BonadocsEditorViewPlaygroundWrapper } from "../../layout/BonadocsEditorView/BonadocsEditorViewPlayground/BonadocsEditorViewPlaygroundWrapper";
 import { BonadocsEditorLayout } from "../BonadocsEditorLayout";
-import { useParams } from "react-router-dom";
 
 interface BonadocsEditorContractsProps {
   className?: string;
@@ -12,11 +11,10 @@ interface BonadocsEditorContractsProps {
 export const BonadocsEditorContracts: React.FC<
   BonadocsEditorContractsProps
   > = ({ className }) => {
-    const { projectId, id } = useParams();
 
     
   return (
-    <BonadocsEditorLayout projectId={projectId} teamId={id}>
+    
       <div className={className}>
         <BonadocsEditorViewHeader className="bonadocs__editor__dashboard__header" />
         <BonadocsEditorViewControlBar className="bonadocs__editor__dashboard__controlbar" />
@@ -24,6 +22,6 @@ export const BonadocsEditorContracts: React.FC<
           <BonadocsEditorViewPlayground />
         </BonadocsEditorViewPlaygroundWrapper>
       </div>
-    </BonadocsEditorLayout>
+    
   );
 };

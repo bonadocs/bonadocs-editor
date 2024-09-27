@@ -184,7 +184,8 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       });
       // console.log(userRole, "userRole");
 
-      if (localStorage.getItem(uriId) && userRole[0].value !== "viewer") {
+      // && userRole[0].value !== "viewer"
+      if (localStorage.getItem(uriId)) {
         let collection = await Collection.createFromLocalStore(
           localStorage.getItem(uriId)!
         );
@@ -199,9 +200,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         await collection.saveToLocal();
         collectionRef.current = collection;
 
-        if (localStorage.getItem(uriId)!) {
-          localStorage.removeItem(uriId);
-        }
+        // if (localStorage.getItem(uriId)!) {
+        //   localStorage.removeItem(uriId);
+        // }
         localStorage.setItem(uriId, collectionRef.current?.data.id!);
       }
 

@@ -2,7 +2,7 @@ import { BonadocsEditorSidebar } from "@/layout/BonadocsEditorSidebar/BonadocsEd
 import React, { useEffect, useState } from "react";
 import { MetaTags } from "@/components/metatags/Metatags";
 import { useCollectionContext } from "@/context/CollectionContext";
-import { useSearchParams } from "react-router-dom";
+import { Outlet, useParams, useSearchParams } from "react-router-dom";
 import { RootState } from "@/store";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store";
@@ -11,27 +11,24 @@ import {
   setMethodDisplayData,
   setTransactionOverrides,
 } from "@/store/method/methodSlice";
-import { MethodItem, ContractItem } from "@/data/dataTypes";
+import { MethodItem, ContractItem, ActionItem } from "@/data/dataTypes";
 import { setActiveContract } from "@/store/contract/contractSlice";
 import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
-interface BonadocsEditorLayoutProps {
-  children?: React.ReactNode;
-  projectId?: string | undefined;
-  teamId?: string | undefined;
-}
+import { setActiveAction } from "@/store/action/actionSlice";
+interface BonadocsEditorLayoutProps {}
 
-export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
-  children,
-  projectId,
-  teamId,
-}) => {
+export const BonadocsEditorLayout: React.FC<
+  BonadocsEditorLayoutProps
+> = ({}) => {
   const { initializeEditor, getCollection } = useCollectionContext();
   const collectionName = getCollection()?.data.name ?? "";
   const [queryParameters] = useSearchParams();
   const dispatch: AppDispatch = useDispatch();
   const [display, setDisplay] = useState<boolean>(false);
   const uri = queryParameters.get("uri");
+  const { projectId, id } = useParams();
+  const teamId = id;
 
   const contract = useSelector(
     (state: RootState) => state.contract.currentContract
@@ -48,6 +45,7 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
 
   const initializeCollection = async () => {
     dispatch(setLoadingScreen(true));
+
     if (projectId && teamId) {
       const uriId = await initializeEditor({ projectId, teamId });
 
@@ -81,7 +79,7 @@ export const BonadocsEditorLayout: React.FC<BonadocsEditorLayoutProps> = ({
             description={`The playground provides a simple and practical way to enable devs to integrate ${collectionName} in their production apps and protocols.`}
           />
           <BonadocsEditorSidebar className="bonadocs__editor__sidebar" />
-          {children}
+          <Outlet />
         </>
       )}
       <LoadingModal show={loadingScreen} />
