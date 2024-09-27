@@ -8,13 +8,13 @@ type BonadocsEditorViewPlaygroundResultViewProps = {
 
 export const BonadocsEditorViewPlaygroundResultView: React.FC<
   BonadocsEditorViewPlaygroundResultViewProps
-> = ({ response }) => {
+  > = ({ response }) => {
+  console.log(response);
+  
   return (
     <CodeBlock>
       {JSON.stringify(
-        typeof response === "object" ? response[0] : response ?? "",
-        null,
-        2
+        typeof response === "object" ? response[0] : response ?? ""
       )}
     </CodeBlock>
   );
