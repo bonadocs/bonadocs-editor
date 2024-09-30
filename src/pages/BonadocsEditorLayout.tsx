@@ -48,7 +48,8 @@ export const BonadocsEditorLayout: React.FC<
 
     if (projectId && teamId) {
       const uriId = await initializeEditor({ projectId, teamId });
-
+      
+      
       if (uriId !== contract.uri) {
         dispatch(setMethodItem({} as MethodItem));
         dispatch(setMethodDisplayData([]));
@@ -56,6 +57,7 @@ export const BonadocsEditorLayout: React.FC<
         dispatch(setTransactionOverrides([]));
       }
     } else if (uri) {
+      console.log(contract, 'contract');
       await initializeEditor({ uri: uri! });
       if (queryParams.get("uri") !== contract.uri) {
         dispatch(setMethodItem({} as MethodItem));

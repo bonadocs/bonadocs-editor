@@ -33,18 +33,20 @@ export const BonadocsEditor: React.FC<BonadocsEditorProps> = ({
         />
 
         <Route path="login" element={<BonadocsEditorLogin />} />
-        <Route
-          path="contracts"
-          element={<BonadocsEditorContracts className={className} />}
-        />
-        <Route
-          path="variables"
-          element={<BonadocsEditorVariables className={className} />}
-        />
-        <Route
-          path="actions"
-          element={<BonadocsEditorActions className={className} />}
-        />
+        <Route element={<BonadocsEditorLayout />}>
+          <Route
+            path="contracts"
+            element={<BonadocsEditorContracts className={className} />}
+          />
+          <Route
+            path="variables"
+            element={<BonadocsEditorVariables className={className} />}
+          />
+          <Route
+            path="actions"
+            element={<BonadocsEditorActions className={className} />}
+          />
+        </Route>
       </Route>
 
       <Route path={"teams"} element={<ProtectedRoute />}>

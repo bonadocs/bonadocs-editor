@@ -76,7 +76,7 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstancesItem: 
                 updateInstance("delete", instance);
               }}
             >
-              Delete Instance
+              Delete network
             </h2>
           </div>
         )}
