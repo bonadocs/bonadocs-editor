@@ -33,6 +33,7 @@ import { setLoader } from "@/store/action/actionSlice";
 import { api } from "@/utils/axios";
 import { auth } from "@/utils/firebase.utils";
 import { getTeamById } from "@/store/team/teamSlice";
+import _ from "lodash";
 
 // Create the context props
 interface CollectionContextProps {
@@ -123,13 +124,11 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         );
 
         collectionRef.current = collection.manager;
-        
       } else {
         let collection = await Collection.createFromURI(uri);
 
         await collection.manager.saveToLocal();
         collectionRef.current = collection.manager;
-        
 
         localStorage.setItem(uri, collectionRef.current?.data.id);
       }
@@ -253,7 +252,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     let uriId;
     if (uri) {
       const loadFromUri = await loadCollectionFromUri(uri);
-     
 
       if (loadFromUri !== true) {
         throw new Error("Collection not loaded");
@@ -274,8 +272,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       // );
       // dispatch(fetchCollectionVariables(collectionRef.current!));
     } else if (projectId && teamId) {
-      
-
       await loadCollectionFromPrivateTeam(teamId, projectId);
 
       // console.log(
@@ -364,6 +360,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     if ((window as any).ethereum) {
       (window as any).ethereum?.on("accountsChanged", handleAccountsChanged);
       (window as any).ethereum?.on("chainChanged", handleChainChanged);
+      // (window as any).ethereum?.on("disconnect", clearAccount);
       checkConnection();
     }
 
@@ -376,6 +373,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         "chainChanged",
         handleChainChanged
       );
+      // (window as any).ethereum?.removeListener("disconnect", clearAccount);
     };
   }
 
@@ -427,8 +425,14 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   };
 
   const populateExecutionContext = (methodExecutor: FunctionExecutor) => {
-    for (let i = 0; i < transactionOverrides.length; i++) {
-      methodExecutor.getExecutionContext(i).overrides = transactionOverrides[i];
+    if (!_.isEmpty(transactionOverrides[0])) {
+      for (let i = 0; i < transactionOverrides.length; i++) {
+        Object.assign(
+          methodExecutor.getExecutionContext(i).overrides!,
+          transactionOverrides[i]
+        );
+        // methodExecutor.getExecutionContext(i).overrides = overrides[i];
+      }
     }
   };
 
@@ -475,7 +479,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
           !simulation &&
           walletId !== methodExecutor.activeChainId
         ) {
-          toast.info("Please connect to the correct widget network");
+          toast.info("Please connect to the correct method network");
           toggleOverlay(false, overlayRef);
           return;
         }
@@ -484,7 +488,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
           let res: Array<DisplayResult | ExecutionResult>;
           populateExecutionContext(methodExecutor);
           if (!simulation) {
-            writeMethod && (await setSigner(methodExecutor));
+            writeMethod && console.log(await setSigner(methodExecutor));
 
             res = await methodExecutor.execute();
           } else {
@@ -498,6 +502,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
           setShowResult(true);
         } catch (error) {
           toggleOverlay(false, overlayRef);
+          console.log(error);
 
           toast.error((error as Error).message);
         }

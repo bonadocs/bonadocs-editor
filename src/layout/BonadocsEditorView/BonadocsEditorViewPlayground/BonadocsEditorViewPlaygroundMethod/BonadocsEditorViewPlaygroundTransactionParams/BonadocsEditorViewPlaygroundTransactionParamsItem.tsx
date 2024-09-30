@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BonadocsWidgetParamProps } from "@/data/dataTypes";
 import { TextInputDescription } from "@/components/input/TextInputDescription";
 import { setTransactionOverrides } from "@/store/method/methodSlice";
@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
-import { TransactionOverrides } from "@bonadocs/core";
+
 interface BonadocsEditorViewPlaygroundTransactionParamsItemProps {
   param: BonadocsWidgetParamProps;
 }
@@ -37,7 +37,7 @@ export const BonadocsEditorViewPlaygroundTransactionParamsItem: React.FC<
         delete overrides[viewIndex][param.overrideKey];
       }
     }
-
+    
     dispatch(setTransactionOverrides([...overrides]));
   };
 

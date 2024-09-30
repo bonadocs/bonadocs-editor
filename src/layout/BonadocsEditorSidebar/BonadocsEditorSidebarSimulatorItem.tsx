@@ -34,7 +34,7 @@ export const BonadocsEditorSidebarSimulatorItem: React.FC<
             checked={simulation}
           />
           <div className="bonadocs__editor__sidebar__simulation__title">
-            {simulation ? `Simulation mode` : `On simulation`}
+            {simulation ? `Simulation mode` : `Simulation off`}
           </div>
         </>
       </Tab>

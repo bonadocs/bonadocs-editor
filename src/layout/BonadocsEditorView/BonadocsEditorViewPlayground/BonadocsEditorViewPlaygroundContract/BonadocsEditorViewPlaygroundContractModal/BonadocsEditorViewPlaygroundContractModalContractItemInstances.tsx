@@ -118,7 +118,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstances: Rea
           className="bonadocs__editor__projects__creation__add__title"
           onClick={() => setOpen(!open)}
         >
-          Add instance
+          Add network
         </h3>
       </div>
       <BonadocsEditorViewPlaygroundContractModalContractItemInstancesAdd
