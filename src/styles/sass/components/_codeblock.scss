@@ -4,6 +4,7 @@
     code {
       margin: 1rem;
       overflow-x: auto;
+      max-width: inherit;
       // background-color: var(--bonadocsEditorBorder);
       pre {
         // background-color: var(--bonadocsCode);

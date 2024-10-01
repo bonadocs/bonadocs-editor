@@ -6,6 +6,8 @@ import { WorkflowItem, WorkflowCodeItem } from "@/data/dataTypes";
 import { setCloudIcon } from "../controlBoard/controlBoardSlice";
 import { toast } from "react-toastify";
 import _ from "lodash";
+import { Root } from "react-markdown/lib";
+import { RootState } from "..";
 
 const initialState = {
   collectionActions: [] as Array<ActionItem>,
@@ -22,7 +24,7 @@ const actionSlice = createSlice({
     },
     setLoader: (state, action: PayloadAction<boolean>) => {
       state.loader = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -30,7 +32,6 @@ const actionSlice = createSlice({
       .addCase(
         getCollectionActions.fulfilled,
         (state, action: PayloadAction<any>) => {
-
           state.collectionActions = action.payload;
         }
       );
@@ -38,7 +39,6 @@ const actionSlice = createSlice({
     builder
       .addCase(deleteWorkflowAction.pending, () => {})
       .addCase(deleteWorkflowAction.fulfilled, (state) => {
-
         state.currentAction = {} as ActionItem;
       });
 
@@ -119,12 +119,13 @@ export const getCollectionActions = createAsyncThunk(
 export const createWorkflowAction = createAsyncThunk(
   "action/createWorkflowAction",
   async (setWorkflowParams: WorkflowItem, { dispatch }) => {
-    const { collection, workflowName } = setWorkflowParams;
+    const { collection, workflowName, workflowChainId, workflowId } =
+      setWorkflowParams;
 
     try {
       await collection.workflowManagerView.addWorkflow({
         id: `00${Math.floor(Math.random() * 1000)}`,
-        name: workflowName?.replace(/\s+/g, '')!,
+        name: workflowName?.replace(/\s+/g, "")!,
         variables: [
           {
             name: "var1",
@@ -138,6 +139,11 @@ export const createWorkflowAction = createAsyncThunk(
           },
         ],
       });
+      await collection.valueManagerView.setString(
+        `workflow-chain-id-${workflowId}`,
+        workflowChainId!.toString()
+      );
+
       await collection.workflowManagerView.setDocText(
         `00${Math.floor(Math.random() * 1000)}`,
         workflowName?.trim()!
@@ -180,7 +186,6 @@ export const updateWorkflowActionCode = createAsyncThunk(
         code
       );
       setCloudIcon(false);
-     
 
       dispatch(getCollectionActions(collection));
       return code;
@@ -193,18 +198,29 @@ export const updateWorkflowActionCode = createAsyncThunk(
 
 export const renameWorkflowAction = createAsyncThunk(
   "action/renameWorkflowAction",
-  async (setWorkflowParams: WorkflowItem, { dispatch }) => {
-    const { collection, workflowId, workflowName } = setWorkflowParams;
-
+  async (setWorkflowParams: WorkflowItem, { dispatch, getState }) => {
+    const { collection, workflowId, workflowName, workflowChainId } =
+      setWorkflowParams;
+    console.log('start');
+    
     try {
+      await collection.valueManagerView.setString(
+        `workflow-chain-id-${workflowId}`,
+        workflowChainId!.toString()
+      );
+     
+
       await collection.workflowManagerView.renameWorkflow(
         workflowId!,
         workflowName?.replace(/\s+/g, "")!
       );
+
       dispatch(getCollectionActions(collection));
-      toast.success(`Successfully renamed action`);
+      toast.success(`Successfully updated action`);
       return workflowName!;
     } catch (err) {
+      console.log(err);
+      
       toast.error(`${err} Error renaming action`);
     }
   }

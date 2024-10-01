@@ -54,6 +54,9 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
+  useEffect((() => {
+    
+  }),[])
   const dispatch = useDispatch<AppDispatch>();
   const closeModal = () => {
     setAddContract(false);

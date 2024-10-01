@@ -5,7 +5,6 @@ import { BonadocsEditorViewsActionsPackagesSidebarChildren } from "../BonadocsEd
 import { RootState } from "@/store";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { getLatestEthersVersion } from "@/store/package/packageSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { BonadocsEditorViewActionsPackagesSidebarHeader } from "../BonadocsEditorViewActionsPackagesSidebar/BonadocsEditorViewActionsPackagesSidebarHeader";
 
@@ -15,14 +14,19 @@ export const BonadocsEditorViewActionsSidebar: React.FC = () => {
     (state: RootState) => state.controlBoard.packagesView
   );
 
+  const currentEthersPackage = useSelector(
+    (state: RootState) => state.package.collectionPackages[0].version
+  );
+
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getLatestEthersVersion(getCollection()!));
-    };
+    // if (currentEthersPackage) return;
+    // const fetchData = async () => {
+    //   await dispatch(getLatestEthersVersion(getCollection()!));
+    // };
 
-    fetchData();
+    // fetchData();
   }, []);
   return (
     <div className="bonadocs__editor__dashboard__playground__action__list">

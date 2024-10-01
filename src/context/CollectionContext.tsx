@@ -516,12 +516,15 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
   async function executionWorkflowButton() {
     setWorkflowResponse("");
-    const activeNetwork = id?.length !== 0 && id !== null ? Number(id) : 1;
+    const activeNetwork = collectionRef.current?.valueManagerView.getString(
+      `workflow-chain-id-${currentAction.id}`
+    );
+
     try {
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
-
-      executor.setActiveChainId(activeNetwork);
+      
+      executor.setActiveChainId(Number(activeNetwork));
 
       const res = await executor.run();
 

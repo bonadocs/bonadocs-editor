@@ -4,13 +4,12 @@ import { CodeBlock } from "@/components/codeBlock/CodeBlock";
 
 type BonadocsEditorViewPlaygroundResultViewProps = {
   response?: Array<DisplayResult | ExecutionResult>;
+  parentWidth?: number;
 };
 
 export const BonadocsEditorViewPlaygroundResultView: React.FC<
   BonadocsEditorViewPlaygroundResultViewProps
-> = ({ response }) => {
-  console.log(response);
-
+> = ({ response, parentWidth }) => {
   const openBrace = `{`;
   const closeBrace = `}`;
 
@@ -122,7 +121,7 @@ export const BonadocsEditorViewPlaygroundResultView: React.FC<
   }
 
   return (
-    <CodeBlock>
+    <CodeBlock style={{ width: parentWidth }}>
       {/* {JSON.stringify(
         typeof response === "object" ? response[0] : response ?? ""
       )} */}

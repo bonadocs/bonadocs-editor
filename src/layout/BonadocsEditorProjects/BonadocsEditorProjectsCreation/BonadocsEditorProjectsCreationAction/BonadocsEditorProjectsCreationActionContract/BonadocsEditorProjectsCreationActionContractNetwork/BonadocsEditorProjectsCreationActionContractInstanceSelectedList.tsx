@@ -25,6 +25,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedList: R
           <BonadocsEditorProjectsCreationActionContractInstanceSelectedItem
             instance={instance}
             key={index}
+            instanceLength={currentContract.contractInstances?.length}
           />
         ))}
     </div>

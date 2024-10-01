@@ -16,6 +16,7 @@ import { setActiveContract } from "@/store/contract/contractSlice";
 import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 import { setActiveAction } from "@/store/action/actionSlice";
+import { getAllPackages } from "@/store/package/packageSlice";
 interface BonadocsEditorLayoutProps {}
 
 export const BonadocsEditorLayout: React.FC<
@@ -47,23 +48,24 @@ export const BonadocsEditorLayout: React.FC<
     dispatch(setLoadingScreen(true));
 
     if (projectId && teamId) {
-      const uriId = await initializeEditor({ projectId, teamId });
-      
-      
+      await initializeEditor({ projectId, teamId });
+      const uriId = `/projects/${teamId}/collections/${projectId}`;
+
       if (uriId !== contract.uri) {
         dispatch(setMethodItem({} as MethodItem));
         dispatch(setMethodDisplayData([]));
         dispatch(setActiveContract({} as ContractItem));
         dispatch(setTransactionOverrides([]));
+        await dispatch(getAllPackages(getCollection()!));
       }
     } else if (uri) {
-      console.log(contract, 'contract');
       await initializeEditor({ uri: uri! });
       if (queryParams.get("uri") !== contract.uri) {
         dispatch(setMethodItem({} as MethodItem));
         dispatch(setMethodDisplayData([]));
         dispatch(setActiveContract({} as ContractItem));
         dispatch(setTransactionOverrides([]));
+        await dispatch(getAllPackages(getCollection()!));
       }
     }
 

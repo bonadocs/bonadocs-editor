@@ -1,19 +1,20 @@
-import { Tab } from '@/components/tab/Tab';
-import React from 'react';
+import { Tab } from "@/components/tab/Tab";
+import React, { useState } from "react";
+import { BonadocsEditorActionsModalPackageDelete } from "../BonadocsEditorActionsModalPackageDelete/BonadocsEditorActionsModalPackageDelete";
 
 interface BonadocsEditorActionsModalPackageAddListItemProp {
-    name: string;
+  name: string;
 }
 export const BonadocsEditorActionsModalPackageAddListItem: React.FC<
   BonadocsEditorActionsModalPackageAddListItemProp
-> = () => {
-  // Your component logic here
+> = ({ name }) => {
+  const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
 
   return (
     <div
       className={`bonadocs__editor__dashboard__playground__package__list__children__item`}
     >
-      ethers
+      {name}
       <Tab
         className="bonadocs__editor__dashboard__playground__package__list__children__item__tab"
         type="package"
@@ -32,9 +33,10 @@ export const BonadocsEditorActionsModalPackageAddListItem: React.FC<
         color="blue"
         children="CJS"
       />
-      <>
+
+      {name !== "ethers" && (
         <svg
-          //   onClick={() => setOpenDeleteModal(!openDeleteModal)}
+          onClick={() => setOpenDeleteModal(!openDeleteModal)}
           className="bonadocs__editor__dashboard__playground__package__list__children__item__img"
           width="16"
           height="16"
@@ -73,12 +75,13 @@ export const BonadocsEditorActionsModalPackageAddListItem: React.FC<
             stroke-linejoin="round"
           />
         </svg>
-      </>
-      {/* <BonadocsEditorViewActionsModalDelete
-          show={openDeleteModal}
-          closeDeleteModal={() => setOpenDeleteModal(!openDeleteModal)}
-          actionItem={collectionActions.find((action) => action.id === id)!}
-        />  */}
+      )}
+
+      <BonadocsEditorActionsModalPackageDelete
+        show={openDeleteModal}
+        closeDeleteModal={() => setOpenDeleteModal(!openDeleteModal)}
+        name={name}
+      />
     </div>
   );
 };

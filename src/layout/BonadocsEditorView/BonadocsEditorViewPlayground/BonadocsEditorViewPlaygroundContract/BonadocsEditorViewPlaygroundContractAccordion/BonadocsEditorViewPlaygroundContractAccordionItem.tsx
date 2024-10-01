@@ -12,6 +12,7 @@ import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { setMethodViewValue } from "@/store/method/methodSlice";
+import { useParams, useSearchParams } from "react-router-dom";
 interface BonadocsEditorViewPlaygroundContractAccordionItemProps {
   index: number;
   contractItem: ContractItem;
@@ -24,6 +25,10 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
   const writeMethod = useSelector(
     (state: RootState) => state.controlBoard.writeMethod
   );
+  const [queryParameters] = useSearchParams();
+  const uri = queryParameters.get("uri");
+  const { projectId, id } = useParams();
+  const teamId = id;
   const method = useSelector((state: RootState) => state.method.methodItem);
   const { getCollection, emptyResponse } = useCollectionContext();
   async function setActiveMethod(
@@ -41,19 +46,32 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
       setMethodItem({
         // collection: getCollection()!,
         // methodItem: {
-          name: methodName,
-          fragmentKey,
-          contractId,
-          instances: contractItem.instances,
-          docs: methodDocs,
-          readMethod,
+        name: methodName,
+        fragmentKey,
+        contractId,
+        instances: contractItem.instances,
+        docs: methodDocs,
+        readMethod,
         // },
       })
     );
 
     dispatch(setMethodViewValue({ collection: getCollection()! }));
 
-    dispatch(setActiveContract(contractItem));
+    if (projectId && teamId) {
+      dispatch(
+        setActiveContract({
+          ...contractItem,
+          uri: `/projects/${teamId}/collections/${projectId}`,
+        })
+      );
+    } else if (uri) {
+      setActiveContract({
+        ...contractItem,
+        uri,
+      });
+    }
+
     if (method.fragmentKey !== fragmentKey) {
       dispatch(setTransactionOverrides([]));
       emptyResponse();

@@ -6,17 +6,20 @@ import { toast } from "react-toastify";
 interface PackageState {
   name: string;
   version: string;
-  versionList: Option[];
+  versionList?: Option[];
 }
 
 interface PackageDetails {
-  versions: Array<PackageState>;
-  currentVersion: string;
+  versions?: Array<PackageState>;
+  currentVersion?: string;
+  name?: string;
+  collection?: CollectionDataManager;
 }
 
 interface UpdatePackageVersion {
   collection: CollectionDataManager;
   packageVersion: string;
+  name: string;
 }
 
 const initialState = {
@@ -30,58 +33,33 @@ const packageSlice = createSlice({
   name: "package",
   initialState,
   reducers: {
-    setCurrentPackage: (state, action: PayloadAction<string>) => {
-      state.collectionPackages[0].version = action.payload;
+    setPackages: (state, action: PayloadAction<Array<PackageState>>) => {
+      state.collectionPackages = action.payload;
     },
     setCurrentPackageVersion: (state, action: PayloadAction<string>) => {
       state.collectionPackages[0].version = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(getLatestEthersVersion.pending, () => {})
-      .addCase(
-        getLatestEthersVersion.fulfilled,
-        (state, action: PayloadAction<PackageDetails | any>) => {
-          if (action.payload) {
-            const versions = action.payload;
-            state.collectionPackages[0].versionList = versions.map(
-              (item: any) => ({
-                label: item.version,
-                value: item.version,
-              })
-            );
-          }
-        }
-      );
-
-    builder
-      .addCase(setCurrentPackageVersion.pending, () => {})
-      .addCase(
-        setCurrentPackageVersion.fulfilled,
-        (state, action: PayloadAction<string | undefined>) => {
-          state.collectionPackages[0].version = action.payload!;
-        }
-      );
   },
 });
 
 export const setCurrentPackageVersion = createAsyncThunk(
   "package/setCurrentPackageVersion",
   async (updatePackageVersion: UpdatePackageVersion, thunkAPI) => {
-    const { collection, packageVersion } = updatePackageVersion;
+    const { collection, packageVersion, name } = updatePackageVersion;
     const state = thunkAPI.getState() as any;
-    const packageName = state.package.collectionPackages[0].name;
+    const currentPackage = state.package.collectionPackages.find(
+      (item: PackageState) => item.name === name
+    );
     try {
       await collection.valueManagerView.removeLibrary(
         "js",
-        `${packageName}@${state.package.collectionPackages[0].version}`
+        `${name}@${currentPackage.version}`
       );
       await collection.valueManagerView.addLibrary(
         "js",
-        `${packageName}@${packageVersion}`
+        `${name}@${packageVersion}`
       );
-      return packageVersion;
+      thunkAPI.dispatch(getAllPackages(collection));
     } catch (error) {
       console.error("Error updating package version:", error);
       toast.error("Error updating package version");
@@ -89,20 +67,105 @@ export const setCurrentPackageVersion = createAsyncThunk(
   }
 );
 
-export const getLatestEthersVersion = createAsyncThunk(
-  "package/getLatestEthersVersion",
+export const getAllPackages = createAsyncThunk(
+  "package/getAllPackages",
   async (collection: CollectionDataManager, { dispatch }) => {
     const regex = /^([^@]+)@(.+)$/;
 
-    let currentVersion;
-    collection.valueManagerView.getLibraries("js").find((library) => {
+    let currentVersion: string;
+    let packageName: string;
+    let packageList: Array<PackageState> = [];
+
+    collection.valueManagerView.getLibraries("js").map(async (library) => {
       const matches = library.match(regex);
 
-      if (matches && matches[1] === "ethers") {
+      if (matches) {
         currentVersion = matches[2];
+        packageName = matches[1];
+
+        packageList.push({
+          name: packageName,
+          version: currentVersion,
+        });
       }
     });
-    const packageName = "ethers";
+
+    if (!packageList.find((item) => item.name === "ethers")) {
+      console.log("ethers not found");
+      try {
+        const response = await fetch(
+          `https://data.jsdelivr.com/v1/packages/npm/ethers`
+        );
+        const data = await response.json();
+
+        const versions = data["versions"];
+
+        await collection.valueManagerView.addLibrary(
+          "js",
+          `$ethers@${versions[0].version.slice()}`
+        );
+        packageList.push({
+          name: "ethers",
+          version: versions[0].version.slice(),
+        });
+        console.log("ethers added");
+      } catch (error) {
+        console.error("Error setting custom package:", error);
+        toast.error("Error setting custom package");
+      }
+    }
+
+    dispatch(setPackages(packageList));
+  }
+);
+
+export const addCustomPackage = createAsyncThunk(
+  "package/setCustomPackage",
+  async (packageDetails: PackageDetails, { dispatch }) => {
+    const { name, currentVersion, collection } = packageDetails;
+
+    try {
+      await collection?.valueManagerView.addLibrary(
+        "js",
+        `${name}@${currentVersion}`
+      );
+
+      toast.success("Package set successfully");
+
+      dispatch(getAllPackages(collection!));
+    } catch (error) {
+      console.error("Error setting custom package:", error);
+      toast.error("Error setting custom package");
+    }
+  }
+);
+
+export const deleteCustomPackage = createAsyncThunk(
+  "package/setCustomPackage",
+  async (packageDetails: PackageDetails, { dispatch, getState }) => {
+    const state = getState() as any;
+    const { name, collection } = packageDetails;
+
+    const currentPackage = state.package.collectionPackages.find(
+      (item: PackageState) => item.name === name
+    );
+
+    try {
+      await collection?.valueManagerView.removeLibrary(
+        "js",
+        `${name}@${currentPackage.version}`
+      );
+      dispatch(getAllPackages(collection!));
+    } catch (error) {
+      console.error("Error setting custom package:", error);
+      toast.error("Error setting custom package");
+    }
+  }
+);
+
+export const packageVersions = createAsyncThunk(
+  "package/packageVersions",
+  async (packageName: string, { dispatch }) => {
     try {
       const response = await fetch(
         `https://data.jsdelivr.com/v1/packages/npm/${packageName}`
@@ -110,28 +173,15 @@ export const getLatestEthersVersion = createAsyncThunk(
       const data = await response.json();
 
       const versions = data["versions"];
-      
-      if (currentVersion) {
-        await collection.valueManagerView.addLibrary(
-          "js",
-          `${packageName}@${currentVersion}`
-        );
-        dispatch(setCurrentPackage(currentVersion));
-      } else {
-        await collection.valueManagerView.addLibrary(
-          "js",
-          `${packageName}@${versions[0].version.slice()}`
-        );
-        dispatch(setCurrentPackage(versions[0].version.slice()));
-      }
 
       return versions;
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error setting custom package:", error);
+      toast.error("Error setting custom package");
     }
   }
 );
 
-export const { setCurrentPackage } = packageSlice.actions;
+export const { setPackages } = packageSlice.actions;
 
 export default packageSlice.reducer;

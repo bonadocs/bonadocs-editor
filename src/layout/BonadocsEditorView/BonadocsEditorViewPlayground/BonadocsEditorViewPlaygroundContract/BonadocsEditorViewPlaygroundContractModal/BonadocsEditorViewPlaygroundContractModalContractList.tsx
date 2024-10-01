@@ -43,12 +43,12 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   const [contractList, setContractList] = React.useState<ContractsState[]>([]);
 
   useEffect(() => {
-    if (tempContracts[0].name !== "" && tempContracts.length > 0) {
-      setContractList(tempContracts);
-    } else {
+    // if (tempContracts[0].name !== "" && tempContracts.length > 0) {
+    //   setContractList(tempContracts);
+    // } else {
       dispatch(setContracts(UIContracts));
       setContractList(UIContracts);
-    }
+   // }
   }, []);
 
   return (

@@ -21,12 +21,14 @@ import _ from "lodash";
 
 interface BonadocsEditorProjectsCreationActionContractInstanceSelectedItemProps {
   instance: ContractInstance;
+  instanceLength?: number;
 }
 
 export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: React.FC<
   BonadocsEditorProjectsCreationActionContractInstanceSelectedItemProps
-> = ({ instance }) => {
+> = ({ instance, instanceLength }) => {
   const dispatch = useDispatch<AppDispatch>();
+  
   const options: Option[] = [
     {
       value: "Verified",
@@ -43,7 +45,9 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   ];
 
   const contractAddress = useRef(instance.address);
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(
+    instanceLength === 1 ? true : false
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
   const [localVerification, setLocalVerification] = useState<boolean>(
@@ -68,7 +72,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.value, "e.target.value");
-    
+
     let instances = currentContract.contractInstances?.slice();
     const newInstance: ContractInstance = {
       ...instance,
@@ -112,10 +116,9 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
 
   const loadABI = useCallback(
     _.debounce(async (address?: string) => {
-      
       const EVMaddress = address ?? contractAddress.current;
       console.log(EVMaddress, "EVMaddress", localVerification);
-      
+
       if (EVMaddress?.length === 42 && localVerification) {
         setLoading(true);
         getApi()
@@ -144,6 +147,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   useEffect(() => {
     setLocalVerification(instance.verification ?? true);
   }, [instance.verification]);
+
+ 
 
   return (
     <>
@@ -202,7 +207,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
                 })
               );
               dispatch(updateContractInstances(instances!));
-              
+
               loadABI(e.target.value);
             }}
           />

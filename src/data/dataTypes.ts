@@ -112,6 +112,7 @@ export type WorkflowItem = {
   workflowName?: string;
   workflowId?: string;
   workflowDocs?: string;
+  workflowChainId?: number;
 };
 
 export type WorkflowCodeItem = {
