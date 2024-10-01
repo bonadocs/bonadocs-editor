@@ -102,13 +102,15 @@ export const getAllPackages = createAsyncThunk(
 
         await collection.valueManagerView.addLibrary(
           "js",
-          `$ethers@${versions[0].version.slice()}`
+          `ethers@${versions[0].version.slice()}`
         );
+        
+        
         packageList.push({
           name: "ethers",
           version: versions[0].version.slice(),
         });
-        console.log("ethers added");
+        console.log("ethers added", packageList);
       } catch (error) {
         console.error("Error setting custom package:", error);
         toast.error("Error setting custom package");
