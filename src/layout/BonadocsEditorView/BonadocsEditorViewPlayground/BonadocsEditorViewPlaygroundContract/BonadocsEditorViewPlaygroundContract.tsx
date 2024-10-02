@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BonadocsEditorViewPlaygroundContractAccordionList } from "./BonadocsEditorViewPlaygroundContractAccordion/BonadocsEditorViewPlaygroundContractAccordionList";
 import { RootState } from "@/store";
@@ -49,20 +49,21 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
     };
   });
 
-  // const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    console.log(isOpen);
+    const handleBeforeUnload = (event: any) => {
+      if (isOpen) {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    };
 
-  // useEffect(() => {
-  //   const element = ref.current!;
+    window.addEventListener("beforeunload", handleBeforeUnload);
 
-  //   setIsOverflown(element.scrollWidth > element.clientWidth);
-  //   const handleResize = () => {
-  //     setIsOverflown(element.scrollWidth > element.clientWidth);
-  //   };
-  //   window.addEventListener("resize", handleResize);
-  //   return () => {
-  //     window.removeEventListener("resize", handleResize);
-  //   };
-  // }, []);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isOpen]);
 
   return (
     <div className={className}>
@@ -76,7 +77,7 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
 
         <img
           onClick={() => {
-             isOpen && setContracts(UIContracts);
+            isOpen && setContracts(UIContracts);
             setIsOpen(!isOpen);
           }}
           src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1720750528/Icon_Edit_kvkncx.svg"

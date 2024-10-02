@@ -14,6 +14,7 @@ import {
 import { AppDispatch, RootState } from "@/store";
 import { set } from "lodash";
 import { BonadocsEditorProjectsCreationActionContractDeleteModal } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationActionContract/BonadocsEditorProjectsCreationActionContractModal/BonadocsEditorProjectsCreationActionContractDeleteModal";
+import { toast } from "react-toastify";
 
 interface BonadocsEditorViewPlaygroundContractModalContractItemProps {
   contractItem: ContractsState;
@@ -38,6 +39,12 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
 
   const handleDeleteContract = async () => {
     const currentContractId = contracts.indexOf(contractItem);
+    console.log("currentContractId", currentContractId);
+    if (currentContractId === 0) {
+      toast.error("You require at least one contract in the playground");
+      return;
+    }
+    
     let list = await dispatch(deletePlaygroundContract(currentContractId));
     handleUpdate(list.payload as ContractsState[]);
   };

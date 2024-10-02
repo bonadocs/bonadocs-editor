@@ -17,13 +17,17 @@ import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 import { setActiveAction } from "@/store/action/actionSlice";
 import { getAllPackages } from "@/store/package/packageSlice";
+import { get } from "lodash";
 interface BonadocsEditorLayoutProps {}
 
 export const BonadocsEditorLayout: React.FC<
   BonadocsEditorLayoutProps
 > = ({}) => {
   const { initializeEditor, getCollection } = useCollectionContext();
-  const collectionName = getCollection()?.data.name ?? "";
+  let collectionName;
+  if (getCollection()) {
+    collectionName = getCollection()?.data.name;
+  }
   const [queryParameters] = useSearchParams();
   const dispatch: AppDispatch = useDispatch();
   const [display, setDisplay] = useState<boolean>(false);

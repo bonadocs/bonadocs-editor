@@ -46,6 +46,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
 > = ({ className, show, closeProjectModal }) => {
   const { getCollection, reloadFunction } = useCollectionContext();
   const [open, isOpen] = useState<boolean>(false);
+  const [reloadWarning, setReloadWarning] = useState<boolean>(true);
   const [addContract, setAddContract] = useState<boolean>(false);
   const [projectName, setProjectName] = useState<string>(
     getCollection()?.data.name ?? ""
@@ -95,7 +96,6 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
     if (submitRef.current) {
       const addContractValid: boolean | void =
         await submitRef.current.submitContract();
-   
 
       if (typeof addContractValid === "boolean") {
         addContractValid && setAddContract(!addContract);
@@ -171,6 +171,10 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
       // dispatch(reset());
     };
   }, []);
+
+  
+
+
 
   return (
     <>
@@ -367,7 +371,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
         closeDeleteModal={() => setOpenCancelModal(!openCancelModal)}
         closeEditModal={() => {
           setOpenCancelModal(!openCancelModal);
-          closeModal()
+          closeModal();
         }}
       />
     </>

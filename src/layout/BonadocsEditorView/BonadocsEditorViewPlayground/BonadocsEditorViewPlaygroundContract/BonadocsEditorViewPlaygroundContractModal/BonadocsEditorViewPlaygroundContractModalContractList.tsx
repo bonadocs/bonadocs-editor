@@ -4,7 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { setContracts, reset } from "@/store/project/projectSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
-import { ContractsState } from "@/data/dataTypes";
+import { ContractInstance, ContractsState } from "@/data/dataTypes";
+import _ from "lodash";
+
 interface BonadocsEditorViewPlaygroundContractModalContractListProps {
   searchValue: string;
   show: boolean;
@@ -43,48 +45,37 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   });
   const [contractList, setContractList] = React.useState<ContractsState[]>([]);
 
-  useEffect(() => {
-    // if (isInitialRender.current) {
-    //   isInitialRender.current = false;
-    //   console.log("update 0", tempContracts);
-    // } else {
-    //   console.log("update", tempContracts);
-    //   setContractList(tempContracts);
-    //   dispatch(setContracts(tempContracts));
-    // }
-    // if (tempContracts && tempContracts.length > 0) {
-    // else {
-    // dispatch(setContracts(UIContracts));
-    // setContractList(UIContracts);
-    //}
-  }, []);
+  const emptyContract = {
+    id: "0",
+    name: "",
+    interfaceHash: "",
+    instances: [],
+  };
 
-  // useEffect(() => {
-  //   setContractList(UIContracts);
-  //   dispatch(setContracts(UIContracts));
-
-  //   return () => {
-  //     dispatch(setContracts([]));
-  //     setContractList([]);
-  //   };
-  // }, []);
+  const emptyContracts: ContractsState[] = [
+    {
+      ...emptyContract,
+      description: "",
+      abi: "",
+      contractInstances: [] as ContractInstance[],
+    },
+  ];
 
   useEffect(() => {
     if (show)
       if (tempContracts && tempContracts.length > 0) {
-        if (tempContracts[0].name) {
-//           console.log("temp");
-// console.log(tempContracts);
-          setContractList(tempContracts);
-        } else {
-          // console.log(tempContracts);
-          
-          console.log("original clone");
+        if (_.isEqual(tempContracts[0], emptyContracts[0])) {
+          // console.log("original clone");
           dispatch(setContracts(UIContracts));
           setContractList(UIContracts);
+        } else {
+          // console.log("tempContracts");
+          console.log(tempContracts);
+          
+          setContractList(tempContracts);
         }
       } else {
-        console.log("original");
+        // console.log("original");
         dispatch(setContracts(UIContracts));
         setContractList(UIContracts);
       }

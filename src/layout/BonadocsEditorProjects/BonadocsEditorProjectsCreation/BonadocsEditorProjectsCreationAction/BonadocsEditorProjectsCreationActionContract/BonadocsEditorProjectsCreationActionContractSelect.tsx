@@ -46,7 +46,7 @@ export const BonadocsEditorProjectsCreationActionContractSelect: React.FC =
       
       if (currentContract) {
         setContractInstances(currentContract.contractInstances!);
-        console.log(currentContract, contracts);
+       
       }
     }, [currentContract]);
 

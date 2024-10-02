@@ -58,7 +58,7 @@ export const BonadocsEditorViewPlaygroundContractModalCancel: React.FC<
       <div className="modal__container">
         <h3 className="modal__container__title">Close Edit modal</h3>
         <div className="modal__container__text">
-          Are you still editing? If yes, click on the Update Contracts to save before
+          Are you still editing? If yes, click on the Update Contracts button to save before
           closing.
         </div>
         <div className="modal__container__wrapper">
