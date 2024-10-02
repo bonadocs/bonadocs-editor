@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store";
-import { getLatestEthersVersion } from "@/store/package/packageSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
 import { Tab } from "@/components/tab/Tab";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { ReactComponent as EditIcon } from "@/assets/action/edit.svg";
@@ -19,8 +18,12 @@ export const BonadocsEditorViewsActionsPackagesSidebarChildrenItem: React.FC<
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const dispatch: AppDispatch = useDispatch();
   const { getCollection } = useCollectionContext();
+  const currentEthersPackage = useSelector(
+    (state: RootState) => state.package.collectionPackages[0].version
+  );
   useEffect(() => {
-    dispatch(getLatestEthersVersion(getCollection()!));
+    // if (currentEthersPackage) return;
+    // dispatch(getLatestEthersVersion(getCollection()!));
   }, []);
   return (
     <div
@@ -43,6 +46,7 @@ export const BonadocsEditorViewsActionsPackagesSidebarChildrenItem: React.FC<
         closeEditModal={() => setOpenEditModal(!openEditModal)}
         show={openEditModal}
         selectedValue={version}
+        name={name}
       />
     </div>
   );

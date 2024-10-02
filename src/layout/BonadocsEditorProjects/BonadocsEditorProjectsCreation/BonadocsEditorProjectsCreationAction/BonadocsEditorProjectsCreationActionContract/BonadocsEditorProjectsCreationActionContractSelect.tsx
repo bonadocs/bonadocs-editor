@@ -5,8 +5,9 @@ import { AppDispatch, RootState } from "@/store";
 import {
   updateContractInstances,
   setCurrentContract,
+  setContracts,
 } from "@/store/project/projectSlice";
-import { ContractInstance } from "@/data/dataTypes";
+import { ContractInstance, ContractsState } from "@/data/dataTypes";
 import { BonadocsEditorProjectsCreationActionContractInstanceDeleteModal } from "./BonadocsEditorProjectsCreationActionContractModal/BonadocsEditorProjectsCreationActionContractInstanceDeleteModal";
 
 export const BonadocsEditorProjectsCreationActionContractSelect: React.FC =
@@ -42,22 +43,28 @@ export const BonadocsEditorProjectsCreationActionContractSelect: React.FC =
     };
 
     useEffect(() => {
+      
       if (currentContract) {
         setContractInstances(currentContract.contractInstances!);
+       
       }
     }, [currentContract]);
+
     return (
       <div className="bonadocs__editor__projects__action__select">
         <div className="bonadocs__editor__projects__action__select__inner">
           <div className="bonadocs__editor__projects__action__select__inner__network">
-            {contracts[Number(currentContract.id)].contractInstances?.length ===
+            {currentContract.id && contracts[Number(currentContract.id)].contractInstances?.length ===
               0 && (
               <h4 className="bonadocs__editor__projects__action__select__inner__network__placeholder">
                 Click "+" icon to add address
               </h4>
             )}
             {contractInstances?.map((instance, index) => (
-              <div key={index} className="bonadocs__editor__projects__action__select__inner__network__item">
+              <div
+                key={index}
+                className="bonadocs__editor__projects__action__select__inner__network__item"
+              >
                 <img src={instance.logo} />
                 <div className="bonadocs__editor__projects__action__select__inner__network__item__name">
                   {instance.name}

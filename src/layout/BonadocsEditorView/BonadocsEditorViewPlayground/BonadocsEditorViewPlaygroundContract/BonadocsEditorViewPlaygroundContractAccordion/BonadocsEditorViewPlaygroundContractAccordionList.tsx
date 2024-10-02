@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { BonadocsEditorViewPlaygroundContractAccordionItem } from "./BonadocsEditorViewPlaygroundContractAccordionItem";
@@ -11,6 +11,9 @@ export const BonadocsEditorViewPlaygroundContractAccordionList: React.FC<
 > = ({ className }) => {
   const contracts = useSelector(
     (state: RootState) => state.contract.collectionContracts
+  );
+  const contractEdit = useSelector(
+    (state: RootState) => state.contract.contractEdit
   );
 
   return (

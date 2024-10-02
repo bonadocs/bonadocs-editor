@@ -71,15 +71,15 @@ export const BonadocsEditorViewPlaygroundContractModalAddContract = forwardRef<
         );
       }
       if (abiContract) {
-        console.log(abiContract, "abiContract");
-
         const valid = await dispatch(
           addPlaygroundContractValidation(abiContract)
         );
+        
         if (
           !(valid.payload as { message: string; status: boolean } | undefined)
             ?.status
         ) {
+          
           toast.error((valid.payload as any)?.message);
           return false;
         } else dispatch(addContract(abiContract));
@@ -112,7 +112,6 @@ export const BonadocsEditorViewPlaygroundContractModalAddContract = forwardRef<
           }
 
           setLoading(false);
-          console.log(abi, "abi", contract);
 
           return true;
         })

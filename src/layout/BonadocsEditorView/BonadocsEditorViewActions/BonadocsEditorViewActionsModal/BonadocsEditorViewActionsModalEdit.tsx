@@ -11,7 +11,9 @@ import { toast } from "react-toastify";
 import MoonLoader from "react-spinners/ClipLoader";
 import { validateString } from "@/data/variables/variableValidation";
 import { renameWorkflowAction } from "@/store/action/actionSlice";
-
+import { Dropdown } from "@/components/dropdown/Dropdown";
+import { supportedChains } from "@bonadocs/core";
+import _ from "lodash";
 interface BonadocsEditorViewActionsModalEditProps {
   className?: string;
   show?: boolean;
@@ -37,26 +39,51 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
       return;
     }
 
-    if (actionItem.name !== actionName) {
+
+    
+
+    // if (actionItem.name !== actionName) {
       await dispatch(
         renameWorkflowAction({
           collection: getCollection()!,
           workflowName: actionName,
           workflowId: actionItem.id,
+          workflowChainId: selectedChainId,
         })
       );
-    }
+    // }
     setLoading(false);
     closeModal();
   };
 
+  const options = Array.from(supportedChains).map((instance) => {
+    return {
+      label: instance[1].name,
+      value: instance[1].chainId,
+    };
+  });
+
+  const currentChain = getCollection()?.valueManagerView.getString(
+    `workflow-chain-id-${actionItem.id}`
+  );
+
+  // console.log(currentChain, "currentChain", actionItem);
+
+  const [selectedChainId, setSelectedChainId] = useState<number>(
+    Number(currentChain) ?? (options[0].value as number)
+  );
+
   useEffect(() => {
     isOpen(show ?? false);
+  
+     setSelectedChainId(Number(currentChain));
   }, [show]);
 
   useEffect(() => {
     setActionName(actionItem.name);
   }, [actionItem]);
+
+  
 
   const closeModal = () => {
     isOpen(!open);
@@ -105,6 +132,15 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
             setActionName(event.target.value);
           }}
           value={actionName}
+        />
+
+        <div className="modal__container__text">Action network</div>
+
+        <Dropdown
+          options={options}
+          updateId={(e) => setSelectedChainId(Number(e.target.value))}
+          className="modal__container__dropdown"
+          selectedValue={selectedChainId}
         />
 
         <div className="modal__container__wrapper">

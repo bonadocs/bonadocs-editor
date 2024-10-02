@@ -83,7 +83,6 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
     if (currentContract) {
       setContractInstances(currentContract.contractInstances!);
       setContractAbi(currentContract.abi!);
-      
     }
   }, [currentContract]);
 
@@ -202,7 +201,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
                 />
                 <svg
                   onClick={() => {
-                    setOpenNetworkList(!openNetworkList);
+                    setSearch("");
                   }}
                   className="modal__side__close__img"
                   width="24"
@@ -229,7 +228,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
               </div>
 
               <BonadocsEditorProjectsCreationActionContractNetworkList
-                searchValue={search}
+                searchValue={search.trim()}
               />
               <Button
                 className="modal__side__container__search__button"

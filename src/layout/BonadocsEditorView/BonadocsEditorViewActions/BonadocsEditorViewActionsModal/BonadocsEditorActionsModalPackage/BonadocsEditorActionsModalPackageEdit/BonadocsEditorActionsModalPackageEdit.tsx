@@ -10,7 +10,12 @@ import { SelectInput } from "@/components/input/SelectInput";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { useCollectionContext } from "@/context/CollectionContext";
-import { setCurrentPackageVersion } from "@/store/package/packageSlice";
+import {
+  packageVersions,
+  setCurrentPackageVersion,
+} from "@/store/package/packageSlice";
+import { PersistPartial } from "redux-persist/es/persistReducer";
+import { Option } from "@/data/dataTypes";
 
 interface BonadocsEditorActionsModalPackageEditProps {
   className?: string;
@@ -18,34 +23,48 @@ interface BonadocsEditorActionsModalPackageEditProps {
   closeEditModal: () => void;
   actionItem?: ActionItem;
   selectedValue: string;
+  name?: string;
 }
 export const BonadocsEditorActionsModalPackageEdit: React.FC<
   BonadocsEditorActionsModalPackageEditProps
-> = ({ show, closeEditModal, actionItem, selectedValue }) => {
+> = ({ show, closeEditModal, actionItem, selectedValue, name }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, isOpen] = useState<boolean>(false);
   const [selectedPackage, setSelectedPackage] = useState<string>(selectedValue);
   const dispatch: AppDispatch = useDispatch();
   const { getCollection } = useCollectionContext();
+  const [versions, setVersions] = useState<Option[]>([]);
+
   const collectionPackages = useSelector(
-    (state: RootState) => state.package.collectionPackages
+    (state: RootState & PersistPartial) => state.package.collectionPackages
   );
 
-  const editPackage = async () => {
-    setLoading(true);
-
-    setLoading(false);
-    // closeModal();
+  const closeModal = () => {
+    isOpen(!open);
+    closeEditModal();
   };
 
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
 
-  const closeModal = () => {
-    isOpen(!open);
-    closeEditModal();
+  const getVersions = async () => {
+    const versionList = await dispatch(packageVersions(name!));
+    if (versionList.payload) {
+      const mappedVersions = versionList.payload.map((item: any) => ({
+        label: item.version,
+        value: item.version,
+      }));
+      setVersions(mappedVersions);
+      setSelectedPackage(mappedVersions[0].value);
+    }
   };
+
+  
+
+  useEffect(() => {
+    show && getVersions();
+  }, [show]);
 
   return (
     <Modal
@@ -81,7 +100,9 @@ export const BonadocsEditorActionsModalPackageEdit: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Edit Package Version</h3>
+        <h3 className="modal__container__title">
+          Edit Package Version - ({name})
+        </h3>
         <div className="modal__container__text">Package Version</div>
         <SelectInput
           handleInputChange={(item) => {
@@ -89,20 +110,20 @@ export const BonadocsEditorActionsModalPackageEdit: React.FC<
               setSelectedPackage(item.target.value);
             }
           }}
-          options={collectionPackages[0].versionList}
+          options={versions}
           selectedValue={selectedValue}
-          
         />
 
         <div className="modal__container__wrapper">
           <Button
-            disabled={loading}
+            disabled={loading || !selectedPackage}
             type="action"
             onClick={() => {
               dispatch(
                 setCurrentPackageVersion({
                   collection: getCollection()!,
                   packageVersion: selectedPackage,
+                  name: name!,
                 })
               );
               closeEditModal();

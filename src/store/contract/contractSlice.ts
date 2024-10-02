@@ -5,10 +5,12 @@ import { FunctionFragment } from "ethers";
 import { ContractItem, ContractItemDocs } from "@/data/dataTypes";
 import { REHYDRATE } from "redux-persist";
 import { RootState } from "..";
+import { act } from "react";
 
 const initialState = {
   collectionContracts: [] as Array<ContractItem>,
   currentContract: {} as ContractItem,
+  contractEdit: false as boolean,
 };
 
 interface ContractsDocsParams {
@@ -22,6 +24,9 @@ const contractSlice = createSlice({
   reducers: {
     setActiveContract: (state, action: PayloadAction<ContractItem>) => {
       state.currentContract = action.payload;
+    },
+    setContractEdit: (state, action: PayloadAction<boolean>) => {
+      state.contractEdit = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -53,9 +58,10 @@ const contractSlice = createSlice({
 export const fetchCollectionContracts = createAsyncThunk(
   "contract/fetchCollectionContracts",
   async (
-    setWorkflowParams: { collection: CollectionDataManager, uriId?: string },
-    { dispatch }
+    setWorkflowParams: { collection: CollectionDataManager; uriId?: string },
+    { dispatch, getState }
   ) => {
+    const state = getState() as RootState;
     const { collection, uriId } = setWorkflowParams;
     const collectionContracts: Array<ContractItem> = [];
     const contractList = [...collection?.data.contracts].map(
@@ -98,6 +104,7 @@ export const fetchCollectionContracts = createAsyncThunk(
         uri: queryParams.get("uri") ?? uriId,
       });
     }
+    dispatch(setContractEdit(!state.contract.contractEdit));
     return collectionContracts;
   }
 );
@@ -145,6 +152,6 @@ export const getActiveContractDocs = createAsyncThunk(
   }
 );
 
-export const { setActiveContract } = contractSlice.actions;
+export const { setActiveContract, setContractEdit } = contractSlice.actions;
 
 export default contractSlice.reducer;

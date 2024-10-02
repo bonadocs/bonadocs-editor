@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { BonadocsEditorViewPlaygroundContractModalContractItem } from "./BonadocsEditorViewPlaygroundContractModalContractItem";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
-import { setContracts } from "@/store/project/projectSlice";
+import { setContracts, reset } from "@/store/project/projectSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
-import { ContractsState } from "@/data/dataTypes";
+import { ContractInstance, ContractsState } from "@/data/dataTypes";
+import _ from "lodash";
+
 interface BonadocsEditorViewPlaygroundContractModalContractListProps {
   searchValue: string;
+  show: boolean;
 }
 
 export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   BonadocsEditorViewPlaygroundContractModalContractListProps
-> = ({ searchValue }) => {
+> = ({ searchValue, show }) => {
   const contracts = useSelector(
     (state: RootState) => state.contract.collectionContracts
   );
@@ -21,7 +24,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   );
 
   const { getCollection } = useCollectionContext();
-
+  const isInitialRender = useRef(true);
   const dispatch = useDispatch<AppDispatch>();
   const UIContracts = contracts.map((contract) => {
     const currentContract = getCollection()?.contractManagerView.getContract(
@@ -42,13 +45,40 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   });
   const [contractList, setContractList] = React.useState<ContractsState[]>([]);
 
+  const emptyContract = {
+    id: "0",
+    name: "",
+    interfaceHash: "",
+    instances: [],
+  };
+
+  const emptyContracts: ContractsState[] = [
+    {
+      ...emptyContract,
+      description: "",
+      abi: "",
+      contractInstances: [] as ContractInstance[],
+    },
+  ];
+
   useEffect(() => {
-    if (tempContracts[0].name !== "" && tempContracts.length > 0) {
-      setContractList(tempContracts);
-    } else {
-      dispatch(setContracts(UIContracts));
-      setContractList(UIContracts);
-    }
+    if (show)
+      if (tempContracts && tempContracts.length > 0) {
+        if (_.isEqual(tempContracts[0], emptyContracts[0])) {
+          // console.log("original clone");
+          dispatch(setContracts(UIContracts));
+          setContractList(UIContracts);
+        } else {
+          // console.log("tempContracts");
+          console.log(tempContracts);
+          
+          setContractList(tempContracts);
+        }
+      } else {
+        // console.log("original");
+        dispatch(setContracts(UIContracts));
+        setContractList(UIContracts);
+      }
   }, []);
 
   return (

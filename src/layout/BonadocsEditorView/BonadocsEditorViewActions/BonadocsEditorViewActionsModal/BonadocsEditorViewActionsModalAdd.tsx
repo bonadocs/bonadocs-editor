@@ -10,6 +10,8 @@ import { toast } from "react-toastify";
 import MoonLoader from "react-spinners/ClipLoader";
 import { validateString } from "@/data/variables/variableValidation";
 import { createWorkflowAction } from "@/store/action/actionSlice";
+import { Dropdown } from "@/components/dropdown/Dropdown";
+import { supportedChains } from "@bonadocs/core";
 
 interface BonadocsEditorViewActionsModalAddProps {
   className?: string;
@@ -23,9 +25,21 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
   const [loading, setLoading] = useState<boolean>(false);
   const [actionName, setActionName] = useState<string>("");
   const [open, isOpen] = useState<boolean>(false);
+  
   const dispatch: AppDispatch = useDispatch();
 
   const { getCollection } = useCollectionContext();
+
+  const options = Array.from(supportedChains).map((instance) => {
+    return {
+      label: instance[1].name,
+      value: instance[1].chainId,
+    };
+  });
+
+  const [selectedChainId, setSelectedChainId] = useState<number>(
+    options[0].value as number
+  );
 
   useEffect(() => {
     isOpen(show ?? false);
@@ -35,6 +49,7 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
     isOpen(!open);
     closeEditModal();
   };
+
   return (
     <Modal
       // className='dsds'
@@ -80,9 +95,17 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
           value={actionName}
         />
 
+        <div className="modal__container__text">Action network</div>
+
+        <Dropdown
+          options={options}
+          updateId={(e) => setSelectedChainId(Number(e.target.value))}
+          className="modal__container__dropdown"
+        />
+
         <div className="modal__container__wrapper">
           <Button
-            disabled={loading}
+            disabled={loading || actionName === "" || !selectedChainId} 
             type="action"
             onClick={() => {
               setLoading(true);
@@ -92,10 +115,13 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
                   toast.error("Action name is invalid");
                   return;
                 }
+          
+                
                 dispatch(
                   createWorkflowAction({
-                    workflowName: actionName.replace(/\s+/g, ''),
+                    workflowName: actionName.replace(/\s+/g, ""),
                     collection: getCollection()!,
+                    workflowChainId: selectedChainId,
                   })
                 );
                 setLoading(false);

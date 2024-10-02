@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { BonadocsEditorViewPlaygroundResultHeader } from "./BonadocsEditorViewPlaygroundResultHeader";
 import { useSelector } from "react-redux";
@@ -23,6 +23,8 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
   const collectionName = getCollection()?.data.name ?? "";
   const collectionDescription = getCollection()?.data.description ?? "";
   const dispatch = useDispatch<AppDispatch>();
+  const parentRef = useRef(null);
+  const [parentWidth, setParentWidth] = useState(0);
   const displayDoc = useSelector(
     (state: RootState) => state.controlBoard.playgroundState
   );
@@ -45,7 +47,25 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
     []
   );
 
-  
+  useEffect(() => {
+    // Function to update the width
+    const updateWidth = () => {
+      if (parentRef.current) {
+        // Measure the width of the parent component
+        const width = (parentRef.current as HTMLElement).getBoundingClientRect().width;
+        setParentWidth(width);
+      }
+    };
+
+    // Initial measurement
+    updateWidth();
+
+    // Add event listener to update width on window resize
+    window.addEventListener("resize", updateWidth);
+
+    // Cleanup event listener when the component unmounts
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   return (
     <div className={className}>
@@ -87,11 +107,14 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
             <BonadocsEditorViewPlaygroundResultContent />
           </>
         ) : (
-          <div>
+          <div ref={parentRef}>
             {response.length !== 0 && (
               <>
                 <BonadocsEditorViewPlaygroundResultTab />
-                <BonadocsEditorViewPlaygroundResultView response={response} />
+                <BonadocsEditorViewPlaygroundResultView
+                  response={response}
+                  parentWidth={parentWidth}
+                />
               </>
             )}
           </div>

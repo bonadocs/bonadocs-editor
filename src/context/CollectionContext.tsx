@@ -34,6 +34,7 @@ import { api } from "@/utils/axios";
 import { auth } from "@/utils/firebase.utils";
 import { getTeamById } from "@/store/team/teamSlice";
 import _ from "lodash";
+import { setContracts } from "@/store/project/projectSlice";
 
 // Create the context props
 interface CollectionContextProps {
@@ -112,6 +113,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const chainId = useSelector((state: RootState) => state.controlBoard.chainId);
   const transactionOverrides = useSelector(
     (state: RootState) => state.method.transactionOverrides
+  );
+  const contracts = useSelector(
+    (state: RootState) => state.contract.collectionContracts
   );
 
   // const provider = new ethers.BrowserProvider((window as any).ethereum);
@@ -313,8 +317,13 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     // // }
 
     initialConnection();
-    dispatch(fetchCollectionContracts({ collection: collectionRef.current! }));
+    await dispatch(
+      fetchCollectionContracts({ collection: collectionRef.current! })
+    );
     dispatch(fetchCollectionVariables(collectionRef.current!));
+
+    
+    
     return uriId!;
     // }
   };
@@ -516,12 +525,15 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
   async function executionWorkflowButton() {
     setWorkflowResponse("");
-    const activeNetwork = id?.length !== 0 && id !== null ? Number(id) : 1;
+    const activeNetwork = collectionRef.current?.valueManagerView.getString(
+      `workflow-chain-id-${currentAction.id}`
+    );
+
     try {
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
 
-      executor.setActiveChainId(activeNetwork);
+      executor.setActiveChainId(Number(activeNetwork));
 
       const res = await executor.run();
 
