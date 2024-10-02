@@ -62,7 +62,9 @@ export const BonadocsEditorProjects: React.FC = () => {
         <>
           <div className="bonadocs__editor__projects__inner__header">
             <Button
-              onClick={() => navigate(-1)}
+              onClick={() => navigate({
+                pathname: "/teams",
+              })}
               type="default"
               className="bonadocs__editor__projects__inner__header__button"
             >

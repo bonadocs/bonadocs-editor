@@ -49,7 +49,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
 
   useEffect(() => {
     if (currentContract) {
-      console.log("updated abi");
+      
       setContractABI(currentContract.abi!);
     }
   }, [currentContract]);

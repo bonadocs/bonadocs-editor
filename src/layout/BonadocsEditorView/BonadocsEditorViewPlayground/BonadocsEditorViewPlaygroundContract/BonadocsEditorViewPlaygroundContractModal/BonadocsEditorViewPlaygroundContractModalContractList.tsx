@@ -1,17 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { BonadocsEditorViewPlaygroundContractModalContractItem } from "./BonadocsEditorViewPlaygroundContractModalContractItem";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
-import { setContracts } from "@/store/project/projectSlice";
+import { setContracts, reset } from "@/store/project/projectSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { ContractsState } from "@/data/dataTypes";
 interface BonadocsEditorViewPlaygroundContractModalContractListProps {
   searchValue: string;
+  show: boolean;
 }
 
 export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   BonadocsEditorViewPlaygroundContractModalContractListProps
-> = ({ searchValue }) => {
+> = ({ searchValue, show }) => {
   const contracts = useSelector(
     (state: RootState) => state.contract.collectionContracts
   );
@@ -21,7 +22,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   );
 
   const { getCollection } = useCollectionContext();
-
+  const isInitialRender = useRef(true);
   const dispatch = useDispatch<AppDispatch>();
   const UIContracts = contracts.map((contract) => {
     const currentContract = getCollection()?.contractManagerView.getContract(
@@ -43,12 +44,50 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   const [contractList, setContractList] = React.useState<ContractsState[]>([]);
 
   useEffect(() => {
-    // if (tempContracts[0].name !== "" && tempContracts.length > 0) {
-    //   setContractList(tempContracts);
+    // if (isInitialRender.current) {
+    //   isInitialRender.current = false;
+    //   console.log("update 0", tempContracts);
     // } else {
-      dispatch(setContracts(UIContracts));
-      setContractList(UIContracts);
-   // }
+    //   console.log("update", tempContracts);
+    //   setContractList(tempContracts);
+    //   dispatch(setContracts(tempContracts));
+    // }
+    // if (tempContracts && tempContracts.length > 0) {
+    // else {
+    // dispatch(setContracts(UIContracts));
+    // setContractList(UIContracts);
+    //}
+  }, []);
+
+  // useEffect(() => {
+  //   setContractList(UIContracts);
+  //   dispatch(setContracts(UIContracts));
+
+  //   return () => {
+  //     dispatch(setContracts([]));
+  //     setContractList([]);
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    if (show)
+      if (tempContracts && tempContracts.length > 0) {
+        if (tempContracts[0].name) {
+//           console.log("temp");
+// console.log(tempContracts);
+          setContractList(tempContracts);
+        } else {
+          // console.log(tempContracts);
+          
+          console.log("original clone");
+          dispatch(setContracts(UIContracts));
+          setContractList(UIContracts);
+        }
+      } else {
+        console.log("original");
+        dispatch(setContracts(UIContracts));
+        setContractList(UIContracts);
+      }
   }, []);
 
   return (

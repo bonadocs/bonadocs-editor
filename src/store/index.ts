@@ -15,7 +15,7 @@ import { persistReducer, persistStore } from "redux-persist";
 const rootPersistConfig = {
   key: "root",
   storage,
-  blacklist: [ "action"],
+  blacklist: [ "action", "project"],
 };
 const methodPersistConfig = {
   key: "method",

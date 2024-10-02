@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Accordion } from "@/components/accordion/Accordion";
 import { ContractItem } from "@/data/dataTypes";
 import { useDispatch } from "react-redux";
@@ -86,6 +86,8 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
 
     return writeMethod ? filterMethodItem(false) : filterMethodItem(true);
   };
+
+
   return (
     <Accordion
       setActiveItem={setActiveMethod}

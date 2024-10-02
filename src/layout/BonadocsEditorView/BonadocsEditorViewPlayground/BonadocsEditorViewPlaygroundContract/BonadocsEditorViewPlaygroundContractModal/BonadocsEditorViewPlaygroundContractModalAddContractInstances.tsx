@@ -83,7 +83,7 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstances: Reac
             setSearchNetwork(e.target.value);
           }}
           value={searchNetwork}
-          placeholder="Search contract instances"
+          placeholder="Search networks"
         />
       </div>
       <div className="bonadocs__editor__projects__creation__selection__instances__list">

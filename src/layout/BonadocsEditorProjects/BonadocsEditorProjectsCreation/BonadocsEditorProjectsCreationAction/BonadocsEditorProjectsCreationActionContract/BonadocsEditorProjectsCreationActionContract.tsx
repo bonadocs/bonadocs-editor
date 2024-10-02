@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { BonadocsEditorProjectsCreationActionContractItem } from "./BonadocsEditorProjectsCreationActionContractItem";
 import { BonadocsEditorProjectsCreationActionContractPagination } from "./BonadocsEditorProjectsCreationActionContractPagination";
@@ -6,6 +6,7 @@ import { BonadocsEditorProjectsCreationActionContractDeleteModal } from "./Bonad
 import {
   addEmptyContract,
   deleteContract,
+  setContracts,
   setCurrentContract,
 } from "@/store/project/projectSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +27,12 @@ export const BonadocsEditorProjectsCreationActionContract: React.FC = () => {
     dispatch(deleteContract(currentContractId));
     dispatch(setCurrentContract(contracts[currentContractId - 1]));
   };
+
+  // useEffect(() => {
+  //    console.log('clear');
+     
+  //    dispatch(setContracts([]));
+  //  }, []);
 
   return (
     <div className="bonadocs__editor__projects__action__contract">

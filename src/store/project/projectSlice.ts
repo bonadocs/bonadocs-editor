@@ -33,6 +33,7 @@ const contracts: ContractsState[] = [
 const initialState = {
   projectItem: {} as ProjectItem,
   contracts: contracts,
+  editContracts: [] as ContractsState[],
   currentContract: contracts[0] as ContractsState,
   projectView: true as boolean,
   projectList: [] as Array<ProjectItem>,
@@ -51,7 +52,7 @@ interface updateContractListParams {
 }
 
 const projectSlice = createSlice({
-  name: "method",
+  name: "project",
   initialState,
   reducers: {
     reset: () => initialState,
@@ -103,6 +104,7 @@ const projectSlice = createSlice({
     },
     setContracts: (state, action: PayloadAction<ContractsState[]>) => {
       state.contracts = action.payload;
+      
     },
     updateContract: (state, action: PayloadAction<ContractsState>) => {
       let contracts = state.contracts.slice();
@@ -213,8 +215,6 @@ export const updateProject = createAsyncThunk(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}/data`
       );
 
-      
-
       // return projects.data.data;
     } catch (err: any) {
       toast.error(err.response.data.message);
@@ -231,7 +231,6 @@ export const getProjectData = createAsyncThunk(
       const projectData = await api.get(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}/data`
       );
-     
 
       // return projects.data.data;
     } catch (err: any) {
@@ -257,7 +256,6 @@ export const saveProject = createAsyncThunk(
           collectionData: collection.data,
         }
       );
-     
 
       // return projects.data.data;
     } catch (err: any) {
@@ -275,7 +273,6 @@ export const getProjectLink = createAsyncThunk(
       const projectData = await api.get(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}`
       );
-   
 
       // return projects.data.data;
     } catch (err: any) {
@@ -290,11 +287,10 @@ export const deleteProject = createAsyncThunk(
   async (projectItem: ProjectItem, { getState, dispatch }) => {
     const { team } = getState() as RootState;
     try {
-       await api.delete(
+      await api.delete(
         `projects/${team.currentTeam.id}/collections/${projectItem.id}`
       );
 
-      
       dispatch(fetchCollections());
       // return projects.data.data;
     } catch (err: any) {
@@ -310,12 +306,14 @@ export const addPlaygroundContractValidation = createAsyncThunk(
     contract: ContractsState,
     { getState }
   ): { message: string; status: boolean } | undefined => {
-    // if (!contract.name || !contract.description) {
-    //   return {
-    //     message: "Please fill in the contract name and description",
-    //     status: false,
-    //   };
-    // }
+   
+
+    if (!contract.name || !contract.description) {
+      return {
+        message: "Please fill in the contract name and description",
+        status: false,
+      };
+    }
 
     if (!contract.abi || contract.abi === "") {
       return {
@@ -335,6 +333,7 @@ export const addPlaygroundContractValidation = createAsyncThunk(
     }
 
     for (let i = 0; i < contract.contractInstances!.length; i++) {
+
       if (!contract.contractInstances![i].address) {
         return {
           message:
@@ -343,18 +342,18 @@ export const addPlaygroundContractValidation = createAsyncThunk(
         };
       }
 
-      if (contract.contractInstances![i].address.length !== 42) {
+      if (contract.contractInstances![i].address.length < 42) {
         return {
           message:
             "Please fill in the correct 42 character contract address for all contract networks",
           status: false,
         };
       }
-      return {
-        message: "Good to goo",
-        status: true,
-      };
     }
+    return {
+      message: "Good to goo",
+      status: true,
+    };
   }
 );
 
@@ -492,6 +491,7 @@ export const updateContractList = createAsyncThunk(
           .setDocText(contract.description!);
       }
       dispatch(fetchCollectionContracts({ collection, uriId }));
+
       return true;
     } catch (err) {
       console.log(err);
@@ -562,13 +562,12 @@ export const createCollection = createAsyncThunk(
           collectionData: newCollectionManager.data,
         }
       );
-      
 
       dispatch(reset());
       return newCollectionManager;
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
-      toast.error("Error creating collection");
+      toast.error(err?.response.data.message);
       return false;
     }
   }
