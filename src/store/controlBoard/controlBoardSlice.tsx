@@ -13,6 +13,7 @@ const initialState = {
   packagesView: false as boolean,
   cloudIcon: false as boolean,
   loadingScreen: false as boolean,
+  warningBar: false as boolean,
 };
 
 const controlBoardSlice = createSlice({
@@ -24,6 +25,9 @@ const controlBoardSlice = createSlice({
     },
     setLoadingScreen: (state, action: PayloadAction<boolean>) => {
       state.loadingScreen = action.payload;
+    },
+    setWarningBar: (state, action: PayloadAction<boolean>) => { 
+      state.warningBar = action.payload
     },
     setPlaygroundState: (state, action: PayloadAction<playgroundState>) => {
       state.playgroundState = action.payload;
@@ -92,7 +96,8 @@ export const {
   setChainId,
   toggleOverlay,
   setCloudIcon,
-  setLoadingScreen
+  setLoadingScreen,
+  setWarningBar
 } = controlBoardSlice.actions;
 
 export default controlBoardSlice.reducer;

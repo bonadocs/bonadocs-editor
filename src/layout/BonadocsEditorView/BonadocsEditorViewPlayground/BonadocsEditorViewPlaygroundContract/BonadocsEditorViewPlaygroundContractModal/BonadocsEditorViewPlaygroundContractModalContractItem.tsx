@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ContractsState } from "@/data/dataTypes";
+import { ContractInstance, ContractsState } from "@/data/dataTypes";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
 import { TextInput } from "@/components/input/TextInput";
@@ -15,6 +15,7 @@ import { AppDispatch, RootState } from "@/store";
 import { set } from "lodash";
 import { BonadocsEditorProjectsCreationActionContractDeleteModal } from "@/layout/BonadocsEditorProjects/BonadocsEditorProjectsCreation/BonadocsEditorProjectsCreationAction/BonadocsEditorProjectsCreationActionContract/BonadocsEditorProjectsCreationActionContractModal/BonadocsEditorProjectsCreationActionContractDeleteModal";
 import { toast } from "react-toastify";
+import _ from "lodash";
 
 interface BonadocsEditorViewPlaygroundContractModalContractItemProps {
   contractItem: ContractsState;
@@ -30,11 +31,22 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
   const [contractDescription, setContractDescription] = useState<string>(
     contractItem.description!
   );
+  const [updatedContract, setUpdatedContract] =
+    useState<ContractsState>(contractItem);
   const [contractABI, setContractABI] = useState<string>(contractItem.abi!);
   const contracts = useSelector((state: RootState) => state.project.contracts);
   const currentContract = useSelector(
     (state: RootState) => state.project.currentContract
   );
+  const emptyContract = {
+    id: "0",
+    name: "",
+    interfaceHash: "",
+    instances: [],
+    description: "",
+    abi: "",
+    contractInstances: [] as ContractInstance[],
+  };
   const dispatch = useDispatch<AppDispatch>();
 
   const handleDeleteContract = async () => {
@@ -44,10 +56,16 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
       toast.error("You require at least one contract in the playground");
       return;
     }
-    
+
     let list = await dispatch(deletePlaygroundContract(currentContractId));
     handleUpdate(list.payload as ContractsState[]);
   };
+
+  useEffect(() => {
+    if (_.isEqual(updatedContract, currentContract)) {
+      setUpdatedContract(currentContract);
+    }
+  }, [currentContract.contractInstances]);
 
   useEffect(() => {
     setContractName(contractItem.name);
@@ -56,7 +74,6 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
 
   useEffect(() => {
     if (currentContract) {
-      
       setContractABI(currentContract.abi!);
     }
   }, [currentContract]);
@@ -76,7 +93,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
         )}
       >
         <h2 className="bonadocs__editor__projects__creation__selection__item__name">
-          {contractItem.name}
+          {contractName}
         </h2>
         <img
           alt="arrow down"
@@ -98,12 +115,20 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
             value={contractName}
             handleChange={(e) => {
               setContractName(e.target.value);
-              const updatedContract = {
-                ...contractItem,
-                name: e.target.value,
-              };
+              console.log(e.target.value, "contractName");
 
-              dispatch(updateContract(updatedContract));
+              const foundContract = contracts.find(
+                (contract) => contract.id === contractItem.id
+              );
+
+              if (foundContract) {
+                const updatedContract: ContractsState = {
+                  ...foundContract,
+                  name: e.target.value,
+                };
+
+                dispatch(updateContract(updatedContract));
+              }
             }}
           />
 
@@ -115,11 +140,19 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
             value={contractDescription}
             handleChange={(e) => {
               setContractDescription(e.target.value);
-              const updatedContract = {
-                ...contractItem,
-                description: e.target.value,
-              };
-              dispatch(updateContract(updatedContract));
+
+              const foundContract = contracts.find(
+                (contract) => contract.id === contractItem.id
+              );
+
+              if (foundContract) {
+                const updatedContract: ContractsState = {
+                  ...foundContract,
+                  description: e.target.value,
+                };
+
+                dispatch(updateContract(updatedContract));
+              }
             }}
           />
 
@@ -131,12 +164,20 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
             value={contractABI}
             handleChange={(e) => {
               setContractABI(e.target.value);
-              const updatedContract = {
-                ...contractItem,
-                abi: e.target.value,
-              };
-              dispatch(setCurrentContract(updatedContract));
-              dispatch(updateContract(updatedContract));
+              // console.log(updatedContract, currentContract, 'contractItem from abi');
+
+              const foundContract = contracts.find(
+                (contract) => contract.id === contractItem.id
+              );
+
+              if (foundContract) {
+                const updatedContract: ContractsState = {
+                  ...foundContract,
+                  abi: e.target.value,
+                };
+
+                dispatch(updateContract(updatedContract));
+              }
             }}
           />
           <h2 className="bonadocs__editor__projects__creation__selection__item__deets__header">
@@ -144,7 +185,9 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
           </h2>
 
           <BonadocsEditorViewPlaygroundContractModalContractItemInstances
-            contractItem={contractItem}
+            contractItem={() =>
+              contracts.find((contract) => contract.id === contractItem.id)!
+            }
           />
           <h2
             className="bonadocs__editor__projects__creation__selection__item__deets__delete"

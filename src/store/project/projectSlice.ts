@@ -1,4 +1,4 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import {
   ProjectItem,
   ContractInstance,
@@ -14,6 +14,7 @@ import {
 import { toast } from "react-toastify";
 import { fetchCollectionContracts } from "../contract/contractSlice";
 import { api } from "@/utils/axios";
+import { act } from "@testing-library/react";
 
 const emptyContract = {
   id: "0",
@@ -104,7 +105,7 @@ const projectSlice = createSlice({
     },
     setContracts: (state, action: PayloadAction<ContractsState[]>) => {
       state.contracts = action.payload;
-      
+      // console.log(state.contracts, "setContract");
     },
     updateContract: (state, action: PayloadAction<ContractsState>) => {
       let contracts = state.contracts.slice();
@@ -113,18 +114,34 @@ const projectSlice = createSlice({
       );
       contracts[index] = action.payload;
       state.contracts = contracts;
+      console.log(state.contracts, "updateContract");
     },
     updateContractInstances: (
       state,
       action: PayloadAction<ContractInstance[]>
     ) => {
+      // console.log(state.currentContract, "current");
+      
       let contracts = state.contracts.slice();
-      let index = contracts.findIndex(
+
+      console.log(state.currentContract.id, "c contract");
+      let contract = contracts.find(
         (contractItem: ContractsState) =>
           contractItem.id === state.currentContract.id
       );
 
-      contracts[index].contractInstances = action.payload;
+      
+      // console.log(
+      //   contracts,
+      //   "update contract instances",
+      //   action.payload,
+      //   contract
+      // );
+
+      if (contract)
+        contracts[
+          contracts.findIndex((index) => index === contract)
+        ].contractInstances = action.payload as ContractInstance[];
       state.contracts = contracts;
     },
   },
@@ -139,6 +156,8 @@ export const projectFilled = (state: RootState) => {
 };
 
 export const projectValidation = (state: RootState) => {
+  // console.log(state.project.contracts);
+
   if (projectFilled(state)) {
     return {
       message: "Please fill in all project fields",
@@ -306,8 +325,6 @@ export const addPlaygroundContractValidation = createAsyncThunk(
     contract: ContractsState,
     { getState }
   ): { message: string; status: boolean } | undefined => {
-   
-
     if (!contract.name || !contract.description) {
       return {
         message: "Please fill in the contract name and description",
@@ -333,7 +350,6 @@ export const addPlaygroundContractValidation = createAsyncThunk(
     }
 
     for (let i = 0; i < contract.contractInstances!.length; i++) {
-
       if (!contract.contractInstances![i].address) {
         return {
           message:

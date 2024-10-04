@@ -86,8 +86,10 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesAdd: 
         <div className="modal__container__wrapper">
           <Button
             type="action"
-            onClick={async () => {
+            onClick={() => {
               handleAddContractInstance(selectedChainId);
+             
+              
 
               closeModal();
             }}

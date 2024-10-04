@@ -7,7 +7,9 @@ import { useCollectionContext } from "@/context/CollectionContext";
 import {
   CollectionDetailsParams,
   ContractInstance,
+  ContractItem,
   ContractsState,
+  MethodItem,
 } from "@/data/dataTypes";
 import {
   addPlaygroundContractValidation,
@@ -34,6 +36,8 @@ import { useParams } from "react-router-dom";
 import { auth } from "@/utils/firebase.utils";
 import { current } from "immer";
 import { BonadocsEditorViewPlaygroundContractModalCancel } from "./BonadocsEditorViewPlaygroundContractModalCancel";
+import { setMethodDisplayData, setMethodItem } from "@/store/method/methodSlice";
+import { setActiveContract } from "@/store/contract/contractSlice";
 
 interface BonadocsEditorViewPlaygroundContractModalProps {
   className?: string;
@@ -135,6 +139,10 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
         setLoading(false);
         closeModal();
       }
+      dispatch({ type: "controlBoard/setWarningBar", payload: true });
+      dispatch(setMethodDisplayData([]));
+      dispatch(setActiveContract({} as ContractItem));
+      dispatch(setMethodItem({} as MethodItem));
     }
 
     setLoading(false);

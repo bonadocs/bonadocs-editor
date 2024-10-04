@@ -38,7 +38,7 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
   });
 
   const [selectedChainId, setSelectedChainId] = useState<number>(
-    options[0].value as number
+    options[1].value as number
   );
 
   useEffect(() => {
@@ -101,6 +101,7 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
           options={options}
           updateId={(e) => setSelectedChainId(Number(e.target.value))}
           className="modal__container__dropdown"
+          selectedValue={selectedChainId}
         />
 
         <div className="modal__container__wrapper">
