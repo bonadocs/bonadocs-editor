@@ -304,6 +304,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     }
 
     if (!collectionRef.current) {
+      toast.error("Collection not loaded");
       throw new Error("Collection not loaded");
     }
 
@@ -322,8 +323,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     );
     dispatch(fetchCollectionVariables(collectionRef.current!));
 
-    
-    
     return uriId!;
     // }
   };
