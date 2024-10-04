@@ -65,17 +65,17 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
     if (show)
       if (tempContracts && tempContracts.length > 0) {
         if (_.isEqual(tempContracts[0], emptyContracts[0])) {
-          // console.log("original clone");
+           console.log("original clone");
           dispatch(setContracts(UIContracts));
           setContractList(UIContracts);
         } else {
-          // console.log("tempContracts");
+           console.log("tempContracts");
           console.log(tempContracts);
           
           setContractList(tempContracts);
         }
       } else {
-        // console.log("original");
+         console.log("original");
         dispatch(setContracts(UIContracts));
         setContractList(UIContracts);
       }

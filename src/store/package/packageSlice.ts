@@ -91,7 +91,6 @@ export const getAllPackages = createAsyncThunk(
     });
 
     if (!packageList.find((item) => item.name === "ethers")) {
-      console.log("ethers not found");
       try {
         const response = await fetch(
           `https://data.jsdelivr.com/v1/packages/npm/ethers`
@@ -110,7 +109,6 @@ export const getAllPackages = createAsyncThunk(
           name: "ethers",
           version: versions[0].version.slice(),
         });
-        console.log("ethers added", packageList);
       } catch (error) {
         console.error("Error setting custom package:", error);
         toast.error("Error setting custom package");

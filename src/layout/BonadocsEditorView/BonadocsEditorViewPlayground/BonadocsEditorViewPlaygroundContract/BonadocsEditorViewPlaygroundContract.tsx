@@ -50,7 +50,7 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
   });
 
   useEffect(() => {
-    console.log(isOpen);
+    
     const handleBeforeUnload = (event: any) => {
       if (isOpen) {
         event.preventDefault();

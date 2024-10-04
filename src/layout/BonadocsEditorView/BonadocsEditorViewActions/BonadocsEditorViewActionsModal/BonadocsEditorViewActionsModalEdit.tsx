@@ -70,7 +70,7 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
   // console.log(currentChain, "currentChain", actionItem);
 
   const [selectedChainId, setSelectedChainId] = useState<number>(
-    Number(currentChain) ?? (options[0].value as number)
+    Number(currentChain) ?? (options[1].value as number)
   );
 
   useEffect(() => {
