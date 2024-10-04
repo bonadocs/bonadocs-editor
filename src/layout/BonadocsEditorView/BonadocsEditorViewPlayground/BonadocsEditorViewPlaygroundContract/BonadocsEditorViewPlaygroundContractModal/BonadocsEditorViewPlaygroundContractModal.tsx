@@ -280,7 +280,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
                 <TextInput
                   className="modal__side__container__input"
                   handleChange={(e) => {
-                    setSearchContracts(e.target.value);
+                    setSearchContracts(e.target.value.trim());
                   }}
                   value={searchContracts}
                   placeholder="Search contract names"

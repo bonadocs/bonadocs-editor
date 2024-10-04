@@ -192,11 +192,11 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
             placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
             value={contractAddress.current}
             handleChange={(e) => {
-              contractAddress.current = e.target.value;
+              contractAddress.current = e.target.value.trim();
               let instances = currentContract.contractInstances?.slice();
               const newInstance: ContractInstance = {
                 ...instance,
-                address: contractAddress.current,
+                address: contractAddress.current.trim(),
               };
               instances?.splice(instances.indexOf(instance!), 1, newInstance);
 

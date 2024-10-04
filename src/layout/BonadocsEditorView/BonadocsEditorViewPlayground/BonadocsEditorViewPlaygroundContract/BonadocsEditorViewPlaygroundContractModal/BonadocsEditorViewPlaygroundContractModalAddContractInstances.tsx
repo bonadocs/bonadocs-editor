@@ -80,7 +80,7 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstances: Reac
         <TextInput
           className="modal__side__container__input"
           handleChange={(e) => {
-            setSearchNetwork(e.target.value);
+            setSearchNetwork(e.target.value.trim());
           }}
           value={searchNetwork}
           placeholder="Search networks"

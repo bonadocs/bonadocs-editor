@@ -60,6 +60,9 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
     let list = await dispatch(deletePlaygroundContract(currentContractId));
     handleUpdate(list.payload as ContractsState[]);
   };
+  const foundContract = contracts.find(
+    (contract) => contract.id === contractItem.id
+  );
 
   useEffect(() => {
     if (_.isEqual(updatedContract, currentContract)) {
@@ -114,17 +117,14 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
             placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
             value={contractName}
             handleChange={(e) => {
-              setContractName(e.target.value);
+              setContractName(e.target.value.trim());
               console.log(e.target.value, "contractName");
 
-              const foundContract = contracts.find(
-                (contract) => contract.id === contractItem.id
-              );
-
+            
               if (foundContract) {
                 const updatedContract: ContractsState = {
                   ...foundContract,
-                  name: e.target.value,
+                  name: e.target.value.trim(),
                 };
 
                 dispatch(updateContract(updatedContract));
@@ -141,9 +141,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
             handleChange={(e) => {
               setContractDescription(e.target.value);
 
-              const foundContract = contracts.find(
-                (contract) => contract.id === contractItem.id
-              );
+           
 
               if (foundContract) {
                 const updatedContract: ContractsState = {
@@ -166,9 +164,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
               setContractABI(e.target.value);
               // console.log(updatedContract, currentContract, 'contractItem from abi');
 
-              const foundContract = contracts.find(
-                (contract) => contract.id === contractItem.id
-              );
+             
 
               if (foundContract) {
                 const updatedContract: ContractsState = {
