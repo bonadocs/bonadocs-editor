@@ -65,8 +65,8 @@ export const BonadocsEditorViewPlaygroundContractModalAddContractInstancesItem: 
               placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
               value={networkAddress}
               handleChange={(e) => {
-                setNetworkAddress(e.target.value);
-                updateInstance("edit", instance, e.target.value);
+                setNetworkAddress(e.target.value.trim());
+                updateInstance("edit", instance, e.target.value.trim());
               }}
             />
 

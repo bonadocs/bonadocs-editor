@@ -114,7 +114,7 @@ const projectSlice = createSlice({
       );
       contracts[index] = action.payload;
       state.contracts = contracts;
-      console.log(state.contracts, "updateContract");
+      // console.log(state.contracts, "updateContract");
     },
     updateContractInstances: (
       state,
@@ -124,7 +124,7 @@ const projectSlice = createSlice({
       
       let contracts = state.contracts.slice();
 
-      console.log(state.currentContract.id, "c contract");
+
       let contract = contracts.find(
         (contractItem: ContractsState) =>
           contractItem.id === state.currentContract.id

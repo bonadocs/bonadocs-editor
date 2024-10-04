@@ -94,13 +94,13 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesItem:
               placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
               value={contractAddress}
               handleChange={async (e) => {
-                setContractAddress(e.target.value);
+                setContractAddress(e.target.value.trim());
 
                 let instances = instanceList.slice();
 
                 const newInstance: Instance = {
                   ...instance,
-                  address: e.target.value,
+                  address: e.target.value.trim(),
                 };
                 instances?.splice(instances.indexOf(instance), 1, newInstance);
                 handleUpdate(instances);
@@ -114,7 +114,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItemInstancesItem:
                       if (typeof abi === "undefined") {
                         toast.error("ABI error. Input it manually.");
                       } else {
-                        console.log(abi, "inside abi");
+                       
 
                         const updatedContract = {
                           ...contractItem,
