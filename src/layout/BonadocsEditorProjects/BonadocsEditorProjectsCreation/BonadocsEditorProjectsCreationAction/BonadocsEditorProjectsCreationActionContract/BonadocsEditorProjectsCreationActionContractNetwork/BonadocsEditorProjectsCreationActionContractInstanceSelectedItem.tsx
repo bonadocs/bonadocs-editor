@@ -211,7 +211,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
               loadABI(e.target.value);
             }}
           />
-          {instance.verification && loading && (
+          {loading && (
             <Button
               className="bonadocs__editor__projects__creation__selection__item__deets__button"
               type="action"

@@ -11,13 +11,12 @@ import {
   setMethodDisplayData,
   setTransactionOverrides,
 } from "@/store/method/methodSlice";
-import { MethodItem, ContractItem, ActionItem } from "@/data/dataTypes";
+import { MethodItem, ContractItem } from "@/data/dataTypes";
 import { setActiveContract } from "@/store/contract/contractSlice";
 import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
-import { setActiveAction } from "@/store/action/actionSlice";
 import { getAllPackages } from "@/store/package/packageSlice";
-import { get } from "lodash";
+
 interface BonadocsEditorLayoutProps {}
 
 export const BonadocsEditorLayout: React.FC<

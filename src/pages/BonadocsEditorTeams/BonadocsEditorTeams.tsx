@@ -11,6 +11,7 @@ import { BonadocsEditorTeamsModalAcceptInvite } from "@/layout/BonadocsEditorTea
 import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 import { useAuthContext } from "@/context/AuthContext";
+import { MetaTags } from "@/components/metatags/Metatags";
 
 export const BonadocsEditorTeams: React.FC = () => {
   const [queryParameters] = useSearchParams();
@@ -34,6 +35,10 @@ export const BonadocsEditorTeams: React.FC = () => {
 
   return (
     <div className="bonadocs__editor__projects">
+      <MetaTags
+        title={`Bonadocs Playground`}
+        description={`The playground provides a simple and practical way to enable devs to integrate in their production apps and protocols.`}
+      />
       <div className="bonadocs__editor__projects__inner">
         <Logo />
         <>
