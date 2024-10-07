@@ -39,18 +39,15 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
       return;
     }
 
-
-    
-
     // if (actionItem.name !== actionName) {
-      await dispatch(
-        renameWorkflowAction({
-          collection: getCollection()!,
-          workflowName: actionName,
-          workflowId: actionItem.id,
-          workflowChainId: selectedChainId,
-        })
-      );
+    await dispatch(
+      renameWorkflowAction({
+        collection: getCollection()!,
+        workflowName: actionName,
+        workflowId: actionItem.id,
+        workflowChainId: selectedChainId,
+      })
+    );
     // }
     setLoading(false);
     closeModal();
@@ -67,23 +64,30 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
     `workflow-chain-id-${actionItem.id}`
   );
 
-  // console.log(currentChain, "currentChain", actionItem);
-
   const [selectedChainId, setSelectedChainId] = useState<number>(
     Number(currentChain) ?? (options[1].value as number)
   );
 
   useEffect(() => {
     isOpen(show ?? false);
-  
-     setSelectedChainId(Number(currentChain));
+
+    if (show && getCollection()) {
+      // console.log(actionItem.id);
+
+      // console.log(
+      //   getCollection()?.valueManagerView.getString(
+      //     `workflow-chain-id-${actionItem.id}`
+      //   ),
+      //   "currentChain"
+      // );
+
+      setSelectedChainId(Number(currentChain));
+    }
   }, [show]);
 
   useEffect(() => {
     setActionName(actionItem.name);
   }, [actionItem]);
-
-  
 
   const closeModal = () => {
     isOpen(!open);
