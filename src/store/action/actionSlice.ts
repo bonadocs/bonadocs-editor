@@ -123,8 +123,14 @@ export const createWorkflowAction = createAsyncThunk(
       setWorkflowParams;
 
     try {
+       await collection.valueManagerView.setString(
+         `workflow-chain-id-${workflowId}`,
+         workflowChainId!.toString()
+       );
+
+
       await collection.workflowManagerView.addWorkflow({
-        id: `00${Math.floor(Math.random() * 1000)}`,
+        id: workflowId!,
         name: workflowName?.replace(/\s+/g, "")!,
         variables: [
           {
@@ -139,15 +145,19 @@ export const createWorkflowAction = createAsyncThunk(
           },
         ],
       });
-      await collection.valueManagerView.setString(
-        `workflow-chain-id-${workflowId}`,
-        workflowChainId!.toString()
-      );
 
       await collection.workflowManagerView.setDocText(
-        `00${Math.floor(Math.random() * 1000)}`,
+        workflowId!,
         workflowName?.trim()!
       );
+      
+      console.log(
+        collection.valueManagerView.getString(
+          `workflow-chain-id-${workflowId}`
+        ),
+        "currentChain"
+      );
+
       dispatch(getCollectionActions(collection));
     } catch (err) {
       console.log(err, "error creating action");
@@ -201,14 +211,13 @@ export const renameWorkflowAction = createAsyncThunk(
   async (setWorkflowParams: WorkflowItem, { dispatch, getState }) => {
     const { collection, workflowId, workflowName, workflowChainId } =
       setWorkflowParams;
-    console.log('start');
-    
+    console.log("start");
+
     try {
       await collection.valueManagerView.setString(
         `workflow-chain-id-${workflowId}`,
         workflowChainId!.toString()
       );
-     
 
       await collection.workflowManagerView.renameWorkflow(
         workflowId!,
@@ -220,7 +229,7 @@ export const renameWorkflowAction = createAsyncThunk(
       return workflowName!;
     } catch (err) {
       console.log(err);
-      
+
       toast.error(`${err} Error renaming action`);
     }
   }

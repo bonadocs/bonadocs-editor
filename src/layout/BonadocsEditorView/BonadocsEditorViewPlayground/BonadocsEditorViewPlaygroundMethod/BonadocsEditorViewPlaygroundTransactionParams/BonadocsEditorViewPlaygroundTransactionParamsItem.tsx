@@ -28,11 +28,11 @@ export const BonadocsEditorViewPlaygroundTransactionParamsItem: React.FC<
       overrides[viewIndex] = {}; // Initialize overrides[viewIndex] as an empty object
       overrides[viewIndex][param.overrideKey] = (
         event.target as HTMLInputElement
-      ).value;
+      ).value.trim();
     } else {
       overrides[viewIndex][param.overrideKey] = (
         event.target as HTMLInputElement
-      ).value;
+      ).value.trim();
       if (overrides[viewIndex][param.overrideKey] === "") {
         delete overrides[viewIndex][param.overrideKey];
       }

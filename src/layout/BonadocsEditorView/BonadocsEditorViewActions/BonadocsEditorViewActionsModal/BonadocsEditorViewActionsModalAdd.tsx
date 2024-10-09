@@ -123,6 +123,7 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
                     workflowName: actionName.replace(/\s+/g, ""),
                     collection: getCollection()!,
                     workflowChainId: selectedChainId,
+                    workflowId: `00${Math.floor(Math.random() * 1000)}`
                   })
                 );
                 setLoading(false);
