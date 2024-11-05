@@ -5,7 +5,7 @@ import { ContractInstance, Option } from "@/data/dataTypes";
 import { TextareaInput } from "@/components/input/TextareaInput";
 import { Button } from "@/components/button/Button";
 import clsx from "clsx";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import {
   setCurrentContract,
@@ -28,7 +28,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   BonadocsEditorProjectsCreationActionContractInstanceSelectedItemProps
 > = ({ instance, instanceLength }) => {
   const dispatch = useDispatch<AppDispatch>();
-  
+
   const options: Option[] = [
     {
       value: "Verified",
@@ -82,6 +82,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
     e.target.value === "Verified"
       ? setLocalVerification(true)
       : setLocalVerification(false);
+
     instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
     dispatch(
@@ -90,17 +91,29 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
         contractInstances: instances,
       })
     );
+
     dispatch(updateContractInstances(instances!));
-    if (e.target.value === "Verified") loadABI();
+    if (e.target.value === "Verified" && !currentContract.abi) loadABI();
   };
 
   const handleABIChange = (abi: string) => {
     let instances = currentContract.contractInstances?.slice();
+    // console.log(
+    //   currentContract.contractInstances,
+    //   abi,
+    //   "current contract here"
+    // );
+
+    // dispatch(setABIChange(abi))
+
     const newInstance: ContractInstance = {
       ...instance,
       address: contractAddress.current,
       abi: abi,
     };
+
+    // console.log(newInstance, currentContract, instance, "new instance");
+
     instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
     const updatedContract = {
@@ -108,6 +121,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
       abi,
       contractInstances: instances,
     };
+
+    // console.log(updatedContract, "updated Contract ABI Change");
 
     dispatch(setCurrentContract(updatedContract));
     dispatch(updateContractInstances(instances!));
@@ -124,8 +139,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
         getApi()
           .loadContractABI(instance.chainId!, EVMaddress)
           .then((abi) => {
-            handleABIChange(abi!);
-            typeof abi === "undefined"
+            !abi
               ? toast.error("ABI error. Input it manually.")
               : handleABIChange(abi);
             setLoading(false);
@@ -147,8 +161,6 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   useEffect(() => {
     setLocalVerification(instance.verification ?? true);
   }, [instance.verification]);
-
- 
 
   return (
     <>
@@ -200,15 +212,31 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
               };
               instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
+              // console.log(
+              //   {
+              //     ...currentContract,
+              //     contractInstances: instances,
+              //   },
+              //   "correct one"
+              // );
+
               dispatch(
                 setCurrentContract({
                   ...currentContract,
                   contractInstances: instances,
                 })
               );
+              // console.log(
+              //   instances,
+
+              //   "correct instances"
+              // );
+
               dispatch(updateContractInstances(instances!));
 
-              loadABI(e.target.value);
+              // console.log(currentContract, "current contract alpha");
+
+              !currentContract.abi && loadABI(e.target.value);
             }}
           />
           {loading && (
