@@ -30,9 +30,9 @@ export const BonadocsEditorViewPlaygroundMethodWidgetModal: React.FC<
 // Here's the widget for ${methodItem.name}
 
 <BonadocsWidget
-  widgetConfigUri="${widgetConfig?.widgetConfigUri}"
-  contract="${widgetConfig?.contract}"
-  functionKey="${widgetConfig?.functionKey}"
+  widgetConfigUri="${widgetConfig?.widgetConfigUri ?? ""}"
+  contract="${widgetConfig?.contract ?? ""}"
+  functionKey="${widgetConfig?.functionKey ?? ""}"
 />`;
 
   const closeModal = () => {
@@ -49,9 +49,8 @@ export const BonadocsEditorViewPlaygroundMethodWidgetModal: React.FC<
   }, [show]);
 
   const getWidgetConfig = async () => {
-
     const config = await dispatch(getMethodWidget(getCollection()!));
-    
+
     setWidgetConfig({
       widgetConfigUri: (config.payload as WidgetConfig).widgetConfigUri,
       contract: (config.payload as WidgetConfig).contract,

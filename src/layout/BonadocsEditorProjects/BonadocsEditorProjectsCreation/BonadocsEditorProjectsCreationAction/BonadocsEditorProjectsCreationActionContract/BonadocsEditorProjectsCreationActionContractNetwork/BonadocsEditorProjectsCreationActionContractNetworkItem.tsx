@@ -37,7 +37,10 @@ export const BonadocsEditorProjectsCreationActionContractNetworkItem: React.FC<
     selectedNetwork()
   );
 
-  useEffect(() => {}, [networkItem.selected]);
+  useEffect(() => { }, [networkItem.selected]);
+  
+  console.log(networkItem);
+  
 
   return (
     <div className="modal__side__container__search__open__item">

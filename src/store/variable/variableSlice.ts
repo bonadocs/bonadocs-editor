@@ -27,43 +27,29 @@ const variableSlice = createSlice({
   name: "variable",
   initialState,
   reducers: {
-    fetchCollectionVariables: (
+    assignCollectionVariables: (
       state,
-      action: PayloadAction<CollectionDataManager>
+      action: PayloadAction<VariableItem[]>
     ) => {
-      const variableList = action.payload.environmentManagerView.list;
-      const collectionVariables = Array.from(variableList, ([name, value]) => ({
-        name,
-        value,
-      }));
-      
-      state.collectionVariables = collectionVariables;
+      state.collectionVariables = action.payload;
     },
-    getCollectionVariable: (
+    setCurrentCollectionVariable: (
       state,
-      action: PayloadAction<VariableParams>
+      action: PayloadAction<VariableItem>
     ): void => {
-      const { collection, variable } = action.payload;
-      const collectionVariable = collection.environmentManagerView.getVariable(
-        variable.name
-      );
-      state.currentVariable = {
-        name: variable.name,
-        value: collectionVariable,
-      };
+      state.currentVariable = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(updateCollectionVariables.pending, (state) => {
-      })
+      .addCase(updateCollectionVariables.pending, (state) => {})
       .addCase(
         updateCollectionVariables.fulfilled,
-        (state, action: PayloadAction<CollectionDataManager | undefined>) => {
+        (state, action: PayloadAction<any | undefined>) => {
           if (!action.payload) {
             return;
           }
-          const variableList = action.payload.environmentManagerView.list;
+          const variableList = action.payload;
           const collectionVariables = Array.from(
             variableList,
             ([name, value]) => ({
@@ -77,15 +63,14 @@ const variableSlice = createSlice({
       );
 
     builder
-      .addCase(renameVariable.pending, () => {
-      })
+      .addCase(renameVariable.pending, () => {})
       .addCase(
         renameVariable.fulfilled,
-        (state, action: PayloadAction<CollectionDataManager | undefined>) => {
+        (state, action: PayloadAction<any>) => {
           if (!action.payload) {
             return;
           }
-          const variableList = action.payload.environmentManagerView.list;
+          const variableList = action.payload;
           const collectionVariables = Array.from(
             variableList,
             ([name, value]) => ({
@@ -99,15 +84,14 @@ const variableSlice = createSlice({
       );
 
     builder
-      .addCase(deleteVariable.pending, () => {
-      })
+      .addCase(deleteVariable.pending, () => {})
       .addCase(
         deleteVariable.fulfilled,
-        (state, action: PayloadAction<CollectionDataManager | undefined>) => {
+        (state, action: PayloadAction<any>) => {
           if (!action.payload) {
             return;
           }
-          const variableList = action.payload.environmentManagerView.list;
+          const variableList = action.payload;
           const collectionVariables = Array.from(
             variableList,
             ([name, value]) => ({
@@ -122,23 +106,52 @@ const variableSlice = createSlice({
   },
 });
 
+export const fetchCollectionVariables = createAsyncThunk(
+  "variable/fetchCollectionVariables",
+  async (collection: CollectionDataManager, { dispatch }) => {
+    const variableList = (await collection.getEnvironmentManagerView()).list;
+    const collectionVariables = Array.from(variableList, ([name, value]) => ({
+      name,
+      value,
+    }));
+
+    dispatch(assignCollectionVariables(collectionVariables));
+  }
+);
+
+export const getCollectionVariable = createAsyncThunk(
+  "variable/getCollectionVariable",
+  async (variableParams: VariableParams, { dispatch }) => {
+    const { collection, variable } = variableParams;
+    const collectionVariable = (
+      await collection.getEnvironmentManagerView()
+    ).getVariable(variable.name);
+
+    dispatch(
+      setCurrentCollectionVariable({
+        name: variable.name,
+        value: collectionVariable,
+      })
+    );
+  }
+);
+
 export const updateCollectionVariables = createAsyncThunk(
   "variable/updateCollectionVariable",
   async (variableData: VariableParams) => {
     const { collection, variable } = variableData;
     if (!collection) {
-
       return;
     }
     try {
-      await collection.environmentManagerView.setVariable(
-        variable.name,
-        variable.value || ""
-      );
-      return collection;
-    } catch (err) {
-     
-    }
+      await (
+        await collection.getEnvironmentManagerView()
+      ).setVariable(variable.name, variable.value || "");
+      const environmentView = await collection.getEnvironmentManagerView();
+
+      const variableList = environmentView.list;
+      return variableList;
+    } catch (err) {}
   }
 );
 
@@ -150,8 +163,13 @@ export const renameVariable = createAsyncThunk(
         throw new Error("Collection not found");
       }
       const { collection, oldName, newName } = renameParams;
-      collection.environmentManagerView.renameVariable(oldName, newName);
-      return collection;
+      await (
+        await collection.getEnvironmentManagerView()
+      ).renameVariable(oldName, newName);
+      const environmentView = await collection.getEnvironmentManagerView();
+
+      const variableList = environmentView.list;
+      return variableList;
     } catch (error) {
       console.error("renameVariable", error);
     }
@@ -166,15 +184,21 @@ export const deleteVariable = createAsyncThunk(
         throw new Error("Collection not found");
       }
       const { collection, variable } = variableParams;
-      collection.environmentManagerView.deleteVariable(variable.name);
-      return collection;
+      (await collection.getEnvironmentManagerView()).deleteVariable(
+        variable.name
+      );
+
+      const environmentView = await collection.getEnvironmentManagerView();
+
+      const variableList = environmentView.list;
+      return variableList;
     } catch (error) {
       console.error("renameVariable", error);
     }
   }
 );
 
-export const { fetchCollectionVariables, getCollectionVariable } =
+export const { assignCollectionVariables, setCurrentCollectionVariable } =
   variableSlice.actions;
 
 export default variableSlice.reducer;

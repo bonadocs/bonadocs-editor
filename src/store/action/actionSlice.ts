@@ -92,14 +92,13 @@ export const getCollectionActions = createAsyncThunk(
   "action/getCollectionActions",
   async (params: CollectionDataManager) => {
     const collection = params;
-    const workflowList = Array.from(collection.workflowManagerView.workflows);
+    const workflowView = await collection.getWorkflowManagerView();
+    const workflowList = Array.from(workflowView.workflows);
     const collectionActions: Array<ActionItem> = [];
     let documentation: any;
 
     for (const workflow of workflowList) {
-      documentation = await collection.workflowManagerView.getDocText(
-        workflow.id
-      );
+      documentation = await workflowView.getDocText(workflow.id);
 
       collectionActions.push({
         id: workflow.id,
@@ -122,14 +121,16 @@ export const createWorkflowAction = createAsyncThunk(
     const { collection, workflowName, workflowChainId, workflowId } =
       setWorkflowParams;
 
+    const valueView = await collection.getValueManagerView();
+    const workflowView = await collection.getWorkflowManagerView();
+
     try {
-       await collection.valueManagerView.setString(
-         `workflow-chain-id-${workflowId}`,
-         workflowChainId!.toString()
-       );
+      await valueView.setString(
+        `workflow-chain-id-${workflowId}`,
+        workflowChainId!.toString()
+      );
 
-
-      await collection.workflowManagerView.addWorkflow({
+      await workflowView.addWorkflow({
         id: workflowId!,
         name: workflowName?.replace(/\s+/g, "")!,
         variables: [
@@ -146,15 +147,10 @@ export const createWorkflowAction = createAsyncThunk(
         ],
       });
 
-      await collection.workflowManagerView.setDocText(
-        workflowId!,
-        workflowName?.trim()!
-      );
-      
+      await workflowView.setDocText(workflowId!, workflowName?.trim()!);
+
       console.log(
-        collection.valueManagerView.getString(
-          `workflow-chain-id-${workflowId}`
-        ),
+        valueView.getString(`workflow-chain-id-${workflowId}`),
         "currentChain"
       );
 
@@ -170,12 +166,10 @@ export const updateWorkflowActionDocs = createAsyncThunk(
   "action/updateWorkflowActionDocs",
   async (setWorkflowParams: WorkflowItem, { dispatch }) => {
     const { collection, workflowId, workflowDocs } = setWorkflowParams;
+    const workflowView = await collection.getWorkflowManagerView();
 
     try {
-      await collection.workflowManagerView.setDocText(
-        workflowId!,
-        workflowDocs!
-      );
+      await workflowView.setDocText(workflowId!, workflowDocs!);
 
       dispatch(getCollectionActions(collection));
       return workflowDocs;
@@ -189,12 +183,10 @@ export const updateWorkflowActionCode = createAsyncThunk(
   "action/updateWorkflowActionCode",
   async (setWorkflowCodeParams: WorkflowCodeItem, { dispatch }) => {
     const { collection, workflowId, code } = setWorkflowCodeParams;
+    const workflowView = await collection.getWorkflowManagerView();
+
     try {
-      await collection.workflowManagerView.setWorkflowCode(
-        workflowId,
-        "js",
-        code
-      );
+      await workflowView.setWorkflowCode(workflowId, "js", code);
       setCloudIcon(false);
 
       dispatch(getCollectionActions(collection));
@@ -211,15 +203,16 @@ export const renameWorkflowAction = createAsyncThunk(
   async (setWorkflowParams: WorkflowItem, { dispatch, getState }) => {
     const { collection, workflowId, workflowName, workflowChainId } =
       setWorkflowParams;
-    console.log("start");
 
+    const valueView = await collection.getValueManagerView();
+    const workflowView = await collection.getWorkflowManagerView();
     try {
-      await collection.valueManagerView.setString(
+      await valueView.setString(
         `workflow-chain-id-${workflowId}`,
         workflowChainId!.toString()
       );
 
-      await collection.workflowManagerView.renameWorkflow(
+      await workflowView.renameWorkflow(
         workflowId!,
         workflowName?.replace(/\s+/g, "")!
       );
@@ -239,9 +232,9 @@ export const deleteWorkflowAction = createAsyncThunk(
   "action/deleteWorkflowAction",
   async (setWorkflowParams: WorkflowItem, { dispatch }) => {
     const { collection, workflowId } = setWorkflowParams;
-
+    const workflowView = await collection.getWorkflowManagerView();
     try {
-      await collection.workflowManagerView.removeWorkflow(workflowId!);
+      await workflowView.removeWorkflow(workflowId!);
       dispatch(getCollectionActions(collection));
       toast.success(`Successfully deleted action`);
     } catch (err) {

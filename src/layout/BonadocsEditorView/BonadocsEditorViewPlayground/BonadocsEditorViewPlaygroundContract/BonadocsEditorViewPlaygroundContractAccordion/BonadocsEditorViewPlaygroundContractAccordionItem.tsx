@@ -41,7 +41,7 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
       contractId!,
       fragmentKey
     );
-    const methodDocs = functionFragment?.getDocText();
+    const methodDocs = async () => await functionFragment?.getDocText();
     dispatch(
       setMethodItem({
         // collection: getCollection()!,
@@ -50,7 +50,7 @@ export const BonadocsEditorViewPlaygroundContractAccordionItem: React.FC<
         fragmentKey,
         contractId,
         instances: contractItem.instances,
-        docs: methodDocs,
+        docs: await methodDocs(),
         readMethod,
         // },
       })

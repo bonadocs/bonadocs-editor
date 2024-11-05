@@ -64,7 +64,8 @@ export const fetchCollectionContracts = createAsyncThunk(
     const state = getState() as RootState;
     const { collection, uriId } = setWorkflowParams;
     const collectionContracts: Array<ContractItem> = [];
-    const contractList = [...collection?.data.contracts].map(
+
+    const contractList = [...(await collection?.getData()).contracts].map(
       ({ name, id, instances }) => ({
         name,
         contractId: id,
@@ -74,13 +75,12 @@ export const fetchCollectionContracts = createAsyncThunk(
     const queryParams = new URLSearchParams(window.location.search);
 
     for (const contract of contractList) {
-      let contractMethods = collection?.getContractDetailsView(
-        contract.contractId
-      ).functions;
+      const contractView = collection?.getContractDetailsView;
+      let contractMethods = (await contractView(contract.contractId)).functions;
 
-      let contractDocs = await collection
-        ?.getContractDetailsView(contract.contractId)
-        .getDocText();
+      let contractDocs = await (
+        await contractView(contract.contractId)
+      ).getDocText();
 
       const methodItem: Array<MethodItem> = [];
       contractMethods.forEach((method) => {
@@ -114,7 +114,8 @@ export const setContractDocs = createAsyncThunk(
   async (setContractDocsParams: ContractItemDocs, { dispatch, getState }) => {
     const { collection, docs, contractId } = setContractDocsParams;
     const state = getState() as RootState;
-    await collection?.getContractDetailsView(contractId).setDocText(docs!);
+    const contractView = collection?.getContractDetailsView;
+    await (await contractView(contractId)).setDocText(docs!);
     dispatch(
       setActiveContract(
         Object.assign({}, state.contract.currentContract, { docs })
@@ -131,9 +132,10 @@ export const updateActiveContractDocs = createAsyncThunk(
   ) => {
     const { collection, docs } = setContractDocsParams;
     const state = getState() as RootState;
-    let contractDocs = await collection
-      ?.getContractDetailsView(state.contract.currentContract.contractId)
-      .setDocText(docs);
+    const contractView = collection?.getContractDetailsView;
+    let contractDocs = await (
+      await contractView(state.contract.currentContract.contractId)
+    ).setDocText(docs);
   }
 );
 
@@ -145,9 +147,10 @@ export const getActiveContractDocs = createAsyncThunk(
   ) => {
     const collection = setContractDocsParams;
     const state = getState() as RootState;
-    let contractDocs = await collection
-      ?.getContractDetailsView(state.contract.currentContract.contractId)
-      .getDocText();
+    const contractView = collection?.getContractDetailsView;
+    let contractDocs = await (
+      await contractView(state.contract.currentContract.contractId)
+    ).getDocText();
     return contractDocs;
   }
 );

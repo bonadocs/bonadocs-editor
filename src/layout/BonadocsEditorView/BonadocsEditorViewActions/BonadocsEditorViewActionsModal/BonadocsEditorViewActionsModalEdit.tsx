@@ -60,9 +60,10 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
     };
   });
 
-  const currentChain = getCollection()?.valueManagerView.getString(
-    `workflow-chain-id-${actionItem.id}`
-  );
+  const valueView = getCollection()?.getValueManagerView;
+  const currentChain = async () =>
+    valueView &&
+    (await (await valueView()).getString(`workflow-chain-id-${actionItem.id}`));
 
   const [selectedChainId, setSelectedChainId] = useState<number>(
     Number(currentChain) ?? (options[1].value as number)

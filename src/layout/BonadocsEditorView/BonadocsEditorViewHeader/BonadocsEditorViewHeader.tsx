@@ -12,7 +12,10 @@ import { useParams } from "react-router-dom";
 import { saveProject } from "@/store/project/projectSlice";
 import { toast } from "react-toastify";
 import { BonadocsEditorViewPublishModal } from "./BonadocsEditorViewPublishModal";
-import { setMethodDisplayData, setMethodItem } from "@/store/method/methodSlice";
+import {
+  setMethodDisplayData,
+  setMethodItem,
+} from "@/store/method/methodSlice";
 import { ContractItem, MethodItem } from "@/data/dataTypes";
 import { setActiveContract } from "@/store/contract/contractSlice";
 
@@ -26,9 +29,22 @@ export const BonadocsEditorViewHeader: React.FC<
   const { getCollection, connectWallet, walletId } = useCollectionContext();
   const [loader, setLoader] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(true);
+  const [collectionName, setCollectionName] = useState<string>("");
   const { user, signOut } = useAuthContext();
-  const collectionName = getCollection()?.data.name!;
+  
+  const dataManager = getCollection();
+
+  const getCollectionName = async () => {
+    if (dataManager) {
+      const metadataView = await dataManager.getMetadataView();
+      const name = await metadataView.getName();
+      setCollectionName(name);
+    }
+  };
+ 
+  
   let [referenceElement, setReferenceElement] = useState<any>();
+  const [refPublishElement, setRefPublishElement] = useState<any>();
   const [openPublishModal, setOpenPublishModal] = useState<boolean>(false);
   const [uri, setUri] = useState<string>("");
 
@@ -37,6 +53,15 @@ export const BonadocsEditorViewHeader: React.FC<
     placement: "bottom-end",
     strategy: "absolute",
   });
+  let { styles: publishStyle, attributes: publishAttributes } = usePopper(
+    refPublishElement,
+    popperElement,
+    {
+      placement: "bottom-end",
+      strategy: "absolute",
+    }
+  );
+
   const connected = useSelector(
     (state: RootState) => state.controlBoard.connected
   );
@@ -59,6 +84,10 @@ export const BonadocsEditorViewHeader: React.FC<
   const dispatch = useDispatch<AppDispatch>();
   const warningHeaderText = `There has been some change on the playground and you might need to reload to view latest changes.`;
 
+  useEffect(() => {
+    getCollectionName();
+  }, []);
+
   return (
     <>
       {open && (
@@ -66,55 +95,95 @@ export const BonadocsEditorViewHeader: React.FC<
           <h2 className="bonadocs__editor__dashboard__header__title">
             {!warningHeader ? collectionName : warningHeaderText}
           </h2>
-          <div className="bonadocs__editor__dashboard__header__share">
-            {/* <Button
-          type="action"
-          onClick={async () => {
-            console.log(JSON.stringify(await getCollection()?.data));
-          }}
-        >Log data</Button>
-        <Button
-          className="bonadocs__editor__dashboard__header__share"
-          onClick={async () => {
-            console.log("start");
+          {!connected ? (
+            <div className="bonadocs__editor__dashboard__header__connect">
+              <Button onClick={() => connectWallet()}>Connect wallet</Button>
+            </div>
+          ) : (
+            <BonadocsEditorViewPlaygroundMethodStatus
+              className={`${
+                connected && !simulation && "connected__green"
+              } bonadocs__editor__dashboard__header__status`}
+            >
+              {!simulation ? (
+                <span
+                  className={` ${
+                    connected ? "connected__green__circle" : "bonadocs__circle"
+                  }`}
+                ></span>
+              ) : (
+                <span className="bonadocs__circle__simulation"></span>
+              )}
 
-            console.log(await getCollection()?.publishToIPFS());
-          }}
-          type="action"
-        >
-          <>
-            <img
-              width={20}
-              height={20}
-              src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715229840/Quick_Actions_2_zvr78g.svg"
-            />
-            Share
-          </>
-        </Button> */}
+              {!simulation ? (
+                <span>{connectionStatus()}</span>
+              ) : (
+                <span>Simulation</span>
+              )}
+            </BonadocsEditorViewPlaygroundMethodStatus>
+          )}
+          <div className="bonadocs__editor__dashboard__header__share">
             {!warningHeader ? (
               <>
-                <Button
-                  disabled={loader}
-                  className="bonadocs__editor__dashboard__header__share bonadocs__editor__dashboard__header__share__publish"
-                  type="inertia"
-                  onClick={async () => {
-                    setLoader(true);
-                    try {
-                      const uri = await getCollection()?.publishToIPFS();
-                      console.log(uri);
+                <Popover className="relative ma-auto">
+                  <Popover.Button ref={setRefPublishElement}> 
+                    <Button
+                      disabled={loader}
+                      className="bonadocs__editor__dashboard__header__share bonadocs__editor__dashboard__header__share__publish"
+                      type="action"
+                      onClick={async () => {
+                        // setLoader(true);
+                        try {
+                          // const uri = await getCollection()?.publishToIPFS();
+                          // console.log(uri);
+                          // setUri(uri!);
+                          // setLoader(false);
+                          // toast.success("Project published to IPFS");
+                          // setOpenPublishModal(!openPublishModal);
+                        } catch (err) {
+                          setLoader(false);
+                        }
+                      }}
+                    >
+                      <span>
+                        <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1728749756/export_mf0ydj.svg" />
+                        {"Publish"}
+                        <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1728750505/icon_filled_dropdown_rjw9jz.svg" />
+                      </span>
+                    </Button>
+                  </Popover.Button>
+                  <Popover.Panel
+                    ref={setPopperElement}
+                    style={publishStyle.popper}
+                    {...publishAttributes.popper}
+                    // className="bonadocs__editor__dashboard__header__view"
+                    className="bonadocs__editor__variables__table__item__popover"
+                  >
+                    <>
+                      <div className="bonadocs__editor__variables__table__item__popover__item">
+                        <div
+                          onClick={() => {
+                            // setInviteModal(!inviteModal);
+                          }}
+                          className="bonadocs__editor__variables__table__item__popover__item__edit"
+                        >
+                          {loader ? "Publishing..." : "Publish to IPFS"}
+                        </div>
+                        <div
+                          onClick={() => {
+                            // setDeleteWidget(!deleteWidget);
+                            // dispatch(deleteTeam(teamItem.id));
+                            // close();
+                          }}
+                          className="bonadocs__editor__variables__table__item__popover__item__edit"
+                        >
+                          Publish to Server
+                        </div>
+                      </div>
+                    </>
+                  </Popover.Panel>
+                </Popover>
 
-                      setUri(uri!);
-                      setLoader(false);
-
-                      toast.success("Project published to IPFS");
-                      setOpenPublishModal(!openPublishModal);
-                    } catch (err) {
-                      setLoader(false);
-                    }
-                  }}
-                >
-                  {loader ? "Publishing..." : "Publish to IPFS"}
-                </Button>
                 <Button
                   disabled={loader}
                   className="bonadocs__editor__dashboard__header__share"
@@ -137,37 +206,7 @@ export const BonadocsEditorViewHeader: React.FC<
                 >
                   {loader ? "Saving..." : "Save Project"}
                 </Button>
-                {!connected ? (
-                  <div className="bonadocs__editor__dashboard__header__connect">
-                    <Button onClick={() => connectWallet()}>
-                      Connect wallet
-                    </Button>
-                  </div>
-                ) : (
-                  <BonadocsEditorViewPlaygroundMethodStatus
-                    className={`${
-                      connected && !simulation && "connected__green"
-                    } bonadocs__editor__dashboard__header__status`}
-                  >
-                    {!simulation ? (
-                      <span
-                        className={` ${
-                          connected
-                            ? "connected__green__circle"
-                            : "bonadocs__circle"
-                        }`}
-                      ></span>
-                    ) : (
-                      <span className="bonadocs__circle__simulation"></span>
-                    )}
 
-                    {!simulation ? (
-                      <span>{connectionStatus()}</span>
-                    ) : (
-                      <span>Simulation</span>
-                    )}
-                  </BonadocsEditorViewPlaygroundMethodStatus>
-                )}
                 {user && (
                   <>
                     <Popover className="relative ma-auto">
@@ -223,7 +262,10 @@ export const BonadocsEditorViewHeader: React.FC<
                   type="inertia"
                   onClick={() => {
                     setOpen(!open);
-                    dispatch({ type: "controlBoard/setWarningBar", payload: !open });
+                    dispatch({
+                      type: "controlBoard/setWarningBar",
+                      payload: !open,
+                    });
                     dispatch(setMethodItem({} as MethodItem));
                     dispatch(setMethodDisplayData([]));
                     dispatch(setActiveContract({} as ContractItem));
@@ -234,7 +276,7 @@ export const BonadocsEditorViewHeader: React.FC<
                 <Button
                   disabled={loader}
                   className="bonadocs__editor__dashboard__header__share"
-                    onClick={() => {
+                  onClick={() => {
                     dispatch({
                       type: "controlBoard/setWarningBar",
                       payload: !open,

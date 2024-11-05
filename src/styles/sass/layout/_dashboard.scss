@@ -73,6 +73,10 @@
           padding-left: 1.6rem;
           &__publish {
             margin-right: 1.6rem;
+            
+            span {
+              color: var(--bonadocsSecondaryText);
+            }
           }
         }
         &__networkDropdown {

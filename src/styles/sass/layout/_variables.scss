@@ -16,7 +16,7 @@
         height: auto;
         overflow-y: auto;
         &__placeholder {
-        padding-top: 20%;
+          padding-top: 20%;
         }
 
         &__items {
@@ -61,14 +61,20 @@
               width: 19.1rem;
               background-color: var(--bonadocsEditorBackground);
               font-size: 1.6rem;
+              margin-top: 1rem;
+              
               &__edit {
                 width: 100%;
                 padding: 0.8rem;
-                color: var(--bonadocsTextWhite);
+                color: var(--bonadocsText);
                 cursor: pointer;
+                // font-weight: 500;
+                // line-height: 2.4rem; /* 150% */
+                // letter-spacing: 0.016rem;
               }
               &__edit:hover {
                 background-color: var(--bonadocsBackground);
+                color: var(--bonadocsSecondaryText);
               }
               &__delete {
                 width: 100%;
@@ -106,6 +112,3 @@
     }
   }
 }
-
-
-

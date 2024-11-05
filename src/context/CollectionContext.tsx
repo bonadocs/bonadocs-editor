@@ -11,9 +11,10 @@ import { fetchCollectionContracts } from "@/store/contract/contractSlice";
 import { fetchCollectionVariables } from "@/store/variable/variableSlice";
 import {
   setConnected,
+  setLoadingScreen,
   setProvider,
 } from "@/store/controlBoard/controlBoardSlice";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { ethers } from "ethers";
 import { useSelector } from "react-redux";
 import {
@@ -92,6 +93,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const [queryParameters] = useSearchParams();
   const currentUserEmail = useSelector((state: RootState) => state.auth.email);
 
+  const navigate = useNavigate();
   const uri = queryParameters.get("uri");
   const id = queryParameters.get("id");
   const writeMethod = useSelector(
@@ -127,18 +129,16 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
           localStorage.getItem(uri)!
         );
 
-        collectionRef.current = collection.manager;
+        collectionRef.current = await collection.getManager();
       } else {
         let collection = await Collection.createFromURI(uri);
-
-        await collection.manager.saveToLocal();
-        collectionRef.current = collection.manager;
-
-        localStorage.setItem(uri, collectionRef.current?.data.id);
+        collectionRef.current = await collection.getManager();
+        localStorage.setItem(uri, collectionRef.current?.id);
       }
       return true;
     } catch (error: any) {
-      toast.error(error);
+      dispatch(setLoadingScreen(false));
+      toast.error(`${error}, Confirm IPFS URI and reload`);
     }
   };
 
@@ -172,48 +172,58 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     projectId: string
   ) => {
     try {
-      const uriId = `/projects/${teamId}/collections/${projectId}`;
+      // const uriId = `/projects/${teamId}/collections/${projectId}`;
 
-      const teamUsers = await dispatch(getTeamById(teamId));
+      // const teamUsers = await dispatch(getTeamById(teamId));
 
-      const userPermission = teamUsers.payload.users.find(
-        (user: any) => user.emailAddress === currentUserEmail
-      )?.permissions;
+      // const userPermission = teamUsers.payload.users.find(
+      //   (user: any) => user.emailAddress === currentUserEmail
+      // )?.permissions;
 
-      const userRole = teamRoles.filter((role) => {
-        if (arraysEqual(role.permission, userPermission)) {
-          return role;
-        }
-      });
+      // const userRole = teamRoles.filter((role) => {
+      //   if (arraysEqual(role.permission, userPermission)) {
+      //     return role;
+      //   }
+      // });
       // console.log(userRole, "userRole");
 
       // && userRole[0].value !== "viewer"
-      if (localStorage.getItem(uriId)) {
-        let collection = await Collection.createFromLocalStore(
-          localStorage.getItem(uriId)!
-        );
+      // if (localStorage.getItem(uriId)) {
+      //   let collection = await Collection.createFromLocalStore(
+      //     localStorage.getItem(uriId)!
+      //   );
 
-        collectionRef.current = collection.manager;
-      } else {
-        const getData = await api.get(
-          `/projects/${teamId}/collections/${projectId}/data`
-        );
+      //   collectionRef.current = await collection.getManager();
+      // } else {
+      
+        // const getData = await api.get(
+        //   `/projects/${teamId}/collections/${projectId}/data`
+        // );
 
-        const collection = new CollectionDataManager(getData.data.data);
-        await collection.saveToLocal();
-        collectionRef.current = collection;
+        const collection = await Collection.createFromBonadocsApi(
+          Number(teamId),
+          Number(projectId)
+        );
+        collectionRef.current = await collection.getManager();
 
         // if (localStorage.getItem(uriId)!) {
         //   localStorage.removeItem(uriId);
         // }
-        localStorage.setItem(uriId, collectionRef.current?.data.id!);
-      }
+        // localStorage.setItem(uriId, collectionRef.current?.id);
+      //}
 
       return true;
     } catch (error) {
       console.log(error);
-
-      toast.error((error as Error).toString());
+      // navigate({
+      //   pathname: "/teams",
+      // });
+      dispatch(setLoadingScreen(false));
+      toast.error(
+        `${(
+          error as Error
+        ).toString()}, Confirm team and project ID, then reload.`
+      );
     }
   };
 
@@ -318,10 +328,12 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     // // }
 
     initialConnection();
+    
+    
     await dispatch(
       fetchCollectionContracts({ collection: collectionRef.current! })
     );
-    dispatch(fetchCollectionVariables(collectionRef.current!));
+    await dispatch(fetchCollectionVariables(collectionRef.current!));
 
     return uriId!;
     // }
@@ -524,9 +536,12 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
   async function executionWorkflowButton() {
     setWorkflowResponse("");
-    const activeNetwork = collectionRef.current?.valueManagerView.getString(
-      `workflow-chain-id-${currentAction.id}`
-    );
+    const valueView = collectionRef.current?.getValueManagerView;
+    const activeNetwork =
+      valueView &&
+      (await (
+        await valueView()
+      ).getString(`workflow-chain-id-${currentAction.id}`));
 
     try {
       dispatch(setLoader(true));

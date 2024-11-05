@@ -52,7 +52,7 @@ export const BonadocsEditorViewPlaygroundContractModalContractItem: React.FC<
   const handleDeleteContract = async () => {
     const currentContractId = contracts.indexOf(contractItem);
     console.log("currentContractId", currentContractId);
-    if (currentContractId === 0) {
+    if (contracts.length === 1) {
       toast.error("You require at least one contract in the playground");
       return;
     }

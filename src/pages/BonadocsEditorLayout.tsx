@@ -17,6 +17,7 @@ import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 import { getAllPackages } from "@/store/package/packageSlice";
 
+
 interface BonadocsEditorLayoutProps {}
 
 export const BonadocsEditorLayout: React.FC<
@@ -24,9 +25,15 @@ export const BonadocsEditorLayout: React.FC<
 > = ({}) => {
   const { initializeEditor, getCollection } = useCollectionContext();
   let collectionName;
-  if (getCollection()) {
-    collectionName = getCollection()?.data.name;
-  }
+  const dataManager = getCollection();
+
+  const getCollectionName = async () => {
+    if (dataManager) {
+      const metadataView = await dataManager.getMetadataView();
+      collectionName = await metadataView.getName();
+    }
+  };
+
   const [queryParameters] = useSearchParams();
   const dispatch: AppDispatch = useDispatch();
   const [display, setDisplay] = useState<boolean>(false);
@@ -38,6 +45,8 @@ export const BonadocsEditorLayout: React.FC<
     (state: RootState) => state.contract.currentContract
   );
 
+  
+
   const queryParams = new URLSearchParams(window.location.search);
   const loadingScreen = useSelector(
     (state: RootState) => state.controlBoard.loadingScreen
@@ -45,12 +54,14 @@ export const BonadocsEditorLayout: React.FC<
 
   useEffect(() => {
     void initializeCollection();
+    getCollectionName();
   }, []);
 
   const initializeCollection = async () => {
     dispatch(setLoadingScreen(true));
 
     if (projectId && teamId) {
+     
       await initializeEditor({ projectId, teamId });
       const uriId = `/projects/${teamId}/collections/${projectId}`;
 

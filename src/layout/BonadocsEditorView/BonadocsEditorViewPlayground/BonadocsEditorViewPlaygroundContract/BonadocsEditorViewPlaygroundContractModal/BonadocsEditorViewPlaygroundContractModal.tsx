@@ -36,7 +36,10 @@ import { useParams } from "react-router-dom";
 import { auth } from "@/utils/firebase.utils";
 import { current } from "immer";
 import { BonadocsEditorViewPlaygroundContractModalCancel } from "./BonadocsEditorViewPlaygroundContractModalCancel";
-import { setMethodDisplayData, setMethodItem } from "@/store/method/methodSlice";
+import {
+  setMethodDisplayData,
+  setMethodItem,
+} from "@/store/method/methodSlice";
 import { setActiveContract } from "@/store/contract/contractSlice";
 
 interface BonadocsEditorViewPlaygroundContractModalProps {
@@ -52,13 +55,10 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
   const [open, isOpen] = useState<boolean>(false);
   const [reloadWarning, setReloadWarning] = useState<boolean>(true);
   const [addContract, setAddContract] = useState<boolean>(false);
-  const [projectName, setProjectName] = useState<string>(
-    getCollection()?.data.name ?? ""
-  );
+
+  const [projectName, setProjectName] = useState<string>();
   const [searchContracts, setSearchContracts] = useState<string>("");
-  const [projectDescription, setProjectDescription] = useState<string>(
-    getCollection()?.data.description ?? ""
-  );
+  const [projectDescription, setProjectDescription] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [openCancelModal, setOpenCancelModal] = useState<boolean>(false);
   const tempContracts = useSelector(
@@ -70,10 +70,31 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
 
   const { projectId, id } = useParams();
 
+  const dataManager = getCollection();
+
+  const getCollectionName = async () => {
+    if (dataManager) {
+      const metadataView = await dataManager.getMetadataView();
+      const name = await metadataView.getName();
+      setProjectName(name);
+    }
+  };
+
+  const getCollectionDescription = async () => {
+    if (dataManager) {
+      const metadataView = await dataManager.getMetadataView();
+      const description = await metadataView.getDescription();
+      setProjectDescription(description);
+    }
+  };
+
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getCollectionName();
+    getCollectionDescription();
+  }, []);
   const dispatch = useDispatch<AppDispatch>();
 
   const closeModal = () => {
@@ -179,10 +200,6 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
       // dispatch(reset());
     };
   }, []);
-
-  
-
-
 
   return (
     <>
@@ -343,7 +360,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
                       data-testid="loader"
                     />
                   ) : (
-                    "Update Contracts"
+                    "Save"
                   )}
                 </>
               </Button>

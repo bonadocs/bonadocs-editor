@@ -19,9 +19,11 @@ interface BonadocsEditorViewPlaygroundResultProps {
 export const BonadocsEditorViewPlaygroundResult: React.FC<
   BonadocsEditorViewPlaygroundResultProps
 > = ({ className }) => {
+  const [collectionName, setCollectionName] = useState<string>("");
+  const [collectionDescription, setCollectionDescription] =
+    useState<string>("");
   const { getCollection, response } = useCollectionContext();
-  const collectionName = getCollection()?.data.name ?? "";
-  const collectionDescription = getCollection()?.data.description ?? "";
+
   const dispatch = useDispatch<AppDispatch>();
   const parentRef = useRef(null);
   const [parentWidth, setParentWidth] = useState(0);
@@ -32,6 +34,24 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
     (state: RootState) => state.contract.currentContract
   );
   const [docs, setDocs] = React.useState<string>(contract?.docs!);
+
+  const dataManager = getCollection();
+
+  const getCollectionName = async () => {
+    if (dataManager) {
+      const metadataView = await dataManager.getMetadataView();
+      const name = await metadataView.getName();
+      setCollectionName(name);
+    }
+  };
+
+  const getCollectionDescription = async () => {
+    if (dataManager) {
+      const metadataView = await dataManager.getMetadataView();
+      const description = await metadataView.getDescription();
+      setCollectionDescription(description);
+    }
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const setCurrentContractDocs = useCallback(
@@ -52,7 +72,8 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
     const updateWidth = () => {
       if (parentRef.current) {
         // Measure the width of the parent component
-        const width = (parentRef.current as HTMLElement).getBoundingClientRect().width;
+        const width = (parentRef.current as HTMLElement).getBoundingClientRect()
+          .width;
         setParentWidth(width);
       }
     };
@@ -65,6 +86,11 @@ export const BonadocsEditorViewPlaygroundResult: React.FC<
 
     // Cleanup event listener when the component unmounts
     return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
+  useEffect(() => {
+    getCollectionName();
+    getCollectionDescription();
   }, []);
 
   return (

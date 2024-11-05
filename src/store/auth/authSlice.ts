@@ -13,7 +13,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { reset as resetProject } from "../project/projectSlice";
-
+import { getApi } from "@bonadocs/core";
 import { toast } from "react-toastify";
 import { RootState } from "..";
 
@@ -21,7 +21,6 @@ interface UserState {
   email: string;
   authToken: string;
   inSession?: boolean;
-  
 }
 
 const initialState: UserState = {
@@ -142,7 +141,7 @@ const bonadocsLogin = async (userInfo: any) => {
       });
     }
 
-    
+    getApi().authenticate(response.data.data.token);
     return {
       email: email,
       authToken: response.data.data.token,

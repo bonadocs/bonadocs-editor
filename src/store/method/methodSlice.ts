@@ -132,7 +132,7 @@ export const updateMethodViewValue = createAsyncThunk(
           state.method.methodItem.contractId!,
           state.method.methodItem.fragmentKey
         );
-        const methodDocs = functionFragment?.getDocText();
+        const methodDocs = async () => await functionFragment?.getDocText();
         const { name, fragmentKey, contractId, instances, readMethod } =
           methodItem;
 
@@ -141,7 +141,7 @@ export const updateMethodViewValue = createAsyncThunk(
           fragmentKey,
           contractId,
           instances,
-          docs: methodDocs,
+          docs: await methodDocs(),
           readMethod,
         };
       } catch (err) {
@@ -157,8 +157,8 @@ export const getMethodWidget = createAsyncThunk(
     try {
       const collection = methodWidgetParams;
       const state = getState() as RootState;
-      const widgetConfig = await collection
-        ?.getContractDetailsView(state.method.methodItem.contractId!)
+      const widgetConfig = await (await collection
+        ?.getContractDetailsView(state.method.methodItem.contractId!))
         .getWidgetConfiguration(state.method.methodItem.fragmentKey);
       return widgetConfig;
     } catch (err) {

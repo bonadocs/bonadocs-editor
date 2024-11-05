@@ -13,8 +13,10 @@ import {
 } from "@/store/method/methodSlice";
 import { MethodItem, ContractItem } from "@/data/dataTypes";
 import { setActiveContract } from "@/store/contract/contractSlice";
+import { getApi } from "@bonadocs/core";
 
 export const BonadocsEditorContainer: React.FC = () => {
+   getApi(process.env.REACT_APP_BONADOCS_ENDPOINT);
   const [queryParameters] = useSearchParams();
   const dispatch: AppDispatch = useDispatch();
   const [display, setDisplay] = useState<boolean>(false);
@@ -43,6 +45,13 @@ export const BonadocsEditorContainer: React.FC = () => {
   //   }
   //    setDisplay(true);
   // };
+  const authToken = useSelector((state: RootState) => state.auth.authToken);
+
+  useEffect(() => {
+     authToken &&
+       getApi().authenticate(authToken);
+  }, []);
+
   return (
     <>
       <>

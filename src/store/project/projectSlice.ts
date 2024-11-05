@@ -1,4 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import {
+  PayloadAction,
+  createAsyncThunk,
+  createSlice,
+  current,
+} from "@reduxjs/toolkit";
 import {
   ProjectItem,
   ContractInstance,
@@ -121,16 +126,15 @@ const projectSlice = createSlice({
       action: PayloadAction<ContractInstance[]>
     ) => {
       // console.log(state.currentContract, "current");
+      console.log(state.contracts, 'initial state');
       
       let contracts = state.contracts.slice();
-
 
       let contract = contracts.find(
         (contractItem: ContractsState) =>
           contractItem.id === state.currentContract.id
       );
 
-      
       // console.log(
       //   contracts,
       //   "update contract instances",
@@ -143,6 +147,8 @@ const projectSlice = createSlice({
           contracts.findIndex((index) => index === contract)
         ].contractInstances = action.payload as ContractInstance[];
       state.contracts = contracts;
+      console.log(state.contracts, 'contracts');
+      
     },
   },
   extraReducers: (builder) => {},
@@ -264,7 +270,8 @@ export const saveProject = createAsyncThunk(
   async (saveProjectParams: SaveProjectParams, { getState, dispatch }) => {
     const { team } = getState() as RootState;
     const { collection, projectId } = saveProjectParams;
-    const collectionName = collection.data.name;
+    const metadataView = await collection.getMetadataView();
+    const collectionName = await metadataView.getName();
 
     try {
       const saveToServer = await api.put(
@@ -272,7 +279,7 @@ export const saveProject = createAsyncThunk(
         {
           name: collectionName,
           isPublic: false,
-          collectionData: collection.data,
+          collectionData: await collection.getData(),
         }
       );
 
@@ -380,8 +387,8 @@ export const importCollection = createAsyncThunk(
       const collection = await Collection.createFromIPFS(uri);
       // dispatch(reset());
       // await collection.manager.saveToLocal()
-
-      return collection.manager;
+      const manager = await collection.getManager();
+      return manager;
     } catch (err) {
       console.log(err);
       toast.error("Error importing collection");
@@ -414,15 +421,17 @@ export const addCollection = createAsyncThunk(
   "project/addCollection",
   async (collectionParam: CollectionDataManager, { dispatch, getState }) => {
     const { team } = getState() as RootState;
-    const collectionName = collectionParam.data.name;
-    console.log(collectionParam.data);
+
+    const metadataView = await collectionParam.getMetadataView();
+    const collectionName = await metadataView.getName();
+
     try {
       const newProject = await api.post(
         `projects/${team.currentTeam.id}/collections`,
         {
           name: collectionName,
           isPublic: false,
-          collectionData: collectionParam.data,
+          collectionData: collectionParam.getData(),
         }
       );
 
@@ -437,14 +446,14 @@ export const addCollection = createAsyncThunk(
 );
 
 export const editCollectionDetails = createAsyncThunk(
-  "project/setCollectionDetails",
+  "project/editCollectionDetails",
   async (collectionDetails: CollectionDetailsParams, { dispatch }) => {
     try {
       const { collection, projectItem, value } = collectionDetails;
       if (projectItem === "name") {
-        await collection.metadataView.rename(value);
+        await (await collection.getMetadataView()).rename(value);
       } else {
-        await collection.metadataView.updateDescription(value);
+        await (await collection.getMetadataView()).updateDescription(value);
       }
       // collection.manager.setDocText(projectItem.description);
       // dispatch(setProjectItem(projectItem));
@@ -464,21 +473,20 @@ export const updateContractList = createAsyncThunk(
     const state = getState() as RootState;
     const collectionContracts = state.contract.collectionContracts;
     const { contracts, collection, uriId } = updateContractListParams;
-    const contractManagerView = collection.contractManagerView;
+    const contractManagerView = collection.getContractManagerView();
     try {
       for (let i = 0; i < collectionContracts.length; i++) {
-        await contractManagerView.removeContract(
-          collectionContracts[i].contractId
-        );
+        await (
+          await contractManagerView
+        ).removeContract(collectionContracts[i].contractId);
       }
 
       for (let i = 0; i < contracts.length; i++) {
         const contract = contracts[i];
 
-        const interfaceHash = await contractManagerView.addContractInterface(
-          contract.name,
-          contract.abi!
-        );
+        const interfaceHash = await (
+          await contractManagerView
+        ).addContractInterface(contract.name, contract.abi!);
 
         const instances = contract.contractInstances?.map((instance) => {
           return {
@@ -495,16 +503,18 @@ export const updateContractList = createAsyncThunk(
         };
 
         if (contractManagerView && instances![0]) {
-          await contractManagerView.addContract(
+          await (
+            await contractManagerView
+          ).addContract(
             contractDefinitionParam,
             instances![0].chainId,
             instances![0].address
           );
         }
 
-        await collection
-          .getContractDetailsView(contract.id)
-          .setDocText(contract.description!);
+        await (
+          await collection.getContractDetailsView(contract.id)
+        ).setDocText(contract.description!);
       }
       dispatch(fetchCollectionContracts({ collection, uriId }));
 
@@ -529,14 +539,18 @@ export const createCollection = createAsyncThunk(
         name,
         description!
       );
-      const contractManagerView = newCollection.manager.contractManagerView;
+      const contractManagerView = await (
+        await newCollection.getManager()
+      ).getContractManagerView();
 
+      debugger;
       for (let i = 0; i < state.project.contracts.length; i++) {
         const contract = state.project.contracts[i];
         const interfaceHash = await contractManagerView.addContractInterface(
           state.project.contracts[i].name,
           state.project?.contracts[i]?.abi || ""
         );
+
         const instances =
           state.project.contracts[i].contractInstances?.map((instance) => {
             return {
@@ -562,25 +576,49 @@ export const createCollection = createAsyncThunk(
           instances[0].chainId,
           instances[0].address
         );
-        newCollection.manager
-          ?.getContractDetailsView(contractId)
-          .setDocText(contract.description!);
+
+        const contractDetailsView = await (
+          await newCollection.getManager()
+        ).getContractDetailsView(contractId);
+
+        contractDetailsView.setDocText(contract.description!);
       }
-      const newCollectionManager: CollectionDataManager = newCollection.manager;
+      const newCollectionManager: CollectionDataManager =
+        await newCollection.getManager();
       // newCollectionManager.metadataView.updateDescription(description);
       // await newCollectionManager.saveToLocal();
-      const collectionName = newCollectionManager.data.name;
-      const newProject = await api.post(
+
+      const metadataView = await newCollectionManager.getMetadataView();
+
+      const collectionName = await metadataView.getName();
+
+      const addedCollection = await api.post(
         `projects/${state.team.currentTeam.id}/collections`,
         {
           name: collectionName,
           isPublic: false,
-          collectionData: newCollectionManager.data,
+          collectionData: await newCollectionManager.getData(),
         }
       );
 
+      console.trace(
+        state.team.currentTeam.id,
+        addedCollection.data.data.collectionId
+      );
+
+      console.log(
+        await Collection.createFromBonadocsApi(
+          Number(state.team.currentTeam.id),
+          Number(addedCollection.data.data.collectionId)
+        )
+      );
+
       dispatch(reset());
-      return newCollectionManager;
+      return {
+        collection: newCollectionManager,
+        projectId: state.team.currentTeam.id,
+        collectionId: addedCollection.data.data.collectionId,
+      };
     } catch (err: any) {
       console.log(err);
       toast.error(err?.response.data.message);

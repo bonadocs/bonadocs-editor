@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BonadocsEditorViewPlaygroundContractModalContractItem } from "./BonadocsEditorViewPlaygroundContractModalContractItem";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
@@ -15,6 +15,7 @@ interface BonadocsEditorViewPlaygroundContractModalContractListProps {
 export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   BonadocsEditorViewPlaygroundContractModalContractListProps
 > = ({ searchValue, show }) => {
+  const [UIContractList, setUIContractList] = useState<ContractsState[]>([]);
   const contracts = useSelector(
     (state: RootState) => state.contract.collectionContracts
   );
@@ -26,23 +27,32 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   const { getCollection } = useCollectionContext();
   const isInitialRender = useRef(true);
   const dispatch = useDispatch<AppDispatch>();
-  const UIContracts = contracts.map((contract) => {
-    const currentContract = getCollection()?.contractManagerView.getContract(
-      contract.contractId
-    );
-    const abi = getCollection()?.contractManagerView.getContractInterface(
-      currentContract?.interfaceHash!
-    )?.abi;
-    return {
-      id: contract.contractId,
-      name: contract.name,
-      interfaceHash: "",
-      abi,
-      description: contract.docs,
-      instances: [],
-      contractInstances: contract.instances,
-    };
-  });
+
+  async function UIContracts() {
+    const contractLoop = contracts.map(async (contract) => {
+      const contractView = await getCollection()?.getContractManagerView();
+      const currentContract =
+        contractView && contractView.getContract(contract.contractId);
+
+      const abi =
+        contractView &&
+        contractView.getContractInterface(currentContract?.interfaceHash!)?.abi;
+
+      return {
+        id: contract.contractId,
+        name: contract.name,
+        interfaceHash: "",
+        abi,
+        description: contract.docs,
+        instances: [],
+        contractInstances: contract.instances,
+      };
+    });
+
+    const responses = await Promise.all(contractLoop);
+    setUIContractList(responses as ContractsState[]);
+  }
+
   const [contractList, setContractList] = React.useState<ContractsState[]>([]);
 
   const emptyContract = {
@@ -62,24 +72,29 @@ export const BonadocsEditorViewPlaygroundContractModalContractList: React.FC<
   ];
 
   useEffect(() => {
+    initializeModal()
+  }, []);
+
+  const initializeModal = async () => {
+    await UIContracts();
     if (show)
       if (tempContracts && tempContracts.length > 0) {
         if (_.isEqual(tempContracts[0], emptyContracts[0])) {
-           console.log("original clone");
-          dispatch(setContracts(UIContracts));
-          setContractList(UIContracts);
+          console.log("original clone");
+          dispatch(setContracts(UIContractList));
+          setContractList(UIContractList);
         } else {
-           console.log("tempContracts");
+          console.log("tempContracts");
           console.log(tempContracts);
-          
+
           setContractList(tempContracts);
         }
       } else {
-         console.log("original");
-        dispatch(setContracts(UIContracts));
-        setContractList(UIContracts);
+        console.log("original");
+        dispatch(setContracts(UIContractList));
+        setContractList(UIContractList);
       }
-  }, []);
+  };
 
   return (
     <div className="bonadocs__editor__projects__action__contract__list">

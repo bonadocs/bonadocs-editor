@@ -63,13 +63,19 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
             dispatch(setProjectView(false));
           } else {
             setLoading(true);
-            const newCollection = await dispatch(createCollection());
-            if (!newCollection) return;
-            setCollection(newCollection.payload as CollectionDataManager);
+            const newCollectionParams = await dispatch(createCollection());
+            if (!newCollectionParams) return;
+            const payload = newCollectionParams.payload as {
+              collection: CollectionDataManager;
+              collectionId: string;
+              projectId: string;
+            };
+            setCollection(payload.collection);
             setLoading(false);
-            navigate({
-              pathname: `/teams/${teamId}/projects`,
-            });
+            if (teamId && payload.collectionId)
+              navigate({
+                pathname: `/teams/${teamId}/projects/${payload.collectionId}`,
+              });
           }
 
           // dispatch(setProjectView(!projectView));

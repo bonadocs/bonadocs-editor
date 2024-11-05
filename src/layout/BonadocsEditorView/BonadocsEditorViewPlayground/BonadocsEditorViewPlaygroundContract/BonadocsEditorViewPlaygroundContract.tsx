@@ -8,6 +8,7 @@ import { setWriteMethod } from "@/store/controlBoard/controlBoardSlice";
 import { BonadocsEditorViewPlaygroundContractModal } from "./BonadocsEditorViewPlaygroundContractModal/BonadocsEditorViewPlaygroundContractModal";
 import { setContracts } from "@/store/project/projectSlice";
 import { useCollectionContext } from "@/context/CollectionContext";
+import { ContractsState } from "@/data/dataTypes";
 
 interface BonadocsEditorViewPlaygroundContractProps {
   className?: string;
@@ -24,6 +25,7 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
   const dispatch: AppDispatch = useDispatch();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [UIContractList, setUIContractList] = useState<ContractsState[]>([]);
 
   const { getCollection } = useCollectionContext();
 
@@ -31,26 +33,31 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
     (state: RootState) => state.contract.collectionContracts
   );
 
-  const UIContracts = contracts.map((contract) => {
-    const currentContract = getCollection()?.contractManagerView.getContract(
-      contract.contractId
-    );
-    const abi = getCollection()?.contractManagerView.getContractInterface(
-      currentContract?.interfaceHash!
-    )?.abi;
-    return {
-      id: contract.contractId,
-      name: contract.name,
-      interfaceHash: "",
-      abi,
-      description: contract.docs,
-      instances: [],
-      contractInstances: contract.instances,
-    };
-  });
+  async function UIContracts() {
+    const contractLoop = contracts.map(async (contract) => {
+      const contractView = await getCollection()?.getContractManagerView();
+      const currentContract =
+        contractView && contractView.getContract(contract.contractId);
+      const abi =
+        contractView &&
+        contractView.getContractInterface(currentContract?.interfaceHash!)?.abi;
+
+      return {
+        id: contract.contractId,
+        name: contract.name,
+        interfaceHash: "",
+        abi,
+        description: contract.docs,
+        instances: [],
+        contractInstances: contract.instances,
+      };
+    });
+
+    const responses = await Promise.all(contractLoop);
+    setUIContractList(responses as ContractsState[]);
+  }
 
   useEffect(() => {
-    
     const handleBeforeUnload = (event: any) => {
       if (isOpen) {
         event.preventDefault();
@@ -76,8 +83,9 @@ export const BonadocsEditorViewPlaygroundContract: React.FC<
         </h3>
 
         <img
-          onClick={() => {
-            isOpen && setContracts(UIContracts);
+          onClick={async () => {
+            await UIContracts();
+            isOpen && setContracts(UIContractList);
             setIsOpen(!isOpen);
           }}
           src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1720750528/Icon_Edit_kvkncx.svg"

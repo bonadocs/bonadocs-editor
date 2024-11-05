@@ -50,15 +50,10 @@ export const setCurrentPackageVersion = createAsyncThunk(
     const currentPackage = state.package.collectionPackages.find(
       (item: PackageState) => item.name === name
     );
+    const valueView = collection?.getValueManagerView();
     try {
-      await collection.valueManagerView.removeLibrary(
-        "js",
-        `${name}@${currentPackage.version}`
-      );
-      await collection.valueManagerView.addLibrary(
-        "js",
-        `${name}@${packageVersion}`
-      );
+      await (await valueView).removeLibrary("js", `${name}@${currentPackage.version}`);
+      await (await valueView).addLibrary("js", `${name}@${packageVersion}`);
       thunkAPI.dispatch(getAllPackages(collection));
     } catch (error) {
       console.error("Error updating package version:", error);
@@ -76,7 +71,9 @@ export const getAllPackages = createAsyncThunk(
     let packageName: string;
     let packageList: Array<PackageState> = [];
 
-    collection.valueManagerView.getLibraries("js").map(async (library) => {
+    const valueView = collection?.getValueManagerView();
+
+    (await (await valueView).getLibraries("js")).map(async (library) => {
       const matches = library.match(regex);
 
       if (matches) {
@@ -91,6 +88,7 @@ export const getAllPackages = createAsyncThunk(
     });
 
     if (!packageList.find((item) => item.name === "ethers")) {
+      const valueView = collection?.getValueManagerView();
       try {
         const response = await fetch(
           `https://data.jsdelivr.com/v1/packages/npm/ethers`
@@ -99,12 +97,11 @@ export const getAllPackages = createAsyncThunk(
 
         const versions = data["versions"];
 
-        await collection.valueManagerView.addLibrary(
+        await (await valueView).addLibrary(
           "js",
           `ethers@${versions[0].version.slice()}`
         );
-        
-        
+
         packageList.push({
           name: "ethers",
           version: versions[0].version.slice(),
@@ -123,9 +120,9 @@ export const addCustomPackage = createAsyncThunk(
   "package/setCustomPackage",
   async (packageDetails: PackageDetails, { dispatch }) => {
     const { name, currentVersion, collection } = packageDetails;
-
+    const valueView = await collection?.getValueManagerView();
     try {
-      await collection?.valueManagerView.addLibrary(
+      await valueView?.addLibrary(
         "js",
         `${name}@${currentVersion}`
       );
@@ -149,9 +146,10 @@ export const deleteCustomPackage = createAsyncThunk(
     const currentPackage = state.package.collectionPackages.find(
       (item: PackageState) => item.name === name
     );
+     const valueView = await collection?.getValueManagerView();
 
     try {
-      await collection?.valueManagerView.removeLibrary(
+      await valueView?.removeLibrary(
         "js",
         `${name}@${currentPackage.version}`
       );
