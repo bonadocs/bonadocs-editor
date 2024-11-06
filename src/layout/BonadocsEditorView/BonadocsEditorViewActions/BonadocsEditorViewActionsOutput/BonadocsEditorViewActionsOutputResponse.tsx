@@ -17,7 +17,7 @@ export const BonadocsEditorViewActionsOutputResponse: React.FC<
       workflowResponse["consoleLogs"].map((arg: any, i: any) => {
         responseText +=
           typeof arg["args"][0] !== "string"
-            ? `\n\n${arg["args"][0]["execResult"]["returnValue"]}` ?? ""
+            ? `\n\n${arg["args"][0]["execResult"]["returnValue"]}` 
             : `\n\n${arg["args"]}`;
       });
 

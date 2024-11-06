@@ -29,7 +29,9 @@ export const BonadocsEditorSidebarItem: React.FC<
   const active =
     userRoute === pathname
       ? "bona__active"
-      : "" || (route === "/contracts" && pathname === "/" && "bona__active");
+      : route === "/contracts" && pathname === "/" 
+      ? "bona__active"
+      : "";
 
   // useEffect(() => {
   //   // Logic to handle changes when id or query params change
