@@ -1,5 +1,5 @@
 import { RootState } from "@/store";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BonadocsEditorProjectsCreationActionContractInstanceSelectedItem } from "./BonadocsEditorProjectsCreationActionContractInstanceSelectedItem";
 
@@ -12,6 +12,10 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedList: R
   const currentContract = useSelector(
     (state: RootState) => state.project.currentContract
   );
+
+  useEffect(() => {console.log("currentContract", currentContract);
+  }, [currentContract]);
+
 
   return (
     <div className="bonadocs__editor__projects__creation__selection__list">

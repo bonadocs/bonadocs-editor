@@ -102,10 +102,13 @@ const projectSlice = createSlice({
     },
     setCurrentContract: (state, action: PayloadAction<ContractsState>) => {
       state.currentContract = action.payload;
+      // console.log(
+      //   state.currentContract,
+      //   "set current payload"
+      // );
     },
     setContracts: (state, action: PayloadAction<ContractsState[]>) => {
       state.contracts = action.payload;
-      // console.log(state.contracts, "setContract");
     },
     updateContract: (state, action: PayloadAction<ContractsState>) => {
       let contracts = state.contracts.slice();
@@ -114,7 +117,6 @@ const projectSlice = createSlice({
       );
       contracts[index] = action.payload;
       state.contracts = contracts;
-      // console.log(state.contracts, "updateContract");
     },
     updateContractInstances: (
       state,
@@ -535,7 +537,7 @@ export const createCollection = createAsyncThunk(
         const contract = state.project.contracts[i];
         const interfaceHash = await contractManagerView.addContractInterface(
           state.project.contracts[i].name,
-          state.project?.contracts[i]?.abi || ""
+          state.project?.contracts[i]?.abi!
         );
         const instances =
           state.project.contracts[i].contractInstances?.map((instance) => {

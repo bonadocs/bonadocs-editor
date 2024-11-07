@@ -28,6 +28,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   BonadocsEditorProjectsCreationActionContractInstanceSelectedItemProps
 > = ({ instance, instanceLength }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const [itemId, setItemId] = useState<number>(0);
 
   const options: Option[] = [
     {
@@ -60,19 +61,53 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
   const deleteInstance = () => {
     let instances = currentContract.contractInstances?.slice();
     instances?.splice(instances.indexOf(instance), 1);
-    dispatch(
-      setCurrentContract({
-        ...currentContract,
-        contractInstances: instances,
-      })
-    );
+    updateContract(instances!);
+  };
+
+  const updateContract = (instances: ContractInstance[], abi?: string) => {
+    if (abi) {
+      dispatch(
+        setCurrentContract({
+          ...currentContract,
+          contractInstances: instances,
+          abi,
+        })
+      );
+    } else {
+      dispatch(
+        setCurrentContract({
+          ...currentContract,
+          contractInstances: instances,
+        })
+      );
+    }
 
     dispatch(updateContractInstances(instances!));
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value, "e.target.value");
+  const handleContractChange = (instances: ContractInstance[]) => {
+    setLoading(true);
+    getApi()
+      .loadContractABI(instance.chainId!, contractAddress.current)
+      .then((abi) => {
+        setLoading(false);
+        if (typeof abi === "undefined") {
+          toast.error("ABI error. Input it manually.");
+          updateContract(instances!);
+        } else {
+          updateContract(instances!, abi);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
 
+        console.log(err, "error");
+        toast.error("Error loading ABI");
+        updateContract(instances!);
+      });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let instances = currentContract.contractInstances?.slice();
     const newInstance: ContractInstance = {
       ...instance,
@@ -85,77 +120,19 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
 
     instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
-    dispatch(
-      setCurrentContract({
-        ...currentContract,
-        contractInstances: instances,
-      })
-    );
+    if (e.target.value === "Verified") {
+      console.log(contractAddress.current, "contractAddress.current");
 
-    dispatch(updateContractInstances(instances!));
-    if (e.target.value === "Verified" && !currentContract.abi) loadABI();
-  };
-
-  const handleABIChange = (abi: string) => {
-    let instances = currentContract.contractInstances?.slice();
-    // console.log(
-    //   currentContract.contractInstances,
-    //   abi,
-    //   "current contract here"
-    // );
-
-    // dispatch(setABIChange(abi))
-
-    const newInstance: ContractInstance = {
-      ...instance,
-      address: contractAddress.current,
-      abi: abi,
-    };
-
-    // console.log(newInstance, currentContract, instance, "new instance");
-
-    instances?.splice(instances.indexOf(instance!), 1, newInstance);
-
-    const updatedContract = {
-      ...currentContract,
-      abi,
-      contractInstances: instances,
-    };
-
-    // console.log(updatedContract, "updated Contract ABI Change");
-
-    dispatch(setCurrentContract(updatedContract));
-    dispatch(updateContractInstances(instances!));
-    dispatch(updateContract(updatedContract));
-  };
-
-  const loadABI = useCallback(
-    _.debounce(async (address?: string) => {
-      const EVMaddress = address ?? contractAddress.current;
-      console.log(EVMaddress, "EVMaddress", localVerification);
-
-      if (EVMaddress?.length === 42 && localVerification) {
-        setLoading(true);
-        getApi()
-          .loadContractABI(instance.chainId!, EVMaddress)
-          .then((abi) => {
-            !abi
-              ? toast.error("ABI error. Input it manually.")
-              : handleABIChange(abi);
-            setLoading(false);
-          })
-          .catch((err) => {
-            setLoading(false);
-            console.log(err, "error");
-            toast.error("Error loading ABI");
-          });
+      if (contractAddress.current.length === 42) {
+        handleContractChange(instances!);
+      } else {
+        updateContract(instances!);
       }
-    }, 500),
-    []
-  );
+    }
+  };
 
   useEffect(() => {
-    contractAddress.current = instance.address;
+    if (instance.address) contractAddress.current = instance.address;
   }, [instance.address]);
 
   useEffect(() => {
@@ -203,7 +180,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
           <TextInput
             placeholder="eg. 0x0123456789ABCDEF0123456789ABCDEF01234567"
             value={contractAddress.current}
-            handleChange={(e) => {
+            handleChange={async (e) => {
               contractAddress.current = e.target.value.trim();
               let instances = currentContract.contractInstances?.slice();
               const newInstance: ContractInstance = {
@@ -212,31 +189,11 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
               };
               instances?.splice(instances.indexOf(instance!), 1, newInstance);
 
-              // console.log(
-              //   {
-              //     ...currentContract,
-              //     contractInstances: instances,
-              //   },
-              //   "correct one"
-              // );
-
-              dispatch(
-                setCurrentContract({
-                  ...currentContract,
-                  contractInstances: instances,
-                })
-              );
-              // console.log(
-              //   instances,
-
-              //   "correct instances"
-              // );
-
-              dispatch(updateContractInstances(instances!));
-
-              // console.log(currentContract, "current contract alpha");
-
-              !currentContract.abi && loadABI(e.target.value);
+              if (e.target.value.trim().length === 42 && localVerification) {
+                handleContractChange(instances!);
+              } else {
+                updateContract(instances!);
+              }
             }}
           />
           {loading && (
