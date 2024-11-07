@@ -114,7 +114,10 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
         >
           {!openNetworkList ? (
             <div className="bonadocs__editor__projects__action__select ">
-              <div className="bonadocs__editor__projects__action__select__inner">
+              <div
+                onClick={() => setOpenNetworkList(!openNetworkList)}
+                className="bonadocs__editor__projects__action__select__inner"
+              >
                 <div className="bonadocs__editor__projects__action__select__inner__network">
                   {contractInstances && contractInstances?.length < 1 && (
                     <h4 className="bonadocs__editor__projects__action__select__inner__network__placeholder">
@@ -281,6 +284,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
           onClick={() => closeInstanceModal()}
           className="modal__side__container__search modal__side__container__search__open__cta"
           type="action"
+          disabled={openNetworkList}
         >
           Continue
         </Button>

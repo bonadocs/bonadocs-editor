@@ -52,14 +52,18 @@ export const BonadocsEditorProjectsCreationActionContractSelect: React.FC =
 
     return (
       <div className="bonadocs__editor__projects__action__select">
-        <div className="bonadocs__editor__projects__action__select__inner">
+        <div
+          onClick={() => setOpenInstanceModal(!openInstanceModal)}
+          className="bonadocs__editor__projects__action__select__inner"
+        >
           <div className="bonadocs__editor__projects__action__select__inner__network">
-            {currentContract.id && contracts[Number(currentContract.id)].contractInstances?.length ===
-              0 && (
-              <h4 className="bonadocs__editor__projects__action__select__inner__network__placeholder">
-                Click "+" icon to add address
-              </h4>
-            )}
+            {currentContract.id &&
+              contracts[Number(currentContract.id)].contractInstances
+                ?.length === 0 && (
+                <h4 className="bonadocs__editor__projects__action__select__inner__network__placeholder">
+                  Click "+" icon to add address
+                </h4>
+              )}
             {contractInstances?.map((instance, index) => (
               <div
                 key={index}
@@ -70,7 +74,8 @@ export const BonadocsEditorProjectsCreationActionContractSelect: React.FC =
                   {instance.name}
                 </div>
                 <img
-                  onClick={() => {
+                  onClick={(event) => {
+                    event.stopPropagation();
                     let instances = contractInstances.slice();
                     setSelectedInstance(instances[index]);
                     setOpenDeleteModal(true);
