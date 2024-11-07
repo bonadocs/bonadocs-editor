@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "@/store";
 import {
   setCurrentContract,
   updateContract,
+  updateContractABI,
   updateContractInstances,
 } from "@/store/project/projectSlice";
 import { getApi } from "@bonadocs/core";
@@ -73,6 +74,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
           abi,
         })
       );
+      dispatch(updateContractABI(abi));
     } else {
       dispatch(
         setCurrentContract({

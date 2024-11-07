@@ -13,8 +13,10 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedList: R
     (state: RootState) => state.project.currentContract
   );
 
-  useEffect(() => {console.log("currentContract", currentContract);
-  }, [currentContract]);
+  // const contracts = useSelector((state: RootState) => state.project.contracts);
+
+  // useEffect(() => {console.log("currentContract", currentContract, contracts);
+  // }, [currentContract]);
 
 
   return (

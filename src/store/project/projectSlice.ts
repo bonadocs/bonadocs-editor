@@ -1,4 +1,9 @@
-import { PayloadAction, createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
+import {
+  PayloadAction,
+  createAsyncThunk,
+  createSlice,
+  current,
+} from "@reduxjs/toolkit";
 import {
   ProjectItem,
   ContractInstance,
@@ -122,28 +127,19 @@ const projectSlice = createSlice({
       state,
       action: PayloadAction<ContractInstance[]>
     ) => {
-      // console.log(state.currentContract, "current");
-      
       let contracts = state.contracts.slice();
 
+      contracts[
+        contracts.findIndex((item) => item.id === state.currentContract.id)
+      ].contractInstances = action.payload as ContractInstance[];
+      state.contracts = contracts;
+    },
+    updateContractABI: (state, action: PayloadAction<string>) => {
+      let contracts = state.contracts.slice();
 
-      let contract = contracts.find(
-        (contractItem: ContractsState) =>
-          contractItem.id === state.currentContract.id
-      );
-
-      
-      // console.log(
-      //   contracts,
-      //   "update contract instances",
-      //   action.payload,
-      //   contract
-      // );
-
-      if (contract)
-        contracts[
-          contracts.findIndex((index) => index === contract)
-        ].contractInstances = action.payload as ContractInstance[];
+      contracts[
+        contracts.findIndex((item) => item.id === state.currentContract.id)
+      ].abi = action.payload;
       state.contracts = contracts;
     },
   },
@@ -602,6 +598,7 @@ export const {
   setCurrentContract,
   updateContract,
   updateContractInstances,
+  updateContractABI,
   reset,
 } = projectSlice.actions;
 
