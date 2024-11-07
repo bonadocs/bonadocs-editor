@@ -23,11 +23,12 @@ import _ from "lodash";
 interface BonadocsEditorProjectsCreationActionContractInstanceSelectedItemProps {
   instance: ContractInstance;
   instanceLength?: number;
+  index: number;
 }
 
 export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: React.FC<
   BonadocsEditorProjectsCreationActionContractInstanceSelectedItemProps
-> = ({ instance, instanceLength }) => {
+> = ({ instance, instanceLength, index }) => {
   const dispatch = useDispatch<AppDispatch>();
   const [itemId, setItemId] = useState<number>(0);
 
@@ -48,7 +49,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceSelectedItem: R
 
   const contractAddress = useRef(instance.address);
   const [open, setOpen] = useState<boolean>(
-    instanceLength === 1 ? true : false
+    index === 0 ? true : false
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);

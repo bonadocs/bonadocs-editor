@@ -120,10 +120,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
               <div
                 onClick={(event) => {
                   event.stopPropagation();
-                  setOpenNetworkList(!openNetworkList)
-                }
-                  
-                }
+                  setOpenNetworkList(!openNetworkList);
+                }}
                 className="bonadocs__editor__projects__action__select__inner"
               >
                 <div className="bonadocs__editor__projects__action__select__inner__network">
@@ -240,8 +238,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
               </div>
 
               <BonadocsEditorProjectsCreationActionContractNetworkList
-                  searchValue={search.trim()}
-                  onClick={(event) => event.stopPropagation()}
+                searchValue={search.trim()}
+                onClick={(event) => event.stopPropagation()}
               />
               <Button
                 className="modal__side__container__search__button"
