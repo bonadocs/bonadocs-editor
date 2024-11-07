@@ -36,18 +36,7 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
       ) : (
         <BonadocsEditorProjectsCreationActionContract />
       )}
-      {!projectView && (
-        <Button
-          type="action"
-          className="bonadocs__editor__projects__action__button"
-          // disabled={projectView && filled ? filled : !projectView ? true : false}
-          onClick={() => {
-            dispatch(setProjectView(!projectView));
-          }}
-        >
-          Back
-        </Button>
-      )}
+
       <Button
         type="action"
         className="bonadocs__editor__projects__action__button bonadocs__editor__projects__action__button__create"
@@ -93,6 +82,18 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
           </>
         )}
       </Button>
+      {!projectView && (
+        <Button
+          type="inertia"
+          className="bonadocs__editor__projects__action__button"
+          // disabled={projectView && filled ? filled : !projectView ? true : false}
+          onClick={() => {
+            dispatch(setProjectView(!projectView));
+          }}
+        >
+          Back
+        </Button>
+      )}
       {!validation.status && !projectView && (
         <Tooltip
           opacity={1}

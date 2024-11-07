@@ -1,14 +1,16 @@
 import React from "react";
 import { BonadocsEditorProjectsCreationActionContractNetworkItem } from "./BonadocsEditorProjectsCreationActionContractNetworkItem";
 import { supportedChains } from "@bonadocs/core";
+import { on } from "events";
 
 interface BonadocsEditorProjectsCreationActionContractNetworkListProps {
   searchValue: string;
+  onClick: (event: any) => void;
 }
 
 export const BonadocsEditorProjectsCreationActionContractNetworkList: React.FC<
   BonadocsEditorProjectsCreationActionContractNetworkListProps
-> = ({ searchValue }) => {
+> = ({ searchValue, onClick }) => {
   const networkList = Array.from(supportedChains).map((chain) => {
     return {
       chainId: chain[1].chainId,
@@ -19,7 +21,7 @@ export const BonadocsEditorProjectsCreationActionContractNetworkList: React.FC<
   });
 
   return (
-    <div className="modal__side__container__search__open__inner">
+    <div onClick={onClick} className="modal__side__container__search__open__inner">
       {networkList
         .filter(
           (network) =>

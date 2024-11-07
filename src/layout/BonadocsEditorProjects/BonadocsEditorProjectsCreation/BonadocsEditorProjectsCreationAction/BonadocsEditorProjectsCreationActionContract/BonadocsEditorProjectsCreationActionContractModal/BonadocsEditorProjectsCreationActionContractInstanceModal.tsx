@@ -94,7 +94,10 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
       isOpen={open}
       onRequestClose={closeModal}
     >
-      <div className="modal__side__container">
+      <div
+        className="modal__side__container"
+        onClick={() => setOpenNetworkList(false)}
+      >
         <h2 className="modal__side__container__header__title">
           Add Contract Address( {currentContract.name} )
         </h2>
@@ -115,7 +118,12 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
           {!openNetworkList ? (
             <div className="bonadocs__editor__projects__action__select ">
               <div
-                onClick={() => setOpenNetworkList(!openNetworkList)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setOpenNetworkList(!openNetworkList)
+                }
+                  
+                }
                 className="bonadocs__editor__projects__action__select__inner"
               >
                 <div className="bonadocs__editor__projects__action__select__inner__network">
@@ -141,7 +149,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
                         className="bonadocs__editor__projects__action__select__inner__network__element__delete"
                         src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1701455363/close_isqdse.svg"
                         alt="network logo"
-                        onClick={() => {
+                        onClick={(event) => {
+                          event.stopPropagation();
                           let instances = contractInstances.slice();
                           setSelectedInstance(instances[index]);
                           setOpenDeleteModal(true);
@@ -231,7 +240,8 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
               </div>
 
               <BonadocsEditorProjectsCreationActionContractNetworkList
-                searchValue={search.trim()}
+                  searchValue={search.trim()}
+                  onClick={(event) => event.stopPropagation()}
               />
               <Button
                 className="modal__side__container__search__button"
