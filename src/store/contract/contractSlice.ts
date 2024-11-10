@@ -72,38 +72,53 @@ export const fetchCollectionContracts = createAsyncThunk(
         instances,
       })
     );
+    console.log("contractList", contractList);
+
     const queryParams = new URLSearchParams(window.location.search);
+    try {
+      for (const contract of contractList) {
+        const contractView = collection?.getContractDetailsView;
+        let contractMethods = (
+          await collection?.getContractDetailsView(contract.contractId)
+        ).functions;
 
-    for (const contract of contractList) {
-      const contractView = collection?.getContractDetailsView;
-      let contractMethods = (await contractView(contract.contractId)).functions;
+      
 
-      let contractDocs = await (
-        await contractView(contract.contractId)
-      ).getDocText();
+        let contractDocs = await(
+          await collection?.getContractDetailsView(contract.contractId)
+        ).getDocText();
 
-      const methodItem: Array<MethodItem> = [];
-      contractMethods.forEach((method) => {
-        methodItem.push({
-          name: method.fragment.name,
-          fragmentKey: method.fragmentKey,
-          readMethod:
-            (method.fragment as FunctionFragment).stateMutability === "view" ||
-            (method.fragment as FunctionFragment).stateMutability === "pure"
-              ? true
-              : false,
+        
+
+        const methodItem: Array<MethodItem> = [];
+        contractMethods.forEach((method) => {
+          methodItem.push({
+            name: method.fragment.name,
+            fragmentKey: method.fragmentKey,
+            readMethod:
+              (method.fragment as FunctionFragment).stateMutability ===
+                "view" ||
+              (method.fragment as FunctionFragment).stateMutability === "pure"
+                ? true
+                : false,
+          });
         });
-      });
 
-      collectionContracts.push({
-        name: contract.name,
-        contractId: contract.contractId,
-        methodItem,
-        docs: contractDocs ?? "",
-        instances: contract.instances,
-        uri: queryParams.get("uri") ?? uriId,
-      });
+        collectionContracts.push({
+          name: contract.name,
+          contractId: contract.contractId,
+          methodItem,
+          docs: contractDocs ?? "",
+          instances: contract.instances,
+          uri: queryParams.get("uri") ?? uriId,
+        });
+      }
+    } catch (err) {
+      console.log("err", err);
     }
+
+    console.log("collectionContracts", collectionContracts);
+
     dispatch(setContractEdit(!state.contract.contractEdit));
     return collectionContracts;
   }

@@ -317,7 +317,6 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       toast.error("Collection not loaded");
       throw new Error("Collection not loaded");
     }
-
     // if (auth.currentUser !== null) {
     //  uriId = `/projects/${teamId}/collections/${projectId}${auth.currentUser.email}`;
     // // initialConnection();
