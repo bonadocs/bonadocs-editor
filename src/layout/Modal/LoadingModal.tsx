@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { customStyles } from "@/data/toast/toastConfig";
-import { MoonLoader } from "react-spinners";
+import { Loader } from "@/components/loader/Loader";
 
 interface LoadingModalProps {
   show?: boolean;
@@ -27,16 +27,9 @@ export const LoadingModal: React.FC<LoadingModalProps> = ({ show }) => {
     >
       <div className="modal__container">
         <div className="modal__container__loader">
-          <MoonLoader
-            color="#fff"
-            loading={true}
-            size={20}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <Loader className="spinner" />
         </div>
       </div>
     </Modal>
   );
 };
-

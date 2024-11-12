@@ -14,7 +14,7 @@ import { Tooltip } from "react-tooltip";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { CollectionDataManager } from "@bonadocs/core";
 import { useNavigate } from "react-router-dom";
-import { MoonLoader } from "react-spinners";
+import { Loader } from "@/components/loader/Loader";
 
 export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -67,19 +67,7 @@ export const BonadocsEditorProjectsCreationActionWrapper: React.FC = () => {
         {projectView ? (
           "Next"
         ) : (
-          <>
-            {loading ? (
-              <MoonLoader
-                color="#0f141b"
-                loading={true}
-                size={10}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-            ) : (
-              `Create Project`
-            )}
-          </>
+          <>{loading ? <Loader className="spinner" /> : `Create Project`}</>
         )}
       </Button>
       {!projectView && (

@@ -12,7 +12,7 @@ import {
 import { useCollectionContext } from "@/context/CollectionContext";
 import { VariableItem } from "@/data/dataTypes";
 import { toast } from "react-toastify";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { validateString } from "@/data/variables/variableValidation";
@@ -159,19 +159,7 @@ export const BonadocsVariableEditModal: React.FC<
             onClick={() => editVariable()}
             className="modal__container__button"
           >
-            <>
-              {loading ? (
-                <MoonLoader
-                  color="#fff"
-                  loading={true}
-                  size={10}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-              ) : (
-                "Edit Variable"
-              )}
-            </>
+            <>{loading ? <Loader className="spinner" /> : "Edit Variable"}</>
           </Button>
         </div>
       </div>

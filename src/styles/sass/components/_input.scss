@@ -55,8 +55,7 @@
   }
 }
 
-.bonadocs__editor__status__input
-  + .bonadocs__editor__status__slider {
+.bonadocs__editor__status__input + .bonadocs__editor__status__slider {
   background-color: var(--bonadocsStatusBgLight);
 }
 
@@ -99,10 +98,9 @@
       &__radio {
         align-items: center;
         font-size: 1.3rem;
-        margin-right: .8rem;
+        margin-right: 0.8rem;
         &__text {
           font-size: 1.3rem;
-
         }
       }
     }
@@ -123,6 +121,23 @@
             background-color: var(--bonadocsInfoBg);
             width: 100%;
           }
+          height: min-content;
+          max-height: 50rem;
+          overflow-y: scroll;
+        }
+        &__teams {
+          background-color: var(--bonadocsBackground);
+          width: 36rem;
+          white-space: nowrap;
+          padding: 01.6rem;
+          cursor: pointer;
+        }
+        &__teams:hover {
+          background-color: var(--bonadocsEditorBackground);
+          h3 {
+             color: var(--bonadocsTextWhite);
+          }
+         
         }
       }
       &__list {
@@ -181,7 +196,7 @@
         background-position-x: 108%;
         background-position-y: 50%;
         &__placeholder {
-         color: var(--bonaodocsPlaceholder); 
+          color: var(--bonaodocsPlaceholder);
         }
       }
     }
@@ -205,7 +220,6 @@ input[type="radio"]:checked {
   padding: 2px;
   border: 2px solid var(--bonadocsBlue);
 }
-
 
 input[type="checkbox"] {
   appearance: none;

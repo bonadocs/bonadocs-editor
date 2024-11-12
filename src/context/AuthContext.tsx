@@ -6,6 +6,10 @@ import React, {
 } from "react";
 import { auth } from "@/utils/firebase.utils";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { AppDispatch } from "@/store";
+import { useDispatch } from "react-redux";
+import { reset } from "@/store/auth/authSlice";
+import { resetTeam } from "@/store/team/teamSlice";
 // Create the context props
 interface AuthContextProps {
   user: any;
@@ -37,7 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [queryParameters] = useSearchParams();
   const [loading, setLoading] = useState<boolean>();
   const uri = queryParameters.get("uri");
-
+  const dispatch: AppDispatch = useDispatch();
   const checkUserStatus = () => {
     auth.onAuthStateChanged((user: any) => {
       setLoading(true);
@@ -65,6 +69,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       .signOut()
       .then(() => {
         setUser(null);
+        dispatch(reset());
+        dispatch(resetTeam());
         navigate({
           pathname: "/login",
           search: `?uri=${uri}`,

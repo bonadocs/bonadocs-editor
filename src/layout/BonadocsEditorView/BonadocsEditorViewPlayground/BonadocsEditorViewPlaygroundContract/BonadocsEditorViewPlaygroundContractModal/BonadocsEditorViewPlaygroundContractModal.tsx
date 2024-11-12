@@ -30,13 +30,16 @@ import {
 } from "./BonadocsEditorViewPlaygroundContractModalAddContract";
 import { Button } from "@/components/button/Button";
 
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { auth } from "@/utils/firebase.utils";
 import { current } from "immer";
 import { BonadocsEditorViewPlaygroundContractModalCancel } from "./BonadocsEditorViewPlaygroundContractModalCancel";
-import { setMethodDisplayData, setMethodItem } from "@/store/method/methodSlice";
+import {
+  setMethodDisplayData,
+  setMethodItem,
+} from "@/store/method/methodSlice";
 import { setActiveContract } from "@/store/contract/contractSlice";
 
 interface BonadocsEditorViewPlaygroundContractModalProps {
@@ -179,10 +182,6 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
       // dispatch(reset());
     };
   }, []);
-
-  
-
-
 
   return (
     <>
@@ -335,13 +334,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
               >
                 <>
                   {loading ? (
-                    <MoonLoader
-                      color="#fff"
-                      loading={true}
-                      size={10}
-                      aria-label="Loading Spinner"
-                      data-testid="loader"
-                    />
+                    <Loader className="spinner" />
                   ) : (
                     "Update Contracts"
                   )}
@@ -358,17 +351,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
                 Cancel
               </Button>
               <Button disabled={loading} type="action" onClick={submitFunction}>
-                {loading ? (
-                  <MoonLoader
-                    color="#fff"
-                    loading={true}
-                    size={10}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                ) : (
-                  "Add Contract"
-                )}
+                {loading ? <Loader className="spinner" /> : "Add Contract"}
               </Button>
             </div>
           )}

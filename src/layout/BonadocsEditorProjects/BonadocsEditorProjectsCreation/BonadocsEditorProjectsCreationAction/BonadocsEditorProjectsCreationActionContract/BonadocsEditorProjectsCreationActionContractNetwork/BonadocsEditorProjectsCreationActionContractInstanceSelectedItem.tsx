@@ -15,7 +15,6 @@ import {
 } from "@/store/project/projectSlice";
 import { getApi } from "@bonadocs/core";
 import { toast } from "react-toastify";
-import { MoonLoader } from "react-spinners";
 import { set } from "lodash";
 import { BonadocsEditorProjectsCreationActionContractInstanceDeleteModal } from "../BonadocsEditorProjectsCreationActionContractModal/BonadocsEditorProjectsCreationActionContractInstanceDeleteModal";
 import _ from "lodash";

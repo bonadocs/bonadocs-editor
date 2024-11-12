@@ -11,7 +11,7 @@ import { RootState } from "@/store";
 import { customStyles } from "@/data/toast/toastConfig";
 import { toast } from "react-toastify";
 import { validateString } from "@/data/variables/variableValidation";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 
 interface BonadocsVariableAddModalProps {
   className?: string;
@@ -135,12 +135,8 @@ export const BonadocsVariableAddModal: React.FC<
           >
             <>
               {loading ? (
-                <MoonLoader
-                  color="#fff"
-                  loading={true}
-                  size={10}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
+                <Loader
+                  className="spinner"
                 />
               ) : (
                 "Add Variable"

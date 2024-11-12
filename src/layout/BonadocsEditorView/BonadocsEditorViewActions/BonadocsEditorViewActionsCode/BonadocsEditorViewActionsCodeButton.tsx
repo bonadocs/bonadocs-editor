@@ -7,7 +7,7 @@ import { workflowButtonText } from "@/store/controlBoard/controlBoardSlice";
 import { useSelector } from "react-redux";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { RootState } from "@/store";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 interface BonadocsEditorViewActionsCodeButtonProps {
   // Add your props here
 }
@@ -43,12 +43,8 @@ export const BonadocsEditorViewActionsCodeButton: React.FC<
               alt="play--v2"
             />
           ) : (
-            <MoonLoader
-              color="#0f141b"
-              loading={true}
-              size={10}
-              aria-label="Loading Spinner"
-              data-testid="loader"
+            <Loader
+              className="spinner"
             />
           )}
           {buttonText}

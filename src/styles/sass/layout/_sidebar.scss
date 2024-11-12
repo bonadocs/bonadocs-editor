@@ -12,8 +12,34 @@
       @media screen and (max-width: 900px) {
         display: none;
       }
+      &__info {
+        display: flex;
+        justify-content: space-between;
+        &__code {
+         border: 1px solid #20262e;
+          border-radius: 1.6rem;
+          padding: 2.4rem;
+          margin-top: 2.4rem;
+          justify-items: center;
+          &__placeholder {
+            margin: 20rem 42.1rem 0 49rem;
+            max-width: 23rem;
+            margin: 0 auto;
+            margin-top: 20rem;
+            // @media screen and (min-width: 1500px) {
+            //   margin: 25rem 50rem 0 55rem;
+            //   width: ;
+            // }
+          }
+
+          &__title {
+            text-align: center;
+          }
+        }
+      }
       &__logo {
         margin-bottom: 4rem;
+        cursor: pointer;
       }
       &__item {
         display: flex;
@@ -49,6 +75,23 @@
         }
         &__title {
           color: white;
+        }
+      }
+      &__selector {
+        border: 1px solid var(--bonadocsProtocolBorder);
+        margin: 2.4rem 0;
+        border-radius: 2rem;
+        display: flex;
+        padding: .8rem 1.2rem;
+        cursor: pointer;
+        &__team {
+          &__name {
+            color: var(--bonadocsSecondaryText);
+            font-size: 1.3rem;
+          }
+          &__dropdown {
+            margin-left: auto;;
+          }
         }
       }
     }

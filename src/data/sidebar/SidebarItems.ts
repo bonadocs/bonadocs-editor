@@ -2,6 +2,8 @@ import { ReactComponent as ActionIcon } from "@/assets/SidebarIcons/action.svg";
 import { ReactComponent as ContractIcon } from "@/assets/SidebarIcons/contract.svg";
 import { ReactComponent as VariableIcon } from "@/assets/SidebarIcons/variable.svg";
 import { ReactComponent as PackagesIcon } from "@/assets/SidebarIcons/packages.svg";
+import { ReactComponent as RecentIcon } from "@/assets/SidebarIcons/recent.svg";
+import { ReactComponent as TeamIcon } from "@/assets/SidebarIcons/team.svg";
 import { ReactComponent as HelpIcon } from "@/assets/SidebarIcons/help.svg";
 import React from "react";
 
@@ -30,6 +32,28 @@ export const SidebarItems: SidebarItemsProp[] = [
   },
 ];
 
+export const SidebarTeamItems: SidebarItemsProp[] = [
+  {
+    name: "Recent",
+    route: "/",
+    icon: React.createElement(RecentIcon) as React.ReactNode,
+  },
+
+  {
+    name: "All teams",
+    route: "/teams",
+    icon: React.createElement(TeamIcon),
+  },
+];
+
+export const SidebarProjectItems: SidebarItemsProp[] = [
+  {
+    name: "All projects",
+    route: "/projects",
+    icon: React.createElement(TeamIcon),
+  },
+];
+
 export const SidebarOptions: SidebarItemsProp[] = [
   // {
   //   name: "Settings",
@@ -45,6 +69,6 @@ export const SidebarOptions: SidebarItemsProp[] = [
     name: "Help",
     route: "",
     icon: React.createElement(HelpIcon),
-    link: "https://bonadocs.com",
+    link: "mailto:hello@bonadocs.com",
   },
 ];

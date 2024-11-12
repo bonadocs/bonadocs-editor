@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { Button } from "@/components/button/Button";
 import { customStyles } from "@/data/toast/toastConfig";
 import { ActionItem } from "@/data/dataTypes";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { SelectInput } from "@/components/input/SelectInput";
@@ -132,12 +132,8 @@ export const BonadocsEditorActionsModalPackageEdit: React.FC<
           >
             <>
               {loading ? (
-                <MoonLoader
-                  color="#fff"
-                  loading={true}
-                  size={10}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
+                <Loader
+                 className="spinner"
                 />
               ) : (
                 "Edit Package"

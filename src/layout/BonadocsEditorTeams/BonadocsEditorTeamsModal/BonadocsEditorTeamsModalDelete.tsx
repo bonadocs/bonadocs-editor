@@ -1,27 +1,27 @@
 import { Button } from "@/components/button/Button";
+import { TextInput } from "@/components/input/TextInput";
 import { customStyles } from "@/data/toast/toastConfig";
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { Loader } from "@/components/loader/Loader";
-import { getTeams, acceptInvite } from "@/store/team/teamSlice";
+import { deleteTeam, teamCreation } from "@/store/team/teamSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { useNavigate } from "react-router-dom";
+import { TeamItem } from "@/data/dataTypes";
 
-interface BonadocsEditorTeamsModalAcceptInviteProps {
+interface BonadocsEditorTeamsModalCreateProps {
   className?: string;
   show?: boolean;
-  closeInviteModal: () => void;
-  inviteToken: string;
+  teamItem: TeamItem;
+  closeDeleteModal: () => void;
 }
 
-export const BonadocsEditorTeamsModalAcceptInvite: React.FC<
-  BonadocsEditorTeamsModalAcceptInviteProps
-> = ({ show, closeInviteModal, inviteToken }) => {
+export const BonadocsEditorTeamsModalDelete: React.FC<
+  BonadocsEditorTeamsModalCreateProps
+> = ({ show, closeDeleteModal, className, teamItem }) => {
   const [open, isOpen] = useState<boolean>(false);
-  const [teamName, setTeamName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     isOpen(show ?? false);
@@ -29,8 +29,7 @@ export const BonadocsEditorTeamsModalAcceptInvite: React.FC<
 
   const closeModal = () => {
     isOpen(!open);
-    setTeamName("");
-    closeInviteModal();
+    closeDeleteModal();
   };
 
   return (
@@ -66,33 +65,29 @@ export const BonadocsEditorTeamsModalAcceptInvite: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Invitation</h3>
-        <h5 className="modal__container__text">Accept invitaion</h5>
+        <h3 className="modal__container__title">Delete Team</h3>
+        <div className="modal__container__text">
+          Are you certain about your decision to delete this team:
+          {teamItem.name} ? Please be aware that this cannot be undone.
+        </div>
         <div className="modal__container__wrapper">
           <Button
-            type="action"
+            type="critical"
+            disabled={!teamItem.name}
             onClick={async () => {
               setLoading(true);
               try {
-                const accept = await dispatch(acceptInvite(inviteToken));
-                const newTeams = await dispatch(getTeams());
-                if (accept.payload === false || newTeams.payload === false) {
+                setLoading(true);
+                dispatch(deleteTeam(teamItem.id));
                   setLoading(false);
-                  return;
-                }
-                setLoading(false);
-
-                closeInviteModal();
-                navigate({
-                  pathname: "/teams",
-                });
+                  closeModal();
               } catch (err) {
                 setLoading(false);
               }
             }}
             className="modal__container__button"
           >
-            <>{loading ? <Loader className="spinner" /> : "Accept"}</>
+            <>{loading ? <Loader className="spinner" /> : "Delete Team"}</>
           </Button>
         </div>
       </div>

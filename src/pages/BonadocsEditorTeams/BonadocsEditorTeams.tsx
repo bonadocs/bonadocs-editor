@@ -12,6 +12,9 @@ import { LoadingModal } from "@/layout/Modal/LoadingModal";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 import { useAuthContext } from "@/context/AuthContext";
 import { MetaTags } from "@/components/metatags/Metatags";
+import { ReactComponent as CodePlaceholder } from "@/assets/SidebarIcons/codePlaceholder.svg";
+import { BonadocsEditorSidebarTeam } from "@/layout/BonadocsEditorSidebar/BonadocsEditorTeamSidebar/BonadocsEditorTeamSidebar";
+import { BonadocsEditorViewHeaderProfile } from "@/layout/BonadocsEditorView/BonadocsEditorViewHeader/BonadocsEditorViewHeaderProfile";
 
 export const BonadocsEditorTeams: React.FC = () => {
   const [queryParameters] = useSearchParams();
@@ -23,7 +26,7 @@ export const BonadocsEditorTeams: React.FC = () => {
     (state: RootState) => state.controlBoard.loadingScreen
   );
   const inviteToken = queryParameters.get("inviteToken");
-  const { signOut } = useAuthContext();
+
   useEffect(() => {
     dispatch(setLoadingScreen(true));
     dispatch(getTeams());
@@ -34,62 +37,81 @@ export const BonadocsEditorTeams: React.FC = () => {
   }, []);
 
   return (
-    <div className="bonadocs__editor__projects">
-      <MetaTags
-        title={`Bonadocs Playground`}
-        description={`The playground provides a simple and practical way to enable devs to integrate in their production apps and protocols.`}
-      />
-      <div className="bonadocs__editor__projects__inner">
-        <Logo />
-        <>
-          <div className="bonadocs__editor__projects__inner__header">
-            <div className="bonadocs__editor__projects__inner__header__left">
-              <h1 className="bonadocs__editor__projects__inner__header__left__title">
-                Your Teams
-              </h1>
-              <h5 className="bonadocs__editor__projects__inner__header__left__description">
-                Select your team and get started
-              </h5>
+    <>
+      <BonadocsEditorSidebarTeam className="bonadocs__editor__sidebar" />
+      <div className="bonadocs__editor__projects">
+        <MetaTags
+          title={`Bonadocs Playground`}
+          description={`The playground provides a simple and practical way to enable devs to integrate in their production apps and protocols.`}
+        />
+        <div className="bonadocs__editor__projects__inner">
+          <>
+            <div className="bonadocs__editor__projects__inner__header">
+              <div className="bonadocs__editor__projects__inner__header__left">
+                <h1 className="bonadocs__editor__projects__inner__header__left__title">
+                  Teams
+                </h1>
+              </div>
+              <div className="bonadocs__editor__projects__inner__header__right">
+                <BonadocsEditorViewHeaderProfile />
+              </div>
             </div>
-            <div className="bonadocs__editor__projects__inner__header__right">
-              <Button
-                type="action"
-                className="bonadocs__editor__projects__inner__header__right__button"
-                onClick={() => setShow(!show)}
-              >
-                <>
-                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715430556/Add_Icon_wmenad.svg" />
-                  Create Team
-                </>
-              </Button>
-              <Button
-                className="bonadocs__editor__projects__inner__header__right__button"
-                onClick={() => signOut()}
-              >
-                <>
-                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1727131299/icons8-sign-out-50_xj89ke.png" />
-                  Sign out
-                </>
-              </Button>
-            </div>
-          </div>
-          <div className="bonadocs__editor__projects__inner__list">
-            {teams.map((team, index) => (
-              <BonadocsEditorTeamsItem teamItem={team} key={index} />
-            ))}
-          </div>
-        </>
+            {teams.length > 0 ? (
+              <div className="bonadocs__editor__projects__inner__list">
+                {teams.map((team, index) => (
+                  <BonadocsEditorTeamsItem teamItem={team} key={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="bonadocs__editor__sidebar__info__code bonadocs__editor__sidebar__info__code__placeholder">
+                {<CodePlaceholder />}
+                <h3 className="bonadocs__editor__sidebar__info__code__title">
+                  You don't have any projects yet
+                </h3>
+                <div className="flex">
+                  <svg
+                    className="bonadocs__editor__dashboard__playground__contract__header__addIconn bonadocs__editor__projects__creation__add__icon"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M4 8L12 8"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M8 12L8 4"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <h3
+                    onClick={() => setShow(!show)}
+                    className="bonadocs__editor__projects__creation__add__title"
+                  >
+                    Create a new team
+                  </h3>
+                </div>
+              </div>
+            )}
+          </>
+        </div>
+        <BonadocsEditorTeamsModalCreate
+          show={show}
+          closeCreateModal={() => setShow(!show)}
+        />
+        <BonadocsEditorTeamsModalAcceptInvite
+          inviteToken={inviteToken!}
+          show={showAcceptInvite}
+          closeInviteModal={() => setShowAcceptInvite(!showAcceptInvite)}
+        />
+        <LoadingModal show={loadingScreen} />
       </div>
-      <BonadocsEditorTeamsModalCreate
-        show={show}
-        closeCreateModal={() => setShow(!show)}
-      />
-      <BonadocsEditorTeamsModalAcceptInvite
-        inviteToken={inviteToken!}
-        show={showAcceptInvite}
-        closeInviteModal={() => setShowAcceptInvite(!showAcceptInvite)}
-      />
-      <LoadingModal show={loadingScreen} />
-    </div>
+    </>
   );
 };

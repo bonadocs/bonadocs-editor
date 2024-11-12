@@ -58,6 +58,10 @@ html {
 .ma-bottom {
   margin-bottom: 3.2rem;
 }
+
+.ma-bottom-sm {
+  margin-bottom: 1.6rem;
+}
 .pa-1 {
   padding: 1.2rem !important;
 }
@@ -122,9 +126,14 @@ body {
   margin-left: 1.3rem;
 }
 
+.ma-l2 {
+  margin-left: 2rem;
+}
+
 .ma-auto {
   margin-left: auto;
 }
+
 // override react-tooltip styles
 .react-tooltip {
   border: 1px solid var(--bonadocsEditorBorder) !important;
@@ -160,6 +169,10 @@ body {
   span {
     color: var(--bonadocsTextWhite);
   }
+}
+
+.white {
+  color: var(--bonadocsTextWhite)
 }
 
 .error__red {
@@ -218,4 +231,64 @@ body {
 
 .ReactModal__Overlay {
   z-index: 100;
+}
+
+.demarcation {
+  width: 100%;
+}
+
+.wid-100 {
+  width: 100%;
+}
+
+.bor-main {
+  border: 1px solid var(--bonadocsProtocolBorder);
+  border-radius: 0.8rem;
+}
+
+.demarcation:before,
+.demarcation:after {
+  content: "";
+  height: 0.5px;
+  background: linear-gradient(
+    to right,
+    rgba(32, 38, 46, 0) 0%,
+    #20262e 50%,
+    rgba(32, 38, 46, 0) 100%
+  );
+
+  display: block;
+
+  margin-top: 2.4rem;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation-name: spin;
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.font-md {
+  width: 1.4rem;
+  height: 1.4rem;
+  align-self: center;
+}
+
+.pa-big {padding: 0 30.6rem;}
+
+.pal-md {
+  padding-left: 12rem;
 }

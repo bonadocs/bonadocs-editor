@@ -390,15 +390,15 @@ export const importCollection = createAsyncThunk(
 
 export const fetchCollections = createAsyncThunk(
   "project/fetchCollection",
-  async (_, { dispatch, getState }) => {
+  async (id: string | undefined, { dispatch, getState }) => {
     const { team } = getState() as RootState;
     if (team.currentTeam) {
       try {
         const projects = await api.get(
-          `projects/${team.currentTeam.id}/collections`
+          `projects/${id ?? team.currentTeam.id}/collections`
         );
-
-        dispatch(setProjectList(projects.data.data));
+      
+        !id && dispatch(setProjectList(projects.data.data));
         return projects.data.data;
       } catch (err: any) {
         toast.error(err.response.data.message);

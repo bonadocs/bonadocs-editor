@@ -3,7 +3,7 @@ import { Button } from "@/components/button/Button";
 import { SelectInput } from "@/components/input/SelectInput";
 import { TextInput } from "@/components/input/TextInput";
 import React, { useState } from "react";
-import { MoonLoader } from "react-spinners";
+import { Loader } from "@/components/loader/Loader";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { inviteMember } from "@/store/team/teamSlice";
@@ -91,12 +91,8 @@ export const BonadocsEditorTeamsModalInviteMember: React.FC<
         >
           <>
             {loading ? (
-              <MoonLoader
-                color="#fff"
-                loading={true}
-                size={10}
-                aria-label="Loading Spinner"
-                data-testid="loader"
+              <Loader
+                className="spinner"
               />
             ) : (
               "Invite member"

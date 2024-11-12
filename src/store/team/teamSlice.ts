@@ -13,7 +13,7 @@ const teamSlice = createSlice({
   name: "method",
   initialState,
   reducers: {
-    // reset: () => initialState,
+    resetTeam: () => initialState,
     setTeamId: (state, action: PayloadAction<string>) => {
       state.currentTeam.id = action.payload.toString();
     },
@@ -38,12 +38,12 @@ export const teamCreation = createAsyncThunk(
   "team/teamCreation",
   async (teamName: string, { getState, dispatch, rejectWithValue }) => {
     try {
-      await api.post("/projects", {
+      const newTeam = await api.post("/projects", {
         name: teamName.toLowerCase().trim(),
         slug: teamName.toLowerCase().trim().replace(/\s+/g, "-"),
       });
       dispatch(getTeams());
-      return teamName;
+      return newTeam.data.data.id;
     } catch (err) {
       toast.error("Error creating project");
       return false;
@@ -203,6 +203,6 @@ export const fetchTeamMembers = createAsyncThunk(
   }
 );
 
-export const { setTeamItems, setTeamId, setCurrentTeam } = teamSlice.actions;
+export const { resetTeam, setTeamItems, setTeamId, setCurrentTeam } = teamSlice.actions;
 
 export default teamSlice.reducer;

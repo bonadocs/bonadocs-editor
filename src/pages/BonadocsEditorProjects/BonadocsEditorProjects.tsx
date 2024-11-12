@@ -13,6 +13,8 @@ import { BonadocsEditorProjectsItem } from "@/layout/BonadocsEditorProjects/Bona
 import { useAuthContext } from "@/context/AuthContext";
 import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
 import { LoadingModal } from "@/layout/Modal/LoadingModal";
+import { BonadocsEditorProjectSidebar } from "@/layout/BonadocsEditorSidebar/BonadocsEditorProjectSidebar/BonadocsEditorProjectSidebar";
+import { BonadocsEditorViewHeaderProfile } from "@/layout/BonadocsEditorView/BonadocsEditorViewHeader/BonadocsEditorViewHeaderProfile";
 
 export const BonadocsEditorProjects: React.FC = () => {
   const [showImportModal, setShowImportModal] = useState<boolean>(false);
@@ -24,6 +26,9 @@ export const BonadocsEditorProjects: React.FC = () => {
   const teamProjects = useSelector(
     (state: RootState) => state.project.projectList
   );
+
+  const currentTeam = useSelector((state: RootState) => state.team.currentTeam);
+
   const currentTeamPermissions = useSelector(
     (state: RootState) => state.team.currentTeam
   );
@@ -39,7 +44,7 @@ export const BonadocsEditorProjects: React.FC = () => {
 
   useEffect(() => {
     currentProject();
-  }, []);
+  }, [id]);
 
   const currentProject = async () => {
     dispatch(setLoadingScreen(true));
@@ -56,89 +61,95 @@ export const BonadocsEditorProjects: React.FC = () => {
   };
 
   return (
-    <div className="bonadocs__editor__projects">
-      <div className="bonadocs__editor__projects__inner">
-        <Logo />
-        <>
-          <div className="bonadocs__editor__projects__inner__header">
-            <Button
-              onClick={() => navigate({
-                pathname: "/teams",
-              })}
-              type="default"
-              className="bonadocs__editor__projects__inner__header__button"
-            >
-              <>
-                <img
-                  alt="go back"
-                  src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1720339940/Arrow-Back_tn27nc.svg"
-                />
-                Back to Teams
-              </>
-            </Button>
-            <div className="bonadocs__editor__projects__inner__header__right">
-              <Button
-                disabled={!addProject}
-                className="bonadocs__editor__projects__inner__header__right__button"
-                onClick={() => setShowImportModal(!showImportModal)}
-              >
-                <>
-                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715430320/Import_Icon_xivizm.svg" />
-                  Import Project
-                </>
-              </Button>
+    <>
+      <BonadocsEditorProjectSidebar className="bonadocs__editor__sidebar" />
+      <div className="bonadocs__editor__projects">
+        <div className="bonadocs__editor__projects__inner">
+          <>
+            <div className="bonadocs__editor__projects__inner__header">
+              <h1 className="bonadocs__editor__projects__inner__header__left white">
+                {currentTeam?.name}
+              </h1>
+              <div className="bonadocs__editor__projects__inner__header__right">
+                <BonadocsEditorViewHeaderProfile />
 
-              <Button
-                disabled={!addProject}
-                type="action"
-                className="bonadocs__editor__projects__inner__header__right__button"
-                onClick={() => {
+                {/* <Button
+                  disabled={!addProject}
+                  type="action"
+                  className="bonadocs__editor__projects__inner__header__right__button"
+                  onClick={() => {
+                    navigate({
+                      pathname: `${location.pathname}/create`,
+                    });
+                  }}
+                >
+                  <>
+                    <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715430556/Add_Icon_wmenad.svg" />
+                    Create Project
+                  </>
+                </Button>
+                <Button
+                  className="bonadocs__editor__projects__inner__header__right__button"
+                  onClick={() => signOut()}
+                >
+                  <>
+                    <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1727131299/icons8-sign-out-50_xj89ke.png" />
+                    Sign out
+                  </>
+                </Button> */}
+              </div>
+            </div>
+            <div className="flex ma-auto ma-bottom-sm">
+              <svg
+                className="bonadocs__editor__dashboard__playground__contract__header__addIconn bonadocs__editor__projects__creation__add__icon"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4 8L12 8"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8 12L8 4"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              <h3
+                onClick={() =>
                   navigate({
                     pathname: `${location.pathname}/create`,
-                  });
-                }}
+                  })
+                }
+                className="bonadocs__editor__projects__creation__add__title"
               >
-                <>
-                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1715430556/Add_Icon_wmenad.svg" />
-                  Create Project
-                </>
-              </Button>
-              <Button
-                className="bonadocs__editor__projects__inner__header__right__button"
-                onClick={() => signOut()}
-              >
-                <>
-                  <img src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1727131299/icons8-sign-out-50_xj89ke.png" />
-                  Sign out
-                </>
-              </Button>
+                Create new Project
+              </h3>
             </div>
-          </div>
-          <div className="bonadocs__editor__projects__inner__header__left">
-            <h1 className="bonadocs__editor__projects__inner__header__left__title">
-              Your Projects
-            </h1>
-            <h5 className="bonadocs__editor__projects__inner__header__left__description">
-              Select these projects to see where you stopped.
-            </h5>
-          </div>
-          <div className="bonadocs__editor__projects__inner__list">
-            {teamProjects.map((projectItem: ProjectItem, index: number) => (
-              <BonadocsEditorProjectsItem
-                projectItem={projectItem}
-                key={index}
-              />
-            ))}
-          </div>
-        </>
-        {/* <Outlet /> */}
+            <div className="bonadocs__editor__projects__inner__list bonadocs__editor__projects__inner__list__projects">
+              {teamProjects.map((projectItem: ProjectItem, index: number) => (
+                <BonadocsEditorProjectsItem
+                  projectItem={projectItem}
+                  key={index}
+                />
+              ))}
+            </div>
+          </>
+          {/* <Outlet /> */}
+        </div>
+        <BonadocsEditorProjectsCreationModal
+          show={showImportModal}
+          closeImportModal={() => setShowImportModal(!showImportModal)}
+          handleImportCollection={() => {}}
+        />
+        <LoadingModal show={loadingScreen} />
       </div>
-      <BonadocsEditorProjectsCreationModal
-        show={showImportModal}
-        closeImportModal={() => setShowImportModal(!showImportModal)}
-        handleImportCollection={() => {}}
-      />
-      <LoadingModal show={loadingScreen} />
-    </div>
+    </>
   );
 };

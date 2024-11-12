@@ -3,7 +3,12 @@ import React, { useEffect, useState } from "react";
 import { BonadocsEditorProjectsCreationActionSteps } from "../BonadocsEditorProjectsCreationActionSteps/BonadocsEditorProjectsCreationActionSteps";
 import { BonadocsEditorProjectsCreationActionWrapper } from "./BonadocsEditorProjectsCreationActionWrapper";
 
-export const BonadocsEditorProjectsCreationAction: React.FC = () => {
+interface BonadocsEditorProjectsCreationActionProps {
+  className?: string;
+}
+export const BonadocsEditorProjectsCreationAction: React.FC<
+  BonadocsEditorProjectsCreationActionProps
+> = ({ className }) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(true);
 
   useEffect(() => {
@@ -23,7 +28,7 @@ export const BonadocsEditorProjectsCreationAction: React.FC = () => {
   }, [hasUnsavedChanges]);
 
   return (
-    <div className="bonadocs__editor__projects__action">
+    <div className={`bonadocs__editor__projects__action  ${className}`}>
       <BonadocsEditorProjectsCreationActionSteps />
       <BonadocsEditorProjectsCreationActionWrapper />
     </div>

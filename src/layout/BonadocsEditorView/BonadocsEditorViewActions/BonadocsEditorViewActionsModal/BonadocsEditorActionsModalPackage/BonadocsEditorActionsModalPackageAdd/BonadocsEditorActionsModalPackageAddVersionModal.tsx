@@ -1,7 +1,7 @@
 import { Button } from "@/components/button/Button";
 import { SelectInput } from "@/components/input/SelectInput";
 import React, { useEffect, useState } from "react";
-import { MoonLoader } from "react-spinners";
+import { Loader } from "@/components/loader/Loader";
 import Modal from "react-modal";
 import { customStyles } from "@/data/toast/toastConfig";
 import { useSelector, useDispatch } from "react-redux";
@@ -141,12 +141,9 @@ const BonadocsEditorActionsModalPackageAddVersionModal: React.FC<
             >
               <>
                 {loading ? (
-                  <MoonLoader
-                    color="#fff"
-                    loading={true}
-                    size={10}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
+                  <Loader
+                    className="spinner"
+                    
                   />
                 ) : (
                   "Download"

@@ -7,7 +7,7 @@ import { AppDispatch } from "@/store";
 import { customStyles } from "@/data/toast/toastConfig";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { toast } from "react-toastify";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 import { validateString } from "@/data/variables/variableValidation";
 import { createWorkflowAction } from "@/store/action/actionSlice";
 import { Dropdown } from "@/components/dropdown/Dropdown";
@@ -139,12 +139,8 @@ export const BonadocsEditorViewActionsModalAdd: React.FC<
           >
             <>
               {loading ? (
-                <MoonLoader
-                  color="#fff"
-                  loading={true}
-                  size={10}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
+                <Loader
+                  className="spinner"
                 />
               ) : (
                 "Create action"

@@ -9,15 +9,15 @@
       padding: 1.6rem;
 
       &__inner {
-        padding: 0 12rem;
+        // padding: 0 12rem;
         width: 100%;
         display: grid;
         &__header {
           width: 100%;
           display: flex;
           justify-content: space-between;
-          margin-top: 7.2rem;
-          margin-bottom: 4.4rem;
+          margin-bottom: 7rem;
+          // padding: 3rem 0;
           &__button {
             display: flex;
             align-items: center;
@@ -26,9 +26,11 @@
             }
           }
           &__left {
+            align-self: center;
             &__title {
               color: var(--bonadocsTextWhite);
-              font-size: 2.4rem;
+              font-size: 1.4rem;
+              padding-left: 5rem;
             }
             &__description {
               font-size: 1.6rem;
@@ -67,32 +69,47 @@
         &__list {
           display: grid;
           gap: 1.6rem;
-          grid-template-columns: repeat(auto-fill, minmax(40rem, 1fr));
-          height: -moz-min-content;
-          height: min-content;
-          max-height: 64vh;
+          grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+          grid-template-rows: repeat(auto-fill, minmax(15rem, 1fr));
+
+          height: 87vh;
+
           overflow-y: auto;
-          margin-top: 4rem;
-          padding: 3rem 0;
+          
+          &__projects {
+            grid-template-rows: repeat(auto-fill, minmax(12rem, 1fr));
+          }
           &__item {
             border-radius: 0.8rem;
             padding: 1.6rem;
-
+            border: 1px solid var(--bonadocsProtocolBorder);
             cursor: pointer;
             height: min-content;
-            display: flex;
+            min-height: 12rem;
+            &__descr {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              margin: .4rem 0;
+            }
+
             &:hover {
               background-color: var(--bonadocsBackground);
             }
             &__wrapper {
               &:hover {
-              background-color: var(--bonadocsBackground);
-            }
+                background-color: var(--bonadocsBackground);
+              }
             }
             &__icon {
               width: 2.4rem;
               height: 2.4rem;
               margin-right: 0.8rem;
+              &__big {
+                width: 4rem;
+                height: 4rem;
+                margin-bottom: 1.6rem;
+              }
             }
             &__info {
               width: 90%;
@@ -109,6 +126,20 @@
                 font-size: 1.4rem;
                 margin-top: 0.4rem;
               }
+              &__team {
+                margin-top: 0.4rem;
+                display: flex;
+                &__members {
+                  font-size: 1.4rem;
+                  margin-left: 0.4rem;
+                }
+              }
+            }
+            &__inner {
+              display: flex;
+            }
+            &__header {
+              display: flex;
             }
           }
         }
@@ -173,7 +204,7 @@
               }
               &__delete {
                 color: var(--bonadocsTextCritical);
-                margin-top: .5rem;
+                margin-top: 0.5rem;
                 cursor: pointer;
                 gap: 1rem;
               }
@@ -208,6 +239,8 @@
 
           &__title {
             color: var(--bonadocsProtocolBlue);
+            cursor: pointer;
+            font-size: 1.4rem;
           }
           &__cancel {
             margin-right: 1rem;

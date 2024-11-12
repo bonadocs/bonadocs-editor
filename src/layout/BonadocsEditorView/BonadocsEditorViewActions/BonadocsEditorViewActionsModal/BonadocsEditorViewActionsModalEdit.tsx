@@ -8,7 +8,7 @@ import { customStyles } from "@/data/toast/toastConfig";
 import { useCollectionContext } from "@/context/CollectionContext";
 import { ActionItem } from "@/data/dataTypes";
 import { toast } from "react-toastify";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 import { validateString } from "@/data/variables/variableValidation";
 import { renameWorkflowAction } from "@/store/action/actionSlice";
 import { Dropdown } from "@/components/dropdown/Dropdown";
@@ -156,12 +156,8 @@ export const BonadocsEditorViewActionsModalEdit: React.FC<
           >
             <>
               {loading ? (
-                <MoonLoader
-                  color="#fff"
-                  loading={true}
-                  size={10}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
+                <Loader
+                  className="spinner"
                 />
               ) : (
                 "Edit Action"

@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/input/TextInput";
 import { customStyles } from "@/data/toast/toastConfig";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 import { addCollection, importCollection } from "@/store/project/projectSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
@@ -88,7 +88,7 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
               const importedCollection = await dispatch(
                 importCollection(collectionName)
               );
-              
+
               if (!importedCollection.payload) {
                 setLoading(false);
                 return;
@@ -110,19 +110,7 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
             }}
             className="modal__container__button"
           >
-            <>
-              {loading ? (
-                <MoonLoader
-                  color="#fff"
-                  loading={true}
-                  size={10}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-              ) : (
-                "Import Project"
-              )}
-            </>
+            <>{loading ? <Loader className="spinner" /> : "Import Project"}</>
           </Button>
         </div>
       </div>

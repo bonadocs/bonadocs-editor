@@ -2,7 +2,7 @@ import { TextInput } from "@/components/input/TextInput";
 import React, { useState, useCallback } from "react";
 import clsx from "clsx";
 import { BonadocsEditorActionsModalPackageAddSearchResult } from "./BonadocsEditorActionsModalPackageAddSearchResult";
-import MoonLoader from "react-spinners/ClipLoader";
+import { Loader } from "@/components/loader/Loader";
 import _ from "lodash";
 
 interface BonadocsEditorActionsModalPackageAddSearchProps {
@@ -123,13 +123,8 @@ export const BonadocsEditorActionsModalPackageAddSearch: React.FC<
         </svg>
       </div>
       {loading && (
-        <MoonLoader
-          className="modal__side__container__search__icon"
-          color="#fff"
-          loading={true}
-          size={10}
-          aria-label="Loading Spinner"
-          data-testid="loader"
+        <Loader
+          className="spinner"
         />
       )}
       <BonadocsEditorActionsModalPackageAddSearchResult

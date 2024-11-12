@@ -11,8 +11,8 @@ export const BonadocsEditorProjectsCreation: React.FC = () => {
   return (
     <div className="bonadocs__editor__projects">
       <div className="bonadocs__editor__projects__inner">
-        <Logo />
-        <div className="bonadocs__editor__projects__inner__header">
+        <Logo className="pal-md"/>
+        <div className="bonadocs__editor__projects__inner__header pa-big">
           <Button
             onClick={() => navigate(-1)}
             type="default"
@@ -40,7 +40,7 @@ export const BonadocsEditorProjectsCreation: React.FC = () => {
             </>
           </Button>
         </div>
-        <div className="bonadocs__editor__projects__inner__info">
+        <div className="bonadocs__editor__projects__inner__info pa-big">
           <h2 className="bonadocs__editor__projects__inner__info__title">
             Create New Project
           </h2>
@@ -48,7 +48,7 @@ export const BonadocsEditorProjectsCreation: React.FC = () => {
             Bring your smart contracts to life with ease.
           </h4>
         </div>
-        <BonadocsEditorProjectsCreationAction />
+        <BonadocsEditorProjectsCreationAction className="pa-big" />
       </div>
       <BonadocsEditorProjectsCreationModal
         show={showImportModal}
