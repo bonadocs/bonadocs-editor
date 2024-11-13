@@ -57,12 +57,12 @@ export const TeamBilling = [
     price: "Free",
     features: [
       {
-        name: "One project playground",
-        description: "Get started with one project playground to explore",
+        name: "3 projects",
+        description: "Get started with three project playgrounds",
       },
       {
         name: "No invitation",
-        description: "Get started with one project playground to explore",
+        description: "Collaborate solo with no invitations",
       },
     ],
   },
