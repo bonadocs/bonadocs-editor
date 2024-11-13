@@ -39,7 +39,12 @@ export const BonadocsEditorViewActionsCodeButton: React.FC<
           setRunLoader(true);
           setSimulation(true);
         
-          await executionWorkflowButton();
+          const actionCall = await executionWorkflowButton();
+          
+          
+          if (actionCall) {
+            setRunLoader(false);
+          }
           setRunLoader(false);
         }}
       >

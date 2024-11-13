@@ -55,7 +55,7 @@ interface CollectionContextProps {
   setCollection: (collection: CollectionDataManager) => void;
   showResult: boolean;
   executionButton: (overlayRef: HTMLDivElement) => void;
-  executionWorkflowButton: () => Promise<void>;
+  executionWorkflowButton: () => Promise<boolean>;
   walletId: number | undefined;
   response: Array<DisplayResult | ExecutionResult>;
   workflowResponse: any;
@@ -543,16 +543,24 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       const executor = await workflowExecutor();
 
       executor.setActiveChainId(Number(activeNetwork));
-
+      toast.info(
+        "P.S: Simulations with multiple contract calls can take between 60-90 seconds",
+        {
+          toastId: "simulation-id",
+        }
+      );
       const res = await executor.run();
       console.log(currentAction, action.current);
 
-      if (action.current !== currentAction.id) return;
+      if (action.current !== currentAction.id) return true;
+
       setWorkflowResponse(res);
 
       dispatch(setLoader(false));
+      return true
     } catch (error) {
       dispatch(setLoader(false));
+      return false
       console.log(error);
 
       toast.error((error as Error).message);
