@@ -22,7 +22,7 @@ export const BonadocsEditorTeamsModalInvite: React.FC<
 > = ({ className, show, closeInviteModal, teamInfo }) => {
   const [open, isOpen] = useState<boolean>(false);
   const [inviteEmail, setInviteEmail] = useState<string>("");
-  const [addMember, setAddMember] = useState<boolean>(false);
+  const [addMember, setAddMember] = useState<boolean>(true);
   const [userRole, setUserRole] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
@@ -82,38 +82,10 @@ export const BonadocsEditorTeamsModalInvite: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Team {teamInfo.name}</h3>
-        <h5 className="modal__container__text">Members List</h5>
-        <div className="bonadocs__editor__projects__action__select ">
-          <div className="bonadocs__editor__projects__action__select__inner">
-            <div className="bonadocs__editor__projects__action__select__inner__network">
-              {teamMembers?.length === 0 && (
-                <h4 className="bonadocs__editor__projects__action__select__inner__network__placeholder">
-                  There is just you on this team.
-                </h4>
-              )}
-              {teamMembers?.map((member, index) => (
-                <div
-                  key={index}
-                  className="bonadocs__editor__projects__action__select__inner__network__item"
-                >
-                  <div className="bonadocs__editor__projects__action__select__inner__network__item__name">
-                    {member.firstName} {member.lastName}
-                  </div>
-                  <img
-                    onClick={() => {
-                      // const members = teamMembers.slice();
-                      // members.splice(index, 1);
-                      // setTeamMembers(members);
-                    }}
-                    alt="delete instance"
-                    src="https://res.cloudinary.com/dfkuxnesz/image/upload/v1701455363/close_isqdse.svg"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <h3 className="modal__container__title">
+          Invite new member to {teamInfo.name}
+        </h3>
+
         {!addMember && (
           <div
             className="bonadocs__editor__projects__creation__add"

@@ -75,7 +75,7 @@ export const BonadocsEditorTeamsItem: React.FC<
               className="bonadocs__editor__projects__inner__list__item__icon"
               ref={setReferenceElement}
               onClick={(event) => {
-                // setDeleteWidget(!deleteWidget);
+      
                 event.stopPropagation();
               }}
             >
@@ -90,7 +90,7 @@ export const BonadocsEditorTeamsItem: React.FC<
               {({ close }) => (
                 <>
                   <div className="bonadocs__editor__variables__table__item__popover__item">
-                    <div
+                    {/* <div
                       onClick={(event) => {
                         event.stopPropagation();
                         setInviteModal(!inviteModal);
@@ -99,10 +99,10 @@ export const BonadocsEditorTeamsItem: React.FC<
                       className="bonadocs__editor__variables__table__item__popover__item__edit"
                     >
                       Team members
-                    </div>
+                    </div> */}
                     <div
                       onClick={(event) => {
-                        // setDeleteWidget(!deleteWidget);
+               
                         event.stopPropagation();
                         setDeleteModal(!deleteModal);
                         close();

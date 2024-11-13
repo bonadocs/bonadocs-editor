@@ -31,4 +31,54 @@ export const teamRoles = [
       "writeCollections",
     ],
   },
+  {
+    label: "Sub controller",
+    value: "sub controller",
+    permission: ["manageSubscriptions", "readCollections", "writeCollections"],
+  },
+];
+
+export const TeamSettings = [
+  { name: "Projects" },
+  { name: "Members" },
+  { name: "Billings" },
+];
+
+export const TeamMembersTable = [
+  { name: "Name" },
+  { name: "Email" },
+  // { name: "Last active" },
+  { name: "Permission" },
+];
+
+export const TeamBilling = [
+  {
+    name: "Starter Team",
+    price: "Free",
+    features: [
+      {
+        name: "One project playground",
+        description: "Get started with one project playground to explore",
+      },
+      {
+        name: "No invitation",
+        description: "Get started with one project playground to explore",
+      },
+    ],
+  },
+  {
+    name: "PRO Team",
+    price: "$15/member/month",
+    features: [
+      {
+        name: "20 projects",
+        description: "Create and manage 20 projects",
+      },
+      {
+        name: "Collaborate with invitations",
+        description:
+          "Work in real-time with your team, making edits and updates together instantly",
+      },
+    ],
+  },
 ];

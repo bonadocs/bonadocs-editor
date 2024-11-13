@@ -62,6 +62,7 @@ export const getTeams = createAsyncThunk(
           slug: team.slug,
           id: team.id,
           permissions: [],
+          activeSubscription: team.activeSubscription === null ? false : true,
         };
       });
       dispatch(setTeamItems(teamList));
@@ -94,6 +95,8 @@ export const getTeamById = createAsyncThunk(
               slug: result.slug,
               id: result.id,
               permissions,
+              activeSubscription:
+                result.activeSubscription === null ? false : true,
             };
 
             dispatch(setCurrentTeam(currentTeam));

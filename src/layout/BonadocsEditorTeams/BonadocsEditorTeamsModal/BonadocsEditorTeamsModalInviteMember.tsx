@@ -53,7 +53,7 @@ export const BonadocsEditorTeamsModalInviteMember: React.FC<
   return (
     <>
       <div className="modal__container__wrapper__inner">
-        <h5 className="modal__container__title ma-top">Invite new member</h5>
+        {/* <h5 className="modal__container__title ma-top">Invite new member</h5> */}
         <h5 className="modal__container__text">Name</h5>
         <TextInput
           value={userName}

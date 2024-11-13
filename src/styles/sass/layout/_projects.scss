@@ -8,10 +8,95 @@
       flex: 1 1;
       padding: 1.6rem;
 
+      &__members {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+        padding: 2.4rem 0 1.6rem 0;
+        border-bottom: 1px solid var(--bonadocsProtocolBorder);
+        &__item {
+          text-transform: uppercase;
+          color: var(--bonadocsSecondaryText);
+          font-size: 1.4rem;
+        }
+        &__details {
+          font-size: 1.3rem;
+        }
+      }
+      &__billings {
+        &__wrapper {
+          display: flex;
+          gap: 2.3rem;
+        }
+        &__card {
+          border: 1px solid var(--bonadocsProtocolBorder);
+          background-color: var(--bonadocsNetworkBg);
+          width: min-content;
+          min-width: 32rem;
+          margin-top: 2.4rem;
+          padding: 2.4rem;
+          border-radius: 0.8rem;
+          min-height: 36.8rem;
+          &__wrapper {
+            width: 100%;
+          }
+          &__button {
+            width: inherit;
+            padding: 1.2rem 1.6rem !important;
+            margin: 1rem 0;
+          }
+          &__price {
+            font-size: 2rem;
+            color: var(--bonadocsTextWhite);
+            margin: 1rem 0 1.4rem 0;
+          }
+          &__feature {
+            &__title {
+              font-size: 1.6rem;
+              color: var(--bonadocsSecondaryText);
+            }
+            &__descr {
+              font-size: 1.2rem;
+            }
+          }
+        }
+      }
+
       &__inner {
         // padding: 0 12rem;
         width: 100%;
         display: grid;
+        &__control {
+          display: flex;
+          width: 100%;
+          margin-bottom: 2.4rem;
+          &__item {
+            border-bottom: 1px solid var(--bonadocsProtocolBorder);
+            padding: 1.6rem;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            &__members {
+              display: flex;
+              background-color: var(--bonadocsNetworkBg);
+              padding: 0 0.8rem;
+              border-radius: 1.2rem;
+              margin-left: 0.8rem;
+
+              &__active {
+                color: var(--bonadocsTextWhite);
+                background-color: var(--bonadocsInfoBg);
+              }
+            }
+            &__active {
+              color: var(--bonadocsProtocolBlue);
+              border-bottom: 2px solid var(--bonadocsProtocolBlue);
+            }
+          }
+          &__free {
+            width: 100%;
+            border-bottom: 1px solid var(--bonadocsProtocolBorder);
+          }
+        }
         &__header {
           width: 100%;
           display: flex;
@@ -75,7 +160,7 @@
           height: 87vh;
 
           overflow-y: auto;
-          
+
           &__projects {
             grid-template-rows: repeat(auto-fill, minmax(12rem, 1fr));
           }
@@ -90,7 +175,7 @@
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
-              margin: .4rem 0;
+              margin: 0.4rem 0;
             }
 
             &:hover {

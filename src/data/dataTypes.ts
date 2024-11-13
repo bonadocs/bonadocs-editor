@@ -64,6 +64,7 @@ export type TeamItem = {
   slug: string;
   id: string;
   permissions?: string | Array<string>;
+  activeSubscription?: boolean;
 };
 
 export type TeamMembers = {
