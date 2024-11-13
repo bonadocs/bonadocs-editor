@@ -1,5 +1,12 @@
 "use client";
-import React, { createContext, useContext, useRef, useState } from "react";
+import React, {
+  act,
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Collection,
   CollectionDataManager,
@@ -48,7 +55,7 @@ interface CollectionContextProps {
   setCollection: (collection: CollectionDataManager) => void;
   showResult: boolean;
   executionButton: (overlayRef: HTMLDivElement) => void;
-  executionWorkflowButton: () => void;
+  executionWorkflowButton: () => Promise<void>;
   walletId: number | undefined;
   response: Array<DisplayResult | ExecutionResult>;
   workflowResponse: any;
@@ -117,6 +124,8 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
   const contracts = useSelector(
     (state: RootState) => state.contract.collectionContracts
   );
+
+  const action = useRef<string>();
 
   // const provider = new ethers.BrowserProvider((window as any).ethereum);
 
@@ -529,14 +538,18 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     );
 
     try {
+      action.current = currentAction.id;
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
 
       executor.setActiveChainId(Number(activeNetwork));
 
       const res = await executor.run();
+      console.log(currentAction, action.current);
 
+      if (action.current !== currentAction.id) return;
       setWorkflowResponse(res);
+
       dispatch(setLoader(false));
     } catch (error) {
       dispatch(setLoader(false));
@@ -552,6 +565,10 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
     //   break;
     // }
   }
+
+  useEffect(() => {
+    action.current = currentAction.id;
+  }, [currentAction.id]);
 
   return (
     <CollectionContext.Provider

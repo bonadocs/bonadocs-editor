@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/button/Button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
@@ -15,31 +15,36 @@ interface BonadocsEditorViewActionsCodeButtonProps {
 export const BonadocsEditorViewActionsCodeButton: React.FC<
   BonadocsEditorViewActionsCodeButtonProps
 > = (props) => {
-  
+  const [runLoader, setRunLoader] = useState<boolean>(false);
 
-  const { executionWorkflowButton, getCollection } = useCollectionContext();
+  const { executionWorkflowButton } = useCollectionContext();
   const buttonText = useSelector(workflowButtonText);
-  const loader = useSelector((state: RootState) => state.action.loader);
   const currentAction = useSelector(
     (state: RootState) => state.action.currentAction
   );
 
-  useEffect(() => {}, [currentAction.id]);
+
+  useEffect(() => {
+    
+    setRunLoader(false);
+  }, [currentAction.id]);
 
   return (
     <div className="bonadocs__editor__dashboard__playground__action__code__button">
       <Button
         className="bonadocs__editor__dashboard__playground__action__code__button__item"
         type="action"
-        disabled={loader}
+        disabled={runLoader}
         onClick={async () => {
+          setRunLoader(true);
           setSimulation(true);
+        
           await executionWorkflowButton();
-
+          setRunLoader(false);
         }}
       >
         <>
-          {buttonText === "Run" && !loader ? (
+          {buttonText === "Run" && !runLoader ? (
             <img
               width="24"
               height="24"
