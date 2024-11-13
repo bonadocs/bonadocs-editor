@@ -14,7 +14,7 @@ import {
 import { MethodItem, ContractItem } from "@/data/dataTypes";
 import { setActiveContract } from "@/store/contract/contractSlice";
 import { LoadingModal } from "@/layout/Modal/LoadingModal";
-import { setLoadingScreen } from "@/store/controlBoard/controlBoardSlice";
+import { setLoadingScreen, setWarningBar } from "@/store/controlBoard/controlBoardSlice";
 import { getAllPackages } from "@/store/package/packageSlice";
 
 interface BonadocsEditorLayoutProps {}
@@ -74,6 +74,7 @@ export const BonadocsEditorLayout: React.FC<
 
     setDisplay(true);
     dispatch(setLoadingScreen(false));
+    dispatch(setWarningBar(false));
   };
 
   return (

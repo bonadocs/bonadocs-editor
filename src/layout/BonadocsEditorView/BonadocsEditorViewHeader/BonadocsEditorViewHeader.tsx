@@ -94,50 +94,54 @@ export const BonadocsEditorViewHeader: React.FC<
         </Button> */}
             {!warningHeader ? (
               <>
-                <Button
-                  disabled={loader}
-                  className="bonadocs__editor__dashboard__header__share bonadocs__editor__dashboard__header__share__publish"
-                  type="inertia"
-                  onClick={async () => {
-                    setLoader(true);
-                    try {
-                      const uri = await getCollection()?.publishToIPFS();
-                      console.log(uri);
+                {user && user.displayName && (
+                  <Button
+                    disabled={loader}
+                    className="bonadocs__editor__dashboard__header__share bonadocs__editor__dashboard__header__share__publish"
+                    type="inertia"
+                    onClick={async () => {
+                      setLoader(true);
+                      try {
+                        const uri = await getCollection()?.publishToIPFS();
+                        console.log(uri);
 
-                      setUri(uri!);
-                      setLoader(false);
+                        setUri(uri!);
+                        setLoader(false);
 
-                      toast.success("Project published to IPFS");
-                      setOpenPublishModal(!openPublishModal);
-                    } catch (err) {
-                      setLoader(false);
-                    }
-                  }}
-                >
-                  {loader ? "Publishing..." : "Publish to IPFS"}
-                </Button>
-                <Button
-                  disabled={loader}
-                  className="bonadocs__editor__dashboard__header__share"
-                  onClick={async () => {
-                    setLoader(true);
-                    try {
-                      await dispatch(
-                        saveProject({
-                          collection: getCollection()!,
-                          projectId: projectId!,
-                        })
-                      );
-                      setLoader(false);
-                      toast.success("Project saved");
-                    } catch (err) {
-                      setLoader(false);
-                    }
-                  }}
-                  type="action"
-                >
-                  {loader ? "Saving..." : "Save Project"}
-                </Button>
+                        toast.success("Project published to IPFS");
+                        setOpenPublishModal(!openPublishModal);
+                      } catch (err) {
+                        setLoader(false);
+                      }
+                    }}
+                  >
+                    {loader ? "Publishing..." : "Publish to IPFS"}
+                  </Button>
+                )}
+                {user && user.displayName && (
+                  <Button
+                    disabled={loader}
+                    className="bonadocs__editor__dashboard__header__share"
+                    onClick={async () => {
+                      setLoader(true);
+                      try {
+                        await dispatch(
+                          saveProject({
+                            collection: getCollection()!,
+                            projectId: projectId!,
+                          })
+                        );
+                        setLoader(false);
+                        toast.success("Project saved");
+                      } catch (err) {
+                        setLoader(false);
+                      }
+                    }}
+                    type="action"
+                  >
+                    {loader ? "Saving..." : "Save Project"}
+                  </Button>
+                )}
                 {!connected ? (
                   <div className="bonadocs__editor__dashboard__header__connect">
                     <Button onClick={() => connectWallet()}>
@@ -169,7 +173,7 @@ export const BonadocsEditorViewHeader: React.FC<
                     )}
                   </BonadocsEditorViewPlaygroundMethodStatus>
                 )}
-                <BonadocsEditorViewHeaderProfile/>
+                <BonadocsEditorViewHeaderProfile />
               </>
             ) : (
               <>
@@ -179,7 +183,10 @@ export const BonadocsEditorViewHeader: React.FC<
                   type="inertia"
                   onClick={() => {
                     setOpen(!open);
-                    dispatch({ type: "controlBoard/setWarningBar", payload: !open });
+                    dispatch({
+                      type: "controlBoard/setWarningBar",
+                      payload: !open,
+                    });
                     dispatch(setMethodItem({} as MethodItem));
                     dispatch(setMethodDisplayData([]));
                     dispatch(setActiveContract({} as ContractItem));
@@ -190,7 +197,7 @@ export const BonadocsEditorViewHeader: React.FC<
                 <Button
                   disabled={loader}
                   className="bonadocs__editor__dashboard__header__share"
-                    onClick={() => {
+                  onClick={() => {
                     dispatch({
                       type: "controlBoard/setWarningBar",
                       payload: !open,
