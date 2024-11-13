@@ -14,13 +14,9 @@ export const Logo: React.FC<LogoProps> = ({ className }) => {
     <svg
       className={className}
       onClick={() => {
-        if (authSession) {
-          navigate({
-            pathname: "/teams",
-          });
-        
-        } else
-        window.open("https://bonadocs.com/", "_blank");
+        navigate({
+          pathname: "/",
+        });
       }}
       width="118"
       height="24"

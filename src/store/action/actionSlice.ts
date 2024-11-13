@@ -6,8 +6,6 @@ import { WorkflowItem, WorkflowCodeItem } from "@/data/dataTypes";
 import { setCloudIcon } from "../controlBoard/controlBoardSlice";
 import { toast } from "react-toastify";
 import _ from "lodash";
-import { Root } from "react-markdown/lib";
-import { RootState } from "..";
 
 const initialState = {
   collectionActions: [] as Array<ActionItem>,

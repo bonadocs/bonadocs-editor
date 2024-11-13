@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/button/Button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
@@ -15,23 +15,27 @@ interface BonadocsEditorViewActionsCodeButtonProps {
 export const BonadocsEditorViewActionsCodeButton: React.FC<
   BonadocsEditorViewActionsCodeButtonProps
 > = (props) => {
+  
+
   const { executionWorkflowButton, getCollection } = useCollectionContext();
   const buttonText = useSelector(workflowButtonText);
   const loader = useSelector((state: RootState) => state.action.loader);
-  const dispatch: AppDispatch = useDispatch();
+  const currentAction = useSelector(
+    (state: RootState) => state.action.currentAction
+  );
+
+  useEffect(() => {}, [currentAction.id]);
+
   return (
     <div className="bonadocs__editor__dashboard__playground__action__code__button">
       <Button
         className="bonadocs__editor__dashboard__playground__action__code__button__item"
         type="action"
         disabled={loader}
-        onClick={() => {
+        onClick={async () => {
           setSimulation(true);
-          executionWorkflowButton();
-          // getCollection()?.valueManagerView.removeLibrary(
-          //   "js",
-          //   `ethers@5.3.0`
-          // );
+          await executionWorkflowButton();
+
         }}
       >
         <>
@@ -43,9 +47,7 @@ export const BonadocsEditorViewActionsCodeButton: React.FC<
               alt="play--v2"
             />
           ) : (
-            <Loader
-              className="spinner"
-            />
+            <Loader className="spinner" />
           )}
           {buttonText}
         </>
