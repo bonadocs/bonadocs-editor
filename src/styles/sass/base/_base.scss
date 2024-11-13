@@ -244,6 +244,10 @@ body {
   width: 100%;
 }
 
+.bona-black {
+  color: var(--bonadocsEditorBackground) !important;
+}
+
 .bor-main {
   border: 1px solid var(--bonadocsProtocolBorder);
   border-radius: 0.8rem;

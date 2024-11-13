@@ -336,7 +336,7 @@ export const BonadocsEditorViewPlaygroundContractModal: React.FC<
                   {loading ? (
                     <Loader className="spinner" />
                   ) : (
-                    "Update Contracts"
+                    "Save and continue"
                   )}
                 </>
               </Button>

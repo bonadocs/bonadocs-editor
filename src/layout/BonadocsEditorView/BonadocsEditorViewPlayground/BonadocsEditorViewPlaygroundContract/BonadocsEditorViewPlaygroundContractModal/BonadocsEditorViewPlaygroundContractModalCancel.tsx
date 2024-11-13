@@ -56,10 +56,10 @@ export const BonadocsEditorViewPlaygroundContractModalCancel: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Close Edit modal</h3>
+        <h3 className="modal__container__title">Close settings</h3>
         <div className="modal__container__text">
-          Are you still editing? If yes, click on the Update Contracts button to save before
-          closing.
+          You have unsaved changes. Closing your settings
+          will discard these changes. Are you sure you want to proceed?
         </div>
         <div className="modal__container__wrapper">
           <Button
@@ -76,9 +76,9 @@ export const BonadocsEditorViewPlaygroundContractModalCancel: React.FC<
             onClick={async () => {
               closeEditModal();
             }}
-            className="modal__container__button"
+            className="modal__container__button bona-black"
           >
-            Delete Edit Changes
+            Discard Changes
           </Button>
         </div>
       </div>

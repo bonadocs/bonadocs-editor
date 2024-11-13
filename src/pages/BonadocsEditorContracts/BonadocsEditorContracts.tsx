@@ -19,12 +19,6 @@ export const BonadocsEditorContracts: React.FC<
 
   return (
     <div className={className}>
-      {warningBar && (
-        <BonadocsEditorViewHeader
-          warningHeader
-          className="bonadocs__editor__dashboard__header ma-bottom"
-        />
-      )}
       <BonadocsEditorViewHeader className="bonadocs__editor__dashboard__header" />
       <BonadocsEditorViewControlBar className="bonadocs__editor__dashboard__controlbar" />
       <BonadocsEditorViewPlaygroundWrapper className="bonadocs__editor__dashboard__playground">
