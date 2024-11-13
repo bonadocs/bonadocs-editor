@@ -21,11 +21,11 @@ export const BonadocsEditorSidebar: React.FC<SidebarProps> = ({
   return (
     <div className={className}>
       {warningBar && (
-        <div className="bonadocs__editor__sidebar__info">
-          <div className="bonadocs__editor__sidebar__info__text">
+        <div className="bonadocs__editor__sidebar__info__warning">
+          <div className="bonadocs__editor__sidebar__info__warning__text">
             {warningText}
             <span
-              className="bonadocs__editor__sidebar__info__text__cta"
+              className="bonadocs__editor__sidebar__info__warning__text__cta"
               onClick={() => {
                 dispatch({
                   type: "controlBoard/setWarningBar",

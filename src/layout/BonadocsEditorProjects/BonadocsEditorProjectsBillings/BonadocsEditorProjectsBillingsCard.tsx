@@ -34,6 +34,15 @@ const BonadocsEditorProjectsBillingsCard: React.FC<
               ? "inertia"
               : "action"
           }
+          disabled={
+            paidSubscription
+              ? isFreePlan
+                ? false
+                : true
+              : isFreePlan
+              ? true
+              : false
+          }
           onClick={() => {
             window.open("mailto:hello@bonadocs.com", "_blank");
           }}
