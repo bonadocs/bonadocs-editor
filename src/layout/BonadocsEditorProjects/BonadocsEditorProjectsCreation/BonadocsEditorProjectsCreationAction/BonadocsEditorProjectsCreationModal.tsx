@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
 import { CollectionDataManager } from "@bonadocs/core";
 import { useCollectionContext } from "@/context/CollectionContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface BonadocsEditorProjectsCreationModalProps {
   className?: string;
@@ -24,6 +24,7 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
   const [open, isOpen] = useState<boolean>(false);
   const [collectionName, setCollectionName] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const { id } = useParams();
 
   const dispatch = useDispatch<AppDispatch>();
   const { setCollection } = useCollectionContext();
@@ -93,7 +94,7 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
                 setLoading(false);
                 return;
               }
-              dispatch(
+              await dispatch(
                 addCollection(
                   importedCollection.payload as CollectionDataManager
                 )
@@ -104,9 +105,9 @@ export const BonadocsEditorProjectsCreationModal: React.FC<
               setLoading(false);
 
               closeModal();
-              // navigate({
-              //   pathname: "/contracts"
-              // });
+              navigate({
+                pathname: `/teams/${id}/projects`
+              });
             }}
             className="modal__container__button"
           >
