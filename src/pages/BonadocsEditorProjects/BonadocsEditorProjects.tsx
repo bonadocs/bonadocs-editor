@@ -19,7 +19,10 @@ import { BonadocsEditorProjectsBillings } from "@/layout/BonadocsEditorProjects/
 export const BonadocsEditorProjects: React.FC = () => {
   const [showImportModal, setShowImportModal] = useState<boolean>(false);
   const [currentProjectSettings, setCurrentProjectSettings] = useState<any>(
-    TeamSettings[0]
+    () => {
+      const savedValue = localStorage.getItem("currentProjectSettings");
+      return savedValue ? JSON.parse(savedValue) : TeamSettings[0];
+    }
   );
   const [teamMembers, setTeamMembers] = useState<any[]>([]);
   const location = useLocation();
@@ -40,23 +43,23 @@ export const BonadocsEditorProjects: React.FC = () => {
     (state: RootState) => state.controlBoard.loadingScreen
   );
 
-  const fetchMembers = async () => {
-    const members = await dispatch(getTeamById(id!));
-    if (members.payload) {
-      setTeamMembers(members.payload["users"]);
-    }
-  };
-
   useEffect(() => {
     currentProject();
-    fetchMembers();
   }, [id]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "currentProjectSettings",
+      JSON.stringify(currentProjectSettings)
+    );
+  }, [currentProjectSettings]);
 
   const currentProject = async () => {
     dispatch(setLoadingScreen(true));
     dispatch(setProjectList([]));
     if (id) {
-      await dispatch(getTeamById(id));
+      const members = await dispatch(getTeamById(id!));
+      setTeamMembers(members.payload["users"]);
     }
 
     const projects = await dispatch(fetchCollections());
@@ -160,10 +163,13 @@ export const BonadocsEditorProjects: React.FC = () => {
             )}
 
             {currentProjectSettings.name === "Members" && (
-              <BonadocsEditorProjectsMembers teamMembers={teamMembers} />
+              <BonadocsEditorProjectsMembers
+                updateCurrentTeam={currentProject}
+                teamMembers={teamMembers}
+              />
             )}
 
-            {currentProjectSettings.name === "Billings" && (
+            {currentProjectSettings.name === "Billing" && (
               <BonadocsEditorProjectsBillings />
             )}
           </>

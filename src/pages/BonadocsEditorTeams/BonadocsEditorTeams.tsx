@@ -2,7 +2,7 @@ import { Button } from "@/components/button/Button";
 import { Logo } from "@/components/logo/Logo";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getTeams } from "@/store/team/teamSlice";
+import { getTeams, setTeamItems } from "@/store/team/teamSlice";
 import { BonadocsEditorTeamsItem } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsItem";
 import { BonadocsEditorTeamsModalCreate } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsModal/BonadocsEditorTeamsModalCreate";
 import { AppDispatch, RootState } from "@/store";
@@ -21,20 +21,28 @@ export const BonadocsEditorTeams: React.FC = () => {
   const [show, setShow] = useState(false);
   const [showAcceptInvite, setShowAcceptInvite] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const teams = useSelector((state: RootState) => state.team.teamList);
+  const [teams, setTeams] = useState<any[]>([]);
   const loadingScreen = useSelector(
     (state: RootState) => state.controlBoard.loadingScreen
   );
   const inviteToken = queryParameters.get("inviteToken");
 
   useEffect(() => {
+    getTeamsList();
+  }, []);
+
+  const getTeamsList = async () => {
     dispatch(setLoadingScreen(true));
-    dispatch(getTeams());
+    const teamList = await dispatch(getTeams());
+    if (!teamList.payload) return;
+    setTeams(teamList.payload);
+    console.log("teams", teams);
+
     dispatch(setLoadingScreen(false));
     if (inviteToken) {
       setShowAcceptInvite(true);
     }
-  }, []);
+  };
 
   return (
     <>

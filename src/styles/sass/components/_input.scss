@@ -127,17 +127,18 @@
         }
         &__teams {
           background-color: var(--bonadocsBackground);
-          width: 36rem;
+          width: 25rem;
           white-space: nowrap;
           padding: 01.6rem;
           cursor: pointer;
+          font-size: 1.3rem;
         }
         &__teams:hover {
           background-color: var(--bonadocsEditorBackground);
-          h3 {
-             color: var(--bonadocsTextWhite);
+          h3,
+          h4 {
+            color: var(--bonadocsTextWhite);
           }
-         
         }
       }
       &__list {

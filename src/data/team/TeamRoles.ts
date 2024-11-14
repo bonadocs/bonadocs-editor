@@ -30,18 +30,13 @@ export const teamRoles = [
       "readCollections",
       "writeCollections",
     ],
-  },
-  {
-    label: "Sub controller",
-    value: "sub controller",
-    permission: ["manageSubscriptions", "readCollections", "writeCollections"],
-  },
+  }
 ];
 
 export const TeamSettings = [
   { name: "Projects" },
   { name: "Members" },
-  { name: "Billings" },
+  { name: "Billing" },
 ];
 
 export const TeamMembersTable = [

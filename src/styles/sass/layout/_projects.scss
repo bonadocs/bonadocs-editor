@@ -13,6 +13,9 @@
         grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
         padding: 2.4rem 0 1.6rem 0;
         border-bottom: 1px solid var(--bonadocsProtocolBorder);
+        @media screen and (max-width: 1500px) {
+          grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+        }
         &__item {
           text-transform: uppercase;
           color: var(--bonadocsSecondaryText);

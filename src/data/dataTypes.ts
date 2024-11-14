@@ -72,6 +72,11 @@ export type TeamMembers = {
   role: Array<string>;
 };
 
+export type TeamMemberRole = {
+  memberId: string;
+  role: Array<string>;
+};
+
 export type TeamInvite = {
   projectId: string;
   name: string;

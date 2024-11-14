@@ -63,7 +63,7 @@ export const BonadocsEditorProjectSidebarSelector: React.FC = () => {
                 key={index}
                 className="bonadocs__editor__param__item__teams"
               >
-                <h3>{team.name}</h3>
+                <h4>{team.name}</h4>
               </div>
             ))}
           </>

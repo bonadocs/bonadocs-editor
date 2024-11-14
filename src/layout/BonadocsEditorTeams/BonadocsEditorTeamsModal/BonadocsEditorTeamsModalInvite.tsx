@@ -121,7 +121,10 @@ export const BonadocsEditorTeamsModalInvite: React.FC<
         {addMember && (
           <BonadocsEditorTeamsModalInviteMember
             addMember={addMember}
-            setAddMember={setAddMember}
+            setAddMember={(status) => {
+              setAddMember(status);
+              closeModal();
+            } }
             projectId={teamInfo.id!}
           />
         )}

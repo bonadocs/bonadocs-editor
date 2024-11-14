@@ -3,7 +3,8 @@ import { toast } from "react-toastify";
 import { api } from "@/utils/axios";
 import { TeamItem, TeamInvite } from "@/data/dataTypes";
 import { auth } from "@/utils/firebase.utils";
-
+import { RootState } from "..";
+import { TeamMemberRole } from "@/data/dataTypes";
 const initialState = {
   teamList: [] as TeamItem[],
   currentTeam: {} as TeamItem,
@@ -65,7 +66,10 @@ export const getTeams = createAsyncThunk(
           activeSubscription: team.activeSubscription === null ? false : true,
         };
       });
+      console.log(teamList, "teamList");
+
       dispatch(setTeamItems(teamList));
+      return teamList;
     } catch (err) {
       toast.error("Error listing projects");
       return false;
@@ -163,18 +167,43 @@ export const inviteMember = createAsyncThunk(
   }
 );
 
-export const deleteMember = createAsyncThunk("team/deleteMember", async (memberId: string, { getState, dispatch, rejectWithValue }) => {
-  try {
-    await api.delete(`/projects/users/${memberId}`);
-    toast.success("Member removed");
-    return true;
-  } catch (err: any) {
-    console.log(err.response.data.message);
+export const deleteMember = createAsyncThunk(
+  "team/deleteMember",
+  async (memberId: string, { getState, dispatch, rejectWithValue }) => {
+    try {
+      await api.delete(`/projects/users/${memberId}`);
+      toast.success("Member removed");
+      return true;
+    } catch (err: any) {
+      console.log(err.response.data.message);
 
-    toast.error(err.response.data.message);
-    return false;
+      toast.error(err.response.data.message);
+      return false;
+    }
   }
- })
+);
+
+export const updateMemberRole = createAsyncThunk(
+  "team/updateMemberRole",
+  async (memberRole: TeamMemberRole, { getState, dispatch, rejectWithValue }) => {
+    const state = getState() as RootState;
+    try {
+      await api.put(
+        `/projects/${state.team.currentTeam.id}/users/${memberRole.memberId}/permissions`,
+        {
+          permissions: memberRole.role,
+        }
+      );
+      toast.success("Member role updated");
+      return true;
+    } catch (err: any) {
+      console.log(err.response.data.message);
+
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
 
 export const getTeamMembers = createAsyncThunk(
   "team/getTeamMembers",
@@ -183,6 +212,24 @@ export const getTeamMembers = createAsyncThunk(
       const members = await api.get(`/projects/${projectId}/users`);
 
       return members.data.data;
+    } catch (err) {
+      const error = err as Error;
+      toast.error(error.message);
+      return false;
+    }
+  }
+);
+
+export const revokeTeamMember = createAsyncThunk(
+  "team/revokeTeamMember",
+  async (memberId: string, { getState, dispatch, rejectWithValue }) => {
+    const state = getState() as RootState;
+    try {
+      const members = await api.delete(
+        `/projects/${state.team.currentTeam.id}/users/${memberId}`
+      );
+
+      return true;
     } catch (err) {
       const error = err as Error;
       toast.error(error.message);
@@ -206,6 +253,7 @@ export const fetchTeamMembers = createAsyncThunk(
   }
 );
 
-export const { resetTeam, setTeamItems, setTeamId, setCurrentTeam } = teamSlice.actions;
+export const { resetTeam, setTeamItems, setTeamId, setCurrentTeam } =
+  teamSlice.actions;
 
 export default teamSlice.reducer;

@@ -41,10 +41,11 @@
             padding: 1.2rem;
             width: 19.1rem;
             background-color: var(--bonadocsEditorBackground);
-
+            font-size: 1.3rem;
             cursor: pointer;
             &:hover {
               background-color: var(--bonadocsBackground);
+              color: var(--bonadocsTextWhite);
             }
           }
         }

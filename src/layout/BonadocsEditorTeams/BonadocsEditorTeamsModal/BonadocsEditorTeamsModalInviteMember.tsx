@@ -86,7 +86,10 @@ export const BonadocsEditorTeamsModalInviteMember: React.FC<
       <div className="bonadocs__editor__projects__creation__selection__item__deets__wrapper">
         <Button
           type="action"
-          onClick={() => sendInvite()}
+          onClick={() => {
+            sendInvite()
+          }
+          }
           disabled={!userValidation}
         >
           <>

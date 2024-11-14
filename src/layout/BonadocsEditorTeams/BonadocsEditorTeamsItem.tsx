@@ -59,7 +59,6 @@ export const BonadocsEditorTeamsItem: React.FC<
       <div
         className="bonadocs__editor__projects__inner__list__item"
         onClick={() => {
-          // dispatch(setTeamId(teamItem.id));
           navigate({
             pathname: `/teams/${teamItem.id}/projects`,
           });
@@ -75,7 +74,6 @@ export const BonadocsEditorTeamsItem: React.FC<
               className="bonadocs__editor__projects__inner__list__item__icon"
               ref={setReferenceElement}
               onClick={(event) => {
-      
                 event.stopPropagation();
               }}
             >
@@ -102,7 +100,6 @@ export const BonadocsEditorTeamsItem: React.FC<
                     </div> */}
                     <div
                       onClick={(event) => {
-               
                         event.stopPropagation();
                         setDeleteModal(!deleteModal);
                         close();

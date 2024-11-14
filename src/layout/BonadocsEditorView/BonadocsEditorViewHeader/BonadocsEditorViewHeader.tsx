@@ -27,7 +27,7 @@ export const BonadocsEditorViewHeader: React.FC<
   const { getCollection, connectWallet, walletId } = useCollectionContext();
   const [loader, setLoader] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(true);
-  const { user, signOut } = useAuthContext();
+  const { user } = useAuthContext();
   const collectionName = getCollection()?.data.name!;
   let [referenceElement, setReferenceElement] = useState<any>();
   const [openPublishModal, setOpenPublishModal] = useState<boolean>(false);

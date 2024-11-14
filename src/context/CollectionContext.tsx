@@ -189,7 +189,7 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
         (user: any) => user.emailAddress === currentUserEmail
       )?.permissions;
 
-      const userRole = teamRoles.filter((role) => {
+      const userRole = teamRoles.find((role) => {
         if (arraysEqual(role.permission, userPermission)) {
           return role;
         }
@@ -539,6 +539,8 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
 
     try {
       action.current = currentAction.id;
+      console.log(currentAction);
+      
       dispatch(setLoader(true));
       const executor = await workflowExecutor();
 
@@ -551,8 +553,9 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       );
       const res = await executor.run();
       console.log(currentAction, action.current);
+console.log(action.current, currentAction.id);
 
-      if (action.current !== currentAction.id) return true;
+     if (action.current !== currentAction.id) return true;
 
       setWorkflowResponse(res);
 
@@ -560,10 +563,11 @@ export const CollectionProvider: React.FC<CollectionProviderProps> = ({
       return true
     } catch (error) {
       dispatch(setLoader(false));
-      return false
       console.log(error);
 
       toast.error((error as Error).message);
+      return false
+      
     } finally {
     }
 

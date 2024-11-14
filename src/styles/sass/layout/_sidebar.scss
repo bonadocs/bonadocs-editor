@@ -15,8 +15,12 @@
       &__info {
         display: flex;
         justify-content: space-between;
+
+        @media screen and (max-width: 1300px) {
+          margin-top: 1rem;
+        }
         &__code {
-         border: 1px solid #20262e;
+          border: 1px solid #20262e;
           border-radius: 1.6rem;
           padding: 2.4rem;
           margin-top: 2.4rem;
@@ -37,27 +41,28 @@
           }
         }
         &__warning {
-        display: flex;
-        margin: -1.6rem -3.9rem 1.6rem -2.4rem;
-        align-items: flex-start;
-        background: var(--bonadocsBlue);
-        height: 12rem;
-        color: var(--bonadocsTextWhite);
-        font-size: 1.6rem;
-        padding: 0.8rem 1.6rem;
-        &__text {
+          display: flex;
+          margin: -1.6rem -3.9rem 1.6rem -2.4rem;
+          align-items: flex-start;
+          background: var(--bonadocsBlue);
+          height: 12rem;
           color: var(--bonadocsTextWhite);
-          font-weight: 500;
-          line-height: 2.5rem; /* 153.846% */
-          letter-spacing: 0.013rem;
+          font-size: 1.6rem;
+          padding: 0.8rem 1.6rem;
+          &__text {
+            color: var(--bonadocsTextWhite);
+            font-weight: 500;
+            line-height: 2.5rem; /* 153.846% */
+            letter-spacing: 0.013rem;
 
-          &__cta {
-            text-decoration: underline;
-            padding-left: 0.3rem;
-            cursor: pointer;
+            &__cta {
+              text-decoration: underline;
+              padding-left: 0.3rem;
+              cursor: pointer;
+            }
           }
         }
-      }}
+      }
       &__logo {
         margin-bottom: 4rem;
         cursor: pointer;
@@ -103,7 +108,7 @@
         margin: 2.4rem 0;
         border-radius: 2rem;
         display: flex;
-        padding: .8rem 1.2rem;
+        padding: 0.8rem 1.2rem;
         cursor: pointer;
         &__team {
           &__name {
@@ -111,7 +116,7 @@
             font-size: 1.3rem;
           }
           &__dropdown {
-            margin-left: auto;;
+            margin-left: auto;
           }
         }
       }
