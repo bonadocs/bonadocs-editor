@@ -43,14 +43,13 @@ export const teamCreation = createAsyncThunk(
         name: teamName.toLowerCase().trim(),
         slug: teamName.toLowerCase().trim().replace(/\s+/g, "-"),
       });
-     setTimeout(() => {
-       dispatch(getTeams());
-     }, 3000);
+      toast.success(`Team ${teamName.toLowerCase().trim()} created`);
+      dispatch(getTeams());
+
       return newTeam.data.data.id;
     } catch (err) {
       const error = err as any;
-      console.log(error.response.data.message, "error");
-      
+
       toast.error(error.response.data.message);
       return false;
     }
@@ -126,8 +125,9 @@ export const deleteTeam = createAsyncThunk(
   async (projectId: string, { dispatch }) => {
     try {
       await api.delete(`/projects/${projectId}`);
-      setTimeout(() => {dispatch(getTeams());}, 3000);
-      
+      toast.success(`Team deleted`);
+      dispatch(getTeams());
+
       return true;
     } catch (err) {
       toast.error("Error deleting project");
@@ -190,7 +190,10 @@ export const deleteMember = createAsyncThunk(
 
 export const updateMemberRole = createAsyncThunk(
   "team/updateMemberRole",
-  async (memberRole: TeamMemberRole, { getState, dispatch, rejectWithValue }) => {
+  async (
+    memberRole: TeamMemberRole,
+    { getState, dispatch, rejectWithValue }
+  ) => {
     const state = getState() as RootState;
     try {
       await api.put(
