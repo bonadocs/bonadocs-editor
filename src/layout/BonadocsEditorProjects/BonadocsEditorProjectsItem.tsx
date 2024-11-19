@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import BonadocsEditorProjectsModalDelete from "./BonadocsEditorProjectsModalDelete";
+import BonadocsEditorProjectsModalEdit from "./BonadocsEditorProjectsModalEdit";
 
 interface BonadocsEditorProjectsItemProps {
   projectItem: ProjectItem;
@@ -22,6 +23,7 @@ export const BonadocsEditorProjectsItem: React.FC<
   });
 
   const [deleteModal, setDeleteModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
   const navigate = useNavigate();
   const currentTeam = useSelector((state: RootState) => state.team.currentTeam);
 
@@ -33,7 +35,6 @@ export const BonadocsEditorProjectsItem: React.FC<
           navigate(`${projectItem.id}`);
         }}
       >
-       
         <div className="flex">
           <img
             className="bonadocs__editor__projects__inner__list__item__icon"
@@ -68,6 +69,16 @@ export const BonadocsEditorProjectsItem: React.FC<
               {({ close }) => (
                 <>
                   <div className="bonadocs__editor__variables__table__item__popover__item">
+                    <div
+                      onClick={async (event) => {
+                        event.stopPropagation();
+                        setEditModal(!editModal);
+                        close();
+                      }}
+                      className="bonadocs__editor__variables__table__item__popover__item__edit"
+                    >
+                      Edit Project
+                    </div>
                     <div
                       onClick={async (event) => {
                         event.stopPropagation();
@@ -126,6 +137,11 @@ export const BonadocsEditorProjectsItem: React.FC<
         projectItem={projectItem}
         show={deleteModal}
         closeDeleteModal={() => setDeleteModal(!deleteModal)}
+      />
+      <BonadocsEditorProjectsModalEdit
+        projectItem={projectItem}
+        show={editModal}
+        closeEditModal={() => setEditModal(!editModal)}
       />
     </>
   );

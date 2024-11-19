@@ -43,10 +43,15 @@ export const teamCreation = createAsyncThunk(
         name: teamName.toLowerCase().trim(),
         slug: teamName.toLowerCase().trim().replace(/\s+/g, "-"),
       });
-      dispatch(getTeams());
+     setTimeout(() => {
+       dispatch(getTeams());
+     }, 3000);
       return newTeam.data.data.id;
     } catch (err) {
-      toast.error("Error creating project");
+      const error = err as any;
+      console.log(error.response.data.message, "error");
+      
+      toast.error(error.response.data.message);
       return false;
     }
   }
@@ -66,7 +71,6 @@ export const getTeams = createAsyncThunk(
           activeSubscription: team.activeSubscription === null ? false : true,
         };
       });
-      console.log(teamList, "teamList");
 
       dispatch(setTeamItems(teamList));
       return teamList;
@@ -122,7 +126,8 @@ export const deleteTeam = createAsyncThunk(
   async (projectId: string, { dispatch }) => {
     try {
       await api.delete(`/projects/${projectId}`);
-      dispatch(getTeams());
+      setTimeout(() => {dispatch(getTeams());}, 3000);
+      
       return true;
     } catch (err) {
       toast.error("Error deleting project");

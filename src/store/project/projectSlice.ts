@@ -240,6 +240,28 @@ export const updateProject = createAsyncThunk(
   }
 );
 
+export const updateProjectName = createAsyncThunk(
+  "project/updateProject",
+  async (projectItem: ProjectItem, { getState, dispatch }) => {
+    const { team } = getState() as RootState;
+    try {
+      await api.put(
+        `projects/${team.currentTeam.id}/collections/${projectItem.id}`,
+        {
+          name: projectItem.name,
+          isPublic: projectItem.isPublic,
+        }
+      );
+      dispatch(fetchCollections());
+
+      return true;
+    } catch (err: any) {
+      toast.error(err.response.data.message);
+      return false;
+    }
+  }
+);
+
 export const getProjectData = createAsyncThunk(
   "project/getProjectData",
   async (projectItem: ProjectItem, { getState, dispatch }) => {
@@ -397,7 +419,7 @@ export const fetchCollections = createAsyncThunk(
         const projects = await api.get(
           `projects/${id ?? team.currentTeam.id}/collections`
         );
-      
+
         !id && dispatch(setProjectList(projects.data.data));
         return projects.data.data;
       } catch (err: any) {

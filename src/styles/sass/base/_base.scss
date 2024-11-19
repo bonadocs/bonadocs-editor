@@ -175,7 +175,7 @@ body {
 }
 
 .white {
-  color: var(--bonadocsTextWhite)
+  color: var(--bonadocsTextWhite);
 }
 
 .error__red {
@@ -269,6 +269,23 @@ body {
   margin-top: 2.4rem;
 }
 
+.demarcation1 {
+  content: "";
+  // height: 0.5px;
+  background: linear-gradient(to right, #20262e, #20262e, #7f97b4);
+
+  border: 1px solid #20262e;
+
+  display: block;
+
+  margin-top: 2.4rem;
+}
+
+.demarcation3 {
+  color: var(--bonadocsText);
+    background-color: var(--bonadocsLoginBg);
+}
+
 .spinner {
   display: flex;
   justify-content: center;
@@ -294,7 +311,9 @@ body {
   align-self: center;
 }
 
-.pa-big {padding: 0 30.6rem;}
+.pa-big {
+  padding: 0 30.6rem;
+}
 
 .pal-md {
   padding-left: 12rem;

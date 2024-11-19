@@ -27,6 +27,8 @@ export type ProjectItem = {
   id?: string;
   name: string;
   description?: string;
+  isPublic?: boolean;
+  uri?: string;
 };
 
 export type WidgetConfig = {
@@ -34,7 +36,6 @@ export type WidgetConfig = {
   contract: string;
   functionKey: string;
 };
-
 
 export type ContractInfo = {
   contractInstances?: ContractInstance[];

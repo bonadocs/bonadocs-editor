@@ -67,6 +67,7 @@ export const BonadocsEditorProjects: React.FC = () => {
     if (!projects.payload) {
       return;
     }
+
   };
 
   return (

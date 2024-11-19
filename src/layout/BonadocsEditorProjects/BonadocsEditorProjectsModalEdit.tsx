@@ -1,39 +1,41 @@
-import { Button } from "@/components/button/Button";
-import { TextInput } from "@/components/input/TextInput";
-import { customStyles } from "@/data/toast/toastConfig";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Modal from "react-modal";
-import { Loader } from "@/components/loader/Loader";
-import { deleteTeam, teamCreation } from "@/store/team/teamSlice";
+import { TextInput } from "@/components/input/TextInput";
+import { Button } from "@/components/button/Button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store";
-import { ProjectItem, TeamItem } from "@/data/dataTypes";
-import { deleteProject } from "@/store/project/projectSlice";
+import { customStyles } from "@/data/toast/toastConfig";
 
-interface BonadocsEditorProjectsModalDeleteProps {
+import { ProjectItem } from "@/data/dataTypes";
+import { Loader } from "@/components/loader/Loader";
+import { updateProjectName } from "@/store/project/projectSlice";
+
+interface BonadocsEditorProjectsModalEditProps {
   className?: string;
   show?: boolean;
+  closeEditModal: () => void;
   projectItem: ProjectItem;
-  closeDeleteModal: () => void;
 }
 
-const BonadocsEditorProjectsModalDelete: React.FC<
-  BonadocsEditorProjectsModalDeleteProps
-> = ({ show, closeDeleteModal, className, projectItem }) => {
+const BonadocsEditorProjectsModalEdit: React.FC<
+  BonadocsEditorProjectsModalEditProps
+> = ({ className, show, closeEditModal, projectItem }) => {
   const [open, isOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [projectName, setProjectName] = useState<string>(projectItem.name);
   const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     isOpen(show ?? false);
   }, [show]);
 
   const closeModal = () => {
     isOpen(!open);
-    closeDeleteModal();
+    closeEditModal();
   };
   return (
     <Modal
+      // className='dsds'
       style={customStyles}
       contentLabel="Contract Modal"
       isOpen={open}
@@ -65,20 +67,27 @@ const BonadocsEditorProjectsModalDelete: React.FC<
         </svg>
       </div>
       <div className="modal__container">
-        <h3 className="modal__container__title">Delete Project</h3>
-        <div className="modal__container__text">
-          Are you certain about your decision to delete this team:
-          {projectItem.name} ? Please be aware that this cannot be undone.
-        </div>
+        <h3 className="modal__container__title">Edit Project</h3>
+        <div className="modal__container__text">Project name</div>
+        <TextInput
+          placeholder="name"
+          handleChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setProjectName(event.target.value);
+          }}
+          value={projectName}
+        />
+
         <div className="modal__container__wrapper">
           <Button
-            type="critical"
-            disabled={!projectItem.name}
+            disabled={loading}
+            type="action"
             onClick={async () => {
               setLoading(true);
               try {
                 setLoading(true);
-                 await dispatch(deleteProject(projectItem));
+                await dispatch(
+                  updateProjectName({ ...projectItem, name: projectName })
+                );
                 setLoading(false);
                 closeModal();
               } catch (err) {
@@ -87,7 +96,9 @@ const BonadocsEditorProjectsModalDelete: React.FC<
             }}
             className="modal__container__button"
           >
-            <>{loading ? <Loader className="spinner" /> : "Delete Project"}</>
+            <>
+              {loading ? <Loader className="spinner" /> : "Edit Project name"}
+            </>
           </Button>
         </div>
       </div>
@@ -95,4 +106,4 @@ const BonadocsEditorProjectsModalDelete: React.FC<
   );
 };
 
-export default BonadocsEditorProjectsModalDelete;
+export default BonadocsEditorProjectsModalEdit;

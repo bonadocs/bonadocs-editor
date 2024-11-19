@@ -1,6 +1,6 @@
 import { Button } from "@/components/button/Button";
 import { Logo } from "@/components/logo/Logo";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getTeams, setTeamItems } from "@/store/team/teamSlice";
 import { BonadocsEditorTeamsItem } from "@/layout/BonadocsEditorTeams/BonadocsEditorTeamsItem";
@@ -15,6 +15,7 @@ import { MetaTags } from "@/components/metatags/Metatags";
 import { ReactComponent as CodePlaceholder } from "@/assets/SidebarIcons/codePlaceholder.svg";
 import { BonadocsEditorSidebarTeam } from "@/layout/BonadocsEditorSidebar/BonadocsEditorTeamSidebar/BonadocsEditorTeamSidebar";
 import { BonadocsEditorViewHeaderProfile } from "@/layout/BonadocsEditorView/BonadocsEditorViewHeader/BonadocsEditorViewHeaderProfile";
+import { set } from "lodash";
 
 export const BonadocsEditorTeams: React.FC = () => {
   const [queryParameters] = useSearchParams();
@@ -25,23 +26,30 @@ export const BonadocsEditorTeams: React.FC = () => {
   const loadingScreen = useSelector(
     (state: RootState) => state.controlBoard.loadingScreen
   );
+  const teamList = useSelector((state: RootState) => state.team.teamList);
   const inviteToken = queryParameters.get("inviteToken");
 
+  const loaderCount = useRef(0);
+
   useEffect(() => {
-    getTeamsList();
-  }, []);
+    if (loaderCount.current === 0) {
+      getTeamsList();
+      return;
+    }
+    setTeams(teamList);
+  }, [teamList.length]);
 
   const getTeamsList = async () => {
     dispatch(setLoadingScreen(true));
     const teamList = await dispatch(getTeams());
     if (!teamList.payload) return;
     setTeams(teamList.payload);
-    console.log("teams", teams);
 
     dispatch(setLoadingScreen(false));
     if (inviteToken) {
       setShowAcceptInvite(true);
     }
+    loaderCount.current++;
   };
 
   return (
