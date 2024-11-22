@@ -1,6 +1,6 @@
 # Getting Started with Bonadocs Editor
 
-Firstly, add the `.env` file with the variable for our base URL.
+Firstly, add the `.env` file with the variable for our base URL:
 
 #### `REACT_APP_BONADOCS_ENDPOINT = {BASE URL}`
 
