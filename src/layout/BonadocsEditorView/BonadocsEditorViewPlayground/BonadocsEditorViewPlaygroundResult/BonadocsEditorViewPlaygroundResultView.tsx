@@ -80,6 +80,8 @@ export const BonadocsEditorViewPlaygroundResultView: React.FC<
     skipIndentation = false,
     sibling?: JSX.Element
   ) {
+    
+    
     if (Array.isArray(obj) && obj.length === 1 && depth === 0) {
       obj = obj[0];
     }
@@ -94,6 +96,7 @@ export const BonadocsEditorViewPlaygroundResultView: React.FC<
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const entries = Object.entries(obj).filter(([_, v]) => v != null);
+    
     return (
       <Fragment key={path}>
         {!skipIndentation && getIndentation(depth)}
@@ -107,7 +110,7 @@ export const BonadocsEditorViewPlaygroundResultView: React.FC<
             <span className="bonadocs__widget__codeblock__inner__name">
               {key}:&nbsp;
             </span>
-            {renderObject(value, `${path}.${key}`, depth + 1, true)}
+            {renderObject(value.toString(), `${path}.${key}`, depth + 1, true)}
             <br />
           </Fragment>
         ))}
