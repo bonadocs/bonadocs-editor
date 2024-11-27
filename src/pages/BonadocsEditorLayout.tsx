@@ -22,7 +22,7 @@ interface BonadocsEditorLayoutProps {}
 export const BonadocsEditorLayout: React.FC<
   BonadocsEditorLayoutProps
 > = ({}) => {
-  const { initializeEditor, getCollection } = useCollectionContext();
+  const { initializeEditor, getCollection, emptyResponse } = useCollectionContext();
   let collectionName;
   if (getCollection()) {
     collectionName = getCollection()?.data.name;
@@ -49,11 +49,10 @@ export const BonadocsEditorLayout: React.FC<
 
   const initializeCollection = async () => {
     dispatch(setLoadingScreen(true));
-
+    emptyResponse();
     if (projectId && teamId) {
       await initializeEditor({ projectId, teamId });
       const uriId = `/projects/${teamId}/collections/${projectId}`;
-
       if (uriId !== contract.uri) {
         dispatch(setMethodItem({} as MethodItem));
         dispatch(setMethodDisplayData([]));
