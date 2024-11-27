@@ -114,6 +114,7 @@ export const BonadocsEditorProjectsCreationActionContractInstanceModal: React.FC
             openNetworkList &&
               `modal__side__container__search modal__side__container__search__open`
           )}
+          onClick={(event) => event.stopPropagation()}
         >
           {!openNetworkList ? (
             <div className="bonadocs__editor__projects__action__select ">
